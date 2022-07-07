@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "nodemon": "^2.0.18",
     "pino-pretty": "^8.1.0",
     "ts-node": "^10.8.2",
@@ -12,7 +13,10 @@
   },
   "dependencies": {
     "@fastify/swagger": "^7.4.1",
-    "fastify": "^4.2.0"
+    "@prisma/client": "4.0.0",
+    "bcrypt": "^5.0.1",
+    "fastify": "^4.2.0",
+    "prisma": "^4.0.0"
   },
   "scripts": {
     "start": "ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
