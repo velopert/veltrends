@@ -1,5 +1,6 @@
 import { FastifySchema } from 'fastify'
-import { appErrorSchema } from '../../../lib/AppError.js'
+import { appErrorSchema, createAppErrorSchema } from '../../../lib/AppError.js'
+import { userSchema } from '../../../schema/userSchema.js'
 
 const authResultSchema = {
   type: 'object',
@@ -11,13 +12,7 @@ const authResultSchema = {
         refreshToken: { type: 'string' },
       },
     },
-    user: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        username: { type: 'string' },
-      },
-    },
+    user: userSchema,
   },
 }
 
@@ -33,28 +28,22 @@ export const registerSchema: FastifySchema = {
   body: authBodySchema,
   response: {
     200: authResultSchema,
-    409: {
-      ...appErrorSchema,
-      example: {
-        name: 'UserExistsError',
-        message: 'User already exists',
-        statusCode: 409,
-      },
-    },
+    409: createAppErrorSchema({
+      name: 'UserExistsError',
+      message: 'User already exists',
+      statusCode: 409,
+    }),
   },
 }
 
-export const loginSchema = {
+export const loginSchema: FastifySchema = {
   body: authBodySchema,
   response: {
     200: authResultSchema,
-    401: {
-      ...appErrorSchema,
-      example: {
-        name: 'AuthenticationError',
-        message: 'Invalid username or password',
-        statusCode: 401,
-      },
-    },
+    401: createAppErrorSchema({
+      name: 'AuthenticationError',
+      message: 'Invalid username or password',
+      statusCode: 401,
+    }),
   },
 }
