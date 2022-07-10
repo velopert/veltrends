@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import db from '../../../lib/db.js'
+import requireAuthPlugin from '../../../plugins/requireAuthPlugin.js'
 import UserService from '../../../services/UserService.js'
 import { loginSchema, registerSchema } from './schema.js'
 import { AuthBody } from './types.js'
