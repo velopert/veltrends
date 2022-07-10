@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import routes from './routes/index.js'
 import fastifySwagger from '@fastify/swagger'
+import fastifyCookie from '@fastify/cookie'
 import { swaggerConfig } from './config/swagger.js'
 import AppError from './lib/AppError.js'
 import 'dotenv/config'
@@ -11,7 +12,7 @@ const server = Fastify({
 })
 
 await server.register(fastifySwagger, swaggerConfig)
-
+server.register(fastifyCookie)
 server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode ?? 500
   if (error instanceof AppError) {

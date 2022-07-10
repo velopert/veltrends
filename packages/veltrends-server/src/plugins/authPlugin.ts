@@ -10,11 +10,12 @@ const authPluginAsync: FastifyPluginAsync = async (fastify) => {
   fastify.decorateRequest('user', null)
   fastify.decorateRequest('isExpiredToken', false)
   fastify.addHook('preHandler', async (request) => {
-    const { authorization } = request.headers
-    if (!authorization || !authorization.includes('Bearer')) {
-      return
-    }
-    const token = authorization.split('Bearer ')[1]
+    const token =
+      request.headers.authorization?.split('Bearer ')[1] ??
+      request.cookies.access_token
+
+    if (!token) return
+
     try {
       const decoded = await validateToken<AccessTokenPayload>(token)
       request.user = {
