@@ -9,6 +9,15 @@ type ErrorInfo = {
   message: string
 }
 
+interface ErrorPayloads {
+  UserExistsError: undefined
+  AuthenticationError: undefined
+  UnknownError: undefined
+  UnauthorizedError: {
+    isExpiredToken: boolean
+  }
+}
+
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   UserExistsError: {
     message: 'User already exists',
@@ -31,7 +40,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
 export default class AppError extends Error {
   public statusCode: number
 
-  constructor(public name: ErrorName) {
+  constructor(
+    public name: ErrorName,
+    public payload?: ErrorPayloads[ErrorName],
+  ) {
     const info = statusCodeMap[name]
     super(info.message)
     this.statusCode = info.statusCode
@@ -51,9 +63,13 @@ export const appErrorSchema = {
   },
 }
 
-export function createAppErrorSchema<T>(example: T) {
+export function createAppErrorSchema<T, S>(example: T, payloadSchema?: S) {
   return {
-    ...appErrorSchema,
+    type: 'object',
+    properties: {
+      ...appErrorSchema.properties,
+      ...(payloadSchema ? { payload: payloadSchema } : {}),
+    },
     example,
   }
 }
