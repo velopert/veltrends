@@ -19,6 +19,9 @@ const StyledInput = styled.input`
   &:focus {
     border: 1px solid ${colors.primary};
   }
+  &::placeholder {
+    color: ${colors.gray2};
+  }
 `
 
 export default Input
