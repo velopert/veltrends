@@ -1,4 +1,11 @@
-import { type ActionFunction, json, createCookie, Response, Headers } from '@remix-run/node'
+import {
+  type ActionFunction,
+  json,
+  createCookie,
+  Response,
+  Headers,
+  unstable_composeUploadHandlers,
+} from '@remix-run/node'
 import { ThrownResponse, useCatch } from '@remix-run/react'
 import AuthForm from '~/components/AuthForm'
 import FullHeightPage from '~/components/FullHeightPage'

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/lib/colors'
 import Input, { type Props as InputProps } from './Input'
@@ -7,19 +7,21 @@ interface Props extends InputProps {
   label: string
 }
 
-function LabelInput({ label, ...rest }: Props) {
+function LabelInput({ label, onBlur, onFocus, ...rest }: Props) {
   const [focused, setFocused] = useState(false)
-  const onFocus = () => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    onFocus?.(e)
     setFocused(true)
   }
-  const onBlur = () => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    onBlur?.(e)
     setFocused(false)
   }
 
   return (
     <Block>
       <Label focused={focused}>{label}</Label>
-      <Input onFocus={onFocus} onBlur={onBlur} {...rest} />
+      <Input onFocus={handleFocus} onBlur={handleBlur} {...rest} />
     </Block>
   )
 }

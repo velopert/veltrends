@@ -37,7 +37,7 @@ const StyledInput = styled.input`
 `
 
 const Message = styled.div`
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 14px;
   color: red;
 `
