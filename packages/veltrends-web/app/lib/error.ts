@@ -19,7 +19,7 @@ interface ErrorPayloads {
   RefreshTokenError: undefined
 }
 
-interface AppError {
+export interface AppError {
   statusCode: number
   message: string
   name: ErrorName

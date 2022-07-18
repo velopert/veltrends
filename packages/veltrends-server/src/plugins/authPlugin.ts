@@ -14,6 +14,13 @@ const authPluginAsync: FastifyPluginAsync = async (fastify) => {
       request.headers.authorization?.split('Bearer ')[1] ??
       request.cookies.access_token
 
+    console.log({ token })
+
+    if (request.cookies.refresh_token && !token) {
+      request.isExpiredToken = true
+      return
+    }
+
     if (!token) return
 
     try {
@@ -24,6 +31,7 @@ const authPluginAsync: FastifyPluginAsync = async (fastify) => {
       }
     } catch (e: any) {
       if (e instanceof JsonWebTokenError) {
+        console.log(e)
         console.log(e)
         if (e.name === 'TokenExpiredError') {
           request.isExpiredToken = true
