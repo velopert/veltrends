@@ -1,6 +1,6 @@
 import { useTransition } from '@remix-run/react'
 
-export function useFormLoading() {
+export function useSubmitLoading() {
   const transition = useTransition()
   return ['submitting', 'loading'].includes(transition.state)
 }
