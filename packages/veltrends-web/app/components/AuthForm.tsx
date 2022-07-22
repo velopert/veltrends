@@ -2,9 +2,11 @@ import { json, type ActionFunction } from '@remix-run/node'
 import { Form, useActionData, useTransition } from '@remix-run/react'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { useForm } from '~/hooks/useForm'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { AppError } from '~/lib/error'
 import { isValidPassword, isValidUsername } from '~/lib/regex'
+import { validate } from '~/lib/validate'
 import Button from './Button'
 import LabelInput from './LabelInput'
 import QuestionLink from './QuestionLink'
@@ -40,66 +42,57 @@ const authDescriptions = {
 function AuthForm({ mode, error }: Props) {
   const action = useActionData<ActionData | undefined>()
   const isLoading = useSubmitLoading()
-  const [isInvalidUsername, setIsInvalidUsername] = useState(false)
-  const [isInvalidPassword, setIsInvalidPassword] = useState(false)
+
+  const { inputProps, handleSubmit, errors } = useForm({
+    form: {
+      username: {
+        validate: mode === 'register' ? validate.username : undefined,
+        errorMessage: '5~20자 사이의 영문 소문자 또는 숫자를 입력해주세요.',
+        initialValue: 'hello',
+      },
+      password: {
+        validate: mode === 'register' ? validate.password : undefined,
+        errorMessage: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
+        initialValue: 'world',
+      },
+    },
+    mode: 'all',
+  })
 
   const { usernamePlaceholder, passwordPlaceholder, buttonText, actionText, question, actionLink } =
     authDescriptions[mode]
 
   const usernameErrorMessage = useMemo(() => {
-    if (isInvalidUsername) {
-      return '5~20자 사이의 영문 소문자 또는 숫자를 입력해주세요.'
+    if (errors.username) {
+      return errors.username
     }
     if (error?.name === 'UserExistsError') {
       return '이미 존재하는 계정입니다.'
     }
     return undefined
-  }, [error, isInvalidUsername])
+  }, [error, errors.username])
+
+  const onSubmit = handleSubmit((values) => {
+    console.log(values)
+  })
 
   return (
-    <StyledForm
-      method="post"
-      onSubmit={(e) => {
-        if (mode !== 'register') return
-        const form = new FormData(e.currentTarget)
-        const username = form.get('username')
-        const password = form.get('password')
-        if (typeof username !== 'string' || typeof password !== 'string') {
-          e.preventDefault()
-          return
-        }
-        if (!isValidUsername(username) || !isValidPassword(password)) {
-          e.preventDefault()
-          return
-        }
-      }}
-    >
+    <StyledForm method="post" onSubmit={onSubmit}>
       <InputGroup>
         <LabelInput
           label="아이디"
-          name="username"
           placeholder={usernamePlaceholder}
           disabled={isLoading}
           errorMessage={usernameErrorMessage}
-          onBlur={(e) => {
-            if (mode !== 'register') return
-            setIsInvalidUsername(!isValidUsername(e.target.value))
-          }}
+          {...inputProps.username}
         />
         <LabelInput
           label="비밀번호"
           name="password"
           placeholder={passwordPlaceholder}
           disabled={isLoading}
-          onBlur={(e) => {
-            if (mode !== 'register') return
-            setIsInvalidPassword(!isValidPassword(e.currentTarget.value))
-          }}
-          errorMessage={
-            isInvalidPassword
-              ? '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.'
-              : undefined
-          }
+          errorMessage={errors.password}
+          {...inputProps.password}
         />
       </InputGroup>
       <ActionsBox>

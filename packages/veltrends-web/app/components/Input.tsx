@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { colors } from '~/lib/colors'
 
 export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  errorMessage?: string
+  errorMessage?: string | null
 }
 
 function Input({ errorMessage, ...rest }: Props) {
