@@ -69,8 +69,6 @@ function AuthForm({ mode, error }: Props) {
     }
   }, [error, setError])
 
-  console.log('asdf')
-
   return (
     <StyledForm method="post" onSubmit={onSubmit}>
       <InputGroup>

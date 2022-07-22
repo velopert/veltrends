@@ -107,12 +107,11 @@ export function useForm<T extends string>({
       return (e) => {
         const formData = new FormData(e.currentTarget)
         const formDataJSON = Object.fromEntries(formData) as Record<T, string>
-        const keys = Object.keys(form) as T[]
+        const entries = Object.entries<string>(formDataJSON) as [T, string][]
 
-        const isValid = keys.reduce((acc, key) => {
+        const isValid = entries.reduce((acc, [key, value]) => {
           const { validate, errorMessage } = form[key]
-          if (validate?.(formDataJSON[key]) === false) {
-            // @todo: move this code to outside?
+          if (validate?.(value) === false) {
             setError(key, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
             return false
           }
