@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { validate } from '~/lib/validate'
 
 interface FormInputConfig {
@@ -21,6 +21,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void
   name: string
+  ref?: (ref: HTMLInputElement) => void
 }
 
 type InputPropsRecord<T extends string> = Record<T, InputProps>
@@ -101,6 +102,9 @@ export function useForm<T extends string>(params: UseFormParams<T>) {
           handleValidation(e.target.value)
         },
         name: key,
+        ref: (ref: HTMLInputElement) => {
+          inputRefs.current[key] = ref
+        },
       }
     })
     return partialInputProps
@@ -134,6 +138,17 @@ export function useForm<T extends string>(params: UseFormParams<T>) {
     },
     [params, setError],
   )
+
+  useEffect(() => {
+    const keys = Object.keys(params.form) as T[]
+    keys.forEach((key) => {
+      const initialValue = params.initialValues?.[key] ?? params.form[key].initialValue
+      const el = inputRefs.current[key]
+      if (initialValue !== undefined && el) {
+        el.value = initialValue
+      }
+    })
+  }, [params.form, params.initialValues])
 
   return {
     inputProps,
