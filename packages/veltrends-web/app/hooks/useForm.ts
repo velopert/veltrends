@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { validate } from '~/lib/validate'
 
 interface FormInputConfig {
   name?: string
-  validate?: (text: string) => boolean
+  validate?(text: string): boolean
   initialValue?: string
   errorMessage?: string
+  onChange?(e: React.ChangeEvent<HTMLInputElement>): void
+  onBlur?(e: React.FocusEvent<HTMLInputElement>): void
 }
 
 type ValidateMode = 'all' | 'change' | 'submit' | 'blur'
@@ -33,15 +35,6 @@ type HandleSubmitFn<T extends string> = (
   onSubmit: CustomSubmitFn<T>,
 ) => (e: React.FormEvent<HTMLFormElement>) => void
 
-interface UseFormResult<T extends string> {
-  inputProps: InputPropsRecord<T>
-  handleSubmit: HandleSubmitFn<T>
-  error: Record<T, string | undefined | null>
-  formError: string | undefined | null
-  setError: (name: T, error: string) => void
-  setFormError: (error: string | null) => void
-}
-
 const DEFAULT_VALIDATE_MESSAGE = 'Validation Error'
 
 /**
@@ -51,17 +44,13 @@ const DEFAULT_VALIDATE_MESSAGE = 'Validation Error'
  *   for each input
  *   for form
  */
-export function useForm<T extends string>(params: UseFormParams<T>) {
-  const mode = params.mode ?? 'submit'
-
-  const initialErrors = useMemo(() => {
-    const errors: Record<string, string | undefined | null> = {}
-    Object.keys(params.form).forEach((name) => {
-      errors[name] = undefined
-    })
-    return errors as Record<T, string | undefined | null>
-  }, [params.form])
-  const [errors, setErrors] = useState(initialErrors)
+export function useForm<T extends string>({
+  form,
+  initialValues,
+  mode = 'submit',
+  shouldPreventDefault,
+}: UseFormParams<T>) {
+  const [errors, setErrors] = useState<Partial<Record<T, string | null>>>({})
   const errorsRef = useRef(errors)
   const setError = useCallback((key: T, error: string | null | undefined) => {
     if (errorsRef.current[key] === error) return
@@ -77,26 +66,29 @@ export function useForm<T extends string>(params: UseFormParams<T>) {
 
   const inputProps = useMemo(() => {
     const partialInputProps: Partial<InputPropsRecord<T>> = {}
-    const keys = Object.keys(params.form) as T[]
+    const keys = Object.keys(form) as T[]
     keys.forEach((key) => {
-      const validate = params.form[key].validate
+      const inputConfig = form[key]
+      const validate = inputConfig.validate
       const handleValidation = (text: string) => {
         if (!validate) return
         const isValid = validate(text)
         if (isValid) {
           setError(key, null)
         } else {
-          const errorMessage = params.form[key].errorMessage ?? DEFAULT_VALIDATE_MESSAGE
+          const errorMessage = inputConfig.errorMessage ?? DEFAULT_VALIDATE_MESSAGE
           setError(key, errorMessage)
         }
       }
       partialInputProps[key] = {
         onChange: (e) => {
+          inputConfig.onChange?.(e)
           const modes: ValidateMode[] = ['change', 'all']
           if (!modes.includes(mode)) return
           handleValidation(e.target.value)
         },
         onBlur: (e) => {
+          inputConfig.onBlur?.(e)
           const modes: ValidateMode[] = ['blur', 'all']
           if (!modes.includes(mode)) return
           handleValidation(e.target.value)
@@ -108,52 +100,56 @@ export function useForm<T extends string>(params: UseFormParams<T>) {
       }
     })
     return partialInputProps
-  }, [params, mode, setError])
+  }, [mode, setError, form])
 
   const handleSubmit: HandleSubmitFn<T> = useCallback(
     (onSubmit) => {
       return (e) => {
         const formData = new FormData(e.currentTarget)
         const formDataJSON = Object.fromEntries(formData) as Record<T, string>
-        const keys = Object.keys(params.form) as T[]
-        let errorCounter = 0
-        keys.forEach((key) => {
-          if (params.form[key].validate?.(formDataJSON[key]) === false) {
-            setError(key, params.form[key].errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
-            errorCounter += 1
-          }
-        })
+        const keys = Object.keys(form) as T[]
 
-        if (errorCounter > 0) {
+        const isValid = keys.reduce((acc, key) => {
+          const { validate, errorMessage } = form[key]
+          if (validate?.(formDataJSON[key]) === false) {
+            // @todo: move this code to outside?
+            setError(key, errorMessage ?? DEFAULT_VALIDATE_MESSAGE)
+            return false
+          }
+          return acc
+        }, true)
+
+        if (!isValid) {
           e.preventDefault()
           return
         }
 
-        if (params.shouldPreventDefault ?? true) {
+        if (shouldPreventDefault ?? true) {
           e.preventDefault()
         }
 
         onSubmit(formDataJSON, e)
       }
     },
-    [params, setError],
+    [shouldPreventDefault, setError, form],
   )
 
   useEffect(() => {
-    const keys = Object.keys(params.form) as T[]
+    const keys = Object.keys(form) as T[]
     keys.forEach((key) => {
-      const initialValue = params.initialValues?.[key] ?? params.form[key].initialValue
+      const initialValue = initialValues?.[key] ?? form[key].initialValue
       const el = inputRefs.current[key]
       if (initialValue !== undefined && el) {
         el.value = initialValue
       }
     })
-  }, [params.form, params.initialValues])
+  }, [form, initialValues])
 
   return {
     inputProps,
     errors,
     handleSubmit,
+    setError,
   }
 }
 
