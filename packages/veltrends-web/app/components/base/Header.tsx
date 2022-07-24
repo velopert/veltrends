@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
-import { Logo } from './vectors'
+import { Logo } from '../vectors'
 
 interface Props {
   title?: React.ReactNode
@@ -34,6 +34,7 @@ const Title = styled.div`
   font-size: 18px;
   font-weight: 600;
   svg {
+    display: block;
     width: 84px;
     height: 17px;
   }

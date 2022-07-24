@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import GlobalStyle from './components/GlobalStyle'
+import GlobalStyle from './GlobalStyle'
 import { getMyAccount, type User } from './lib/api/auth'
 import { setClientCookie } from './lib/client'
 import { extractError, isAppError } from './lib/error'

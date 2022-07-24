@@ -7,8 +7,8 @@ import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { AppError } from '~/lib/error'
 import { isValidPassword, isValidUsername } from '~/lib/regex'
 import { validate } from '~/lib/validate'
-import Button from './Button'
-import LabelInput from './LabelInput'
+import Button from '../system/Button'
+import LabelInput from '../system/LabelInput'
 import QuestionLink from './QuestionLink'
 
 interface ActionData {

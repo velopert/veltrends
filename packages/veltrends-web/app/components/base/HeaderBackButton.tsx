@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ArrowLeft } from './vectors'
+import { ArrowLeft } from '../vectors'
 
 interface Props {
   onClick?: () => void
