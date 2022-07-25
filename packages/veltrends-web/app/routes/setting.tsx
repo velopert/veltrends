@@ -1,5 +1,5 @@
-import TabTemplate from '~/components/templates/TabTemplate'
+import TabLayout from '~/components/layouts/TabLayout'
 
 export default function Setting() {
-  return <TabTemplate>Setting</TabTemplate>
+  return <TabLayout>Setting</TabLayout>
 }

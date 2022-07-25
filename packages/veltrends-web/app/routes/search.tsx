@@ -1,5 +1,5 @@
-import TabTemplate from '~/components/templates/TabTemplate'
+import TabLayout from '~/components/layouts/TabLayout'
 
 export default function Search() {
-  return <TabTemplate>Mooyaho</TabTemplate>
+  return <TabLayout>Mooyaho</TabLayout>
 }

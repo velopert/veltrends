@@ -7,7 +7,10 @@ interface Props {
   children?: React.ReactNode
 }
 
-function TabTemplate({ children }: Props) {
+/**
+ * Shows content with a header and a tab bar
+ */
+function TabLayout({ children }: Props) {
   return (
     <FullHeightPage>
       <Header />
@@ -18,7 +21,9 @@ function TabTemplate({ children }: Props) {
 }
 
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 `
 
-export default TabTemplate
+export default TabLayout

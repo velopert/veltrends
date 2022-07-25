@@ -1,12 +1,9 @@
 import { type ActionFunction, json } from '@remix-run/node'
-import { ThrownResponse, useCatch } from '@remix-run/react'
+import { type ThrownResponse, useCatch } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
-import FullHeightPage from '~/components/system/FullHeightPage'
-import Header from '~/components/base/Header'
-import HeaderBackButton from '~/components/base/HeaderBackButton'
-import { useGoBack } from '~/hooks/useGoBack'
 import { register } from '~/lib/api/auth'
-import { AppError, extractError } from '~/lib/error'
+import { type AppError, extractError } from '~/lib/error'
+import BasicLayout from '~/components/layouts/BasicLayout'
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
@@ -33,12 +30,10 @@ interface Props {
 }
 
 export default function Register({ error }: Props) {
-  const goBack = useGoBack()
   return (
-    <FullHeightPage>
-      <Header title="회원가입" headerLeft={<HeaderBackButton onClick={goBack} />} />
+    <BasicLayout title="회원가입" hasBackButton>
       <AuthForm mode="register" error={error} />
-    </FullHeightPage>
+    </BasicLayout>
   )
 }
 

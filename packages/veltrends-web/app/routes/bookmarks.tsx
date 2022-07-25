@@ -1,5 +1,5 @@
-import TabTemplate from '~/components/templates/TabTemplate'
+import TabLayout from '~/components/layouts/TabLayout'
 
 export default function Bookmarks() {
-  return <TabTemplate>Bookmarks</TabTemplate>
+  return <TabLayout>Bookmarks</TabLayout>
 }

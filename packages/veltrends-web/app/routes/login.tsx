@@ -1,13 +1,9 @@
 import { type ActionFunction, json } from '@remix-run/node'
 import { type ThrownResponse, useCatch } from '@remix-run/react'
-import styled from 'styled-components'
 import AuthForm from '~/components/auth/AuthForm'
-import FullHeightPage from '~/components/system/FullHeightPage'
-import Header from '~/components/base/Header'
-import HeaderBackButton from '~/components/base/HeaderBackButton'
-import { useGoBack } from '~/hooks/useGoBack'
 import { login } from '~/lib/api/auth'
 import { type AppError, extractError } from '~/lib/error'
+import BasicLayout from '~/components/layouts/BasicLayout'
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
@@ -33,12 +29,10 @@ interface Props {
 }
 
 export default function Login({ error }: Props) {
-  const goBack = useGoBack()
   return (
-    <FullHeightPage>
-      <Header title="로그인" headerLeft={<HeaderBackButton onClick={goBack} />} />
+    <BasicLayout title="로그인" hasBackButton>
       <AuthForm mode="login" error={error} />
-    </FullHeightPage>
+    </BasicLayout>
   )
 }
 
