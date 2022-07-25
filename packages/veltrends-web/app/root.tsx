@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   } catch (e) {
     const error = extractError(e)
     if (error.name === 'UnauthorizedError') {
-      console.log(error.payload)
+      // console.log(error.payload)
     }
     return null
   }
