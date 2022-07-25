@@ -8,13 +8,19 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
+import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
 import { getMyAccount, type User } from './lib/api/auth'
 import { setClientCookie } from './lib/client'
 import { extractError, isAppError } from './lib/error'
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async (args) => {
+  const { request } = args
+  args.context = {
+    isLoggedIn: false,
+  }
   const cookie = request.headers.get('Cookie')
+
   if (!cookie) return null
   setClientCookie(cookie)
   try {
@@ -47,7 +53,9 @@ export default function App() {
       </head>
       <body>
         <GlobalStyle />
-        <Outlet />
+        <UserContext.Provider value={data}>
+          <Outlet />
+        </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

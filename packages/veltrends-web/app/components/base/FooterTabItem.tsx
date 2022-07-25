@@ -15,25 +15,22 @@ const iconMap = {
 
 interface Props {
   icon: keyof typeof iconMap
-  to?: string
+  to: string
 }
 
 function FooterTabItem({ icon, to }: Props) {
   const iconEl = React.createElement(iconMap[icon])
-  if (to) {
-    return (
-      <LinkItem
-        to={to}
-        className={({ isActive }) => {
-          if (isActive) return 'active'
-          return ''
-        }}
-      >
-        {iconEl}
-      </LinkItem>
-    )
-  }
-  return <ButtonItem>{iconEl}</ButtonItem>
+  return (
+    <LinkItem
+      to={to}
+      className={({ isActive }) => {
+        if (isActive) return 'active'
+        return ''
+      }}
+    >
+      {iconEl}
+    </LinkItem>
+  )
 }
 
 const sharedStyle = css`
@@ -60,13 +57,6 @@ const LinkItem = styled(NavLink)`
       color: ${colors.primary};
     }
   }
-`
-
-const ButtonItem = styled.button`
-  ${sharedStyle}
-  background: none;
-  outline: none;
-  border: none;
 `
 
 export default FooterTabItem

@@ -7,7 +7,7 @@ function Footer() {
     <StyledFooter>
       <FooterTabItem icon="home" to="/" />
       <FooterTabItem icon="search" to="/search" />
-      <FooterTabItem icon="plus-circle" />
+      <FooterTabItem icon="plus-circle" to="/write" />
       <FooterTabItem icon="bookmark" to="/bookmarks" />
       <FooterTabItem icon="setting" to="/setting" />
     </StyledFooter>
