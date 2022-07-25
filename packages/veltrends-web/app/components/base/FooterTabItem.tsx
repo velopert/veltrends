@@ -1,3 +1,4 @@
+import { NavLink } from '@remix-run/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
@@ -14,23 +15,28 @@ const iconMap = {
 
 interface Props {
   icon: keyof typeof iconMap
-  isActive?: boolean
   to?: string
 }
 
-function FooterTabItem({ icon, to, isActive }: Props) {
+function FooterTabItem({ icon, to }: Props) {
   const iconEl = React.createElement(iconMap[icon])
   if (to) {
     return (
-      <LinkItem to={to} $isActive={isActive}>
+      <LinkItem
+        to={to}
+        className={({ isActive }) => {
+          if (isActive) return 'active'
+          return ''
+        }}
+      >
         {iconEl}
       </LinkItem>
     )
   }
-  return <ButtonItem $isActive={isActive}>{iconEl}</ButtonItem>
+  return <ButtonItem>{iconEl}</ButtonItem>
 }
 
-const sharedStyle = (isActive?: boolean) => css`
+const sharedStyle = css`
   flex: 1;
   display: flex;
   align-items: center;
@@ -39,35 +45,28 @@ const sharedStyle = (isActive?: boolean) => css`
     color: ${colors.gray2};
     width: 32px;
     height: 32px;
-    ${isActive &&
-    css`
+  }
+  &:active {
+    svg {
       color: ${colors.primary};
-    `}
+    }
   }
 `
 
-const LinkItem = styled(Link)<{ $isActive?: boolean }>`
-  ${(props) => sharedStyle(props.$isActive)}
+const LinkItem = styled(NavLink)`
+  ${sharedStyle}
+  &.active {
+    svg {
+      color: ${colors.primary};
+    }
+  }
 `
 
-const ButtonItem = styled.button<{ $isActive?: boolean }>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const ButtonItem = styled.button`
+  ${sharedStyle}
   background: none;
   outline: none;
   border: none;
-  svg {
-    color: ${colors.gray2};
-    width: 32px;
-    height: 32px;
-    ${(props) =>
-      props.$isActive &&
-      css`
-        color: ${colors.primary};
-      `}
-  }
 `
 
 export default FooterTabItem
