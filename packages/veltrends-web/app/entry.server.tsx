@@ -25,16 +25,3 @@ export default function handleRequest(
     headers: responseHeaders,
   })
 }
-
-export const handleDataRequest: HandleDataRequestFunction = (
-  response: Response,
-  // same args that get passed to the action or loader that was called
-  args,
-) => {
-  console.log('asdf')
-  response.headers.set('x-custom', 'yay!')
-  args.context = {
-    mooyaho: 'jalmolayo',
-  }
-  return response
-}
