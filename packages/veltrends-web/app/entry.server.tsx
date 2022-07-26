@@ -1,4 +1,4 @@
-import type { EntryContext } from '@remix-run/node'
+import type { EntryContext, HandleDataRequestFunction } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet } from 'styled-components'
@@ -24,4 +24,17 @@ export default function handleRequest(
     status: responseStatusCode,
     headers: responseHeaders,
   })
+}
+
+export const handleDataRequest: HandleDataRequestFunction = (
+  response: Response,
+  // same args that get passed to the action or loader that was called
+  args,
+) => {
+  console.log('asdf')
+  response.headers.set('x-custom', 'yay!')
+  args.context = {
+    mooyaho: 'jalmolayo',
+  }
+  return response
 }
