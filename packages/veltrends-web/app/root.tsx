@@ -23,6 +23,7 @@ function extractPathNameFromUrl(url: string) {
 export const loader: LoaderFunction = async ({ request, context }) => {
   const cookie = request.headers.get('Cookie')
 
+  /*
   const redirectIfNeeded = () => {
     const { pathname, search } = new URL(request.url)
     const isProtected = PROTECTED_ROUTES.some((route) => pathname.includes(route))
@@ -31,8 +32,10 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     }
     return null
   }
+  */
 
-  if (!cookie) return redirectIfNeeded()
+  if (!cookie) return null
+  // if (!cookie) return redirectIfNeeded()
   setClientCookie(cookie)
   try {
     const me = await getMyAccount()
@@ -44,7 +47,8 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     if (error.name === 'UnauthorizedError') {
       // console.log(error.payload)
     }
-    return redirectIfNeeded()
+    return null
+    // return redirectIfNeeded()
   }
 }
 
