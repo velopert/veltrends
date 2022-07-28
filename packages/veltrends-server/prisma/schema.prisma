@@ -32,9 +32,68 @@ model Token {
 }
 
 model Item {
-  id          Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String
-  user        User   @relation(fields: [userId], references: [id])
-  userId      Int
+  link        String?
+  thumbnail   String?
+  tags        Tag[]
+  siteInfo    SiteInfo? @relation(fields: [siteInfoId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User @relation(fields: [userId], references: [id])
+  userId     Int
+  siteInfoId Int?
+
+  itemsTags ItemsTags[]
+}
+
+model SiteInfo {
+  id      Int     @id @default(autoincrement())
+  name    String
+  favicon String?
+  domain  String  @unique
+
+  items Item[]
+}
+
+model Tag {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  Item      Item?       @relation(fields: [itemId], references: [id])
+  itemId    Int?
+  itemsTags ItemsTags[]
+}
+
+model ItemsTags {
+  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  tagId  Int
+
+  @@id([itemId, tagId])
+  @@index(tagId)
+  @@index(itemId)
+}
+
+model TagRelation {
+  id          Int @id @default(autoincrement())
+  tagId       Int
+  originTagId Int
+
+  @@index(tagId)
+  @@index(originTagId)
+}
+
+model ItemLike {
+  id     Int @id @default(autoincrement())
+  itemId Int
+  userId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([itemId, userId])
 }

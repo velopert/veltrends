@@ -3,3 +3,4 @@ dist
 .vscode
 .env
 dev.db
+dev.db-journal
