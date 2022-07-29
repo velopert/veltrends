@@ -37,7 +37,7 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
 
   fastify.post<{ Body: { refreshToken?: string } }>(
     '/refresh',
-    { schema: refreshTokenSchema },
+    { schema: registerSchema },
     async (request, reply) => {
       const refreshToken =
         request.body.refreshToken ?? request.cookies.refresh_token ?? ''

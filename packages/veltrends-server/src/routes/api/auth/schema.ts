@@ -1,5 +1,5 @@
 import { FastifySchema } from 'fastify'
-import { appErrorSchema, createAppErrorSchema } from '../../../lib/AppError.js'
+import { createAppErrorSchema } from '../../../lib/AppError.js'
 import { Static, Type } from '@sinclair/typebox'
 import { UserSchema } from '../../../schema/userSchema.js'
 
@@ -7,29 +7,24 @@ export const AuthBody = Type.Object({
   username: Type.String(),
   password: Type.String(),
 })
-export const AuthResult = Type.Object({})
 
 export type AuthBodyType = Static<typeof AuthBody>
 
-const authResultSchema = {
-  type: 'object',
-  properties: {
-    tokens: {
-      type: 'object',
-      properties: {
-        accessToken: { type: 'string' },
-        refreshToken: { type: 'string' },
-      },
-    },
-    user: UserSchema,
-  },
-}
+const TokensSchema = Type.Object({
+  accessToken: Type.String(),
+  refreshToken: Type.String(),
+})
+
+const AuthResult = Type.Object({
+  tokens: TokensSchema,
+  user: UserSchema,
+})
 
 export const registerSchema: FastifySchema = {
   tags: ['auth'],
   body: AuthBody,
   response: {
-    200: authResultSchema,
+    200: AuthResult,
     409: createAppErrorSchema({
       name: 'UserExistsError',
       message: 'User already exists',
@@ -42,7 +37,7 @@ export const loginSchema: FastifySchema = {
   tags: ['auth'],
   body: AuthBody,
   response: {
-    200: authResultSchema,
+    200: AuthResult,
     401: createAppErrorSchema({
       name: 'AuthenticationError',
       message: 'Invalid username or password',
@@ -51,12 +46,19 @@ export const loginSchema: FastifySchema = {
   },
 }
 
+const RefreshTokenBody = Type.Object({
+  refreshToken: Type.String(),
+})
+
 export const refreshTokenSchema: FastifySchema = {
   tags: ['auth'],
-  body: {
-    type: 'object',
-    properties: {
-      refreshToken: { type: 'string' },
-    },
+  body: RefreshTokenBody,
+  response: {
+    200: TokensSchema,
+    401: createAppErrorSchema({
+      name: 'RefreshTokenError',
+      message: 'Failed to refresh token',
+      statusCode: 401,
+    }),
   },
 }
