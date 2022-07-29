@@ -32,13 +32,13 @@ model Token {
 }
 
 model Item {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  link        String?
-  thumbnail   String?
-  tags        Tag[]
-  siteInfo    SiteInfo? @relation(fields: [siteInfoId], references: [id])
+  id        Int       @id @default(autoincrement())
+  title     String
+  body      String
+  link      String?
+  thumbnail String?
+  tags      Tag[]
+  siteInfo  SiteInfo? @relation(fields: [siteInfoId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
