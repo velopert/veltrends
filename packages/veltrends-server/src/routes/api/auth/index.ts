@@ -1,14 +1,7 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import AppError from '../../../lib/AppError.js'
-import db from '../../../lib/db.js'
-import requireAuthPlugin from '../../../plugins/requireAuthPlugin.js'
 import UserService from '../../../services/UserService.js'
-import {
-  loginSchema,
-  refreshTokenSchema,
-  registerSchema,
-  AuthBodyType,
-} from './schema.js'
+import { loginSchema, registerSchema, AuthBodyType } from './schema.js'
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()
