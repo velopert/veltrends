@@ -4,10 +4,14 @@ import requireAuthPlugin, {
 } from '../../../plugins/requireAuthPlugin.js'
 import ItemService from '../../../services/ItemService.js'
 import {
+  DeleteItemRoute,
+  DeleteItemSchema,
   GetItemRoute,
   GetItemSchema,
   GetItemsRoute,
   GetItemsSchema,
+  UpdateItemRoute,
+  UpdateItemSchema,
   WriteItemRoute,
   WriteItemSchema,
 } from './schema.js'
@@ -48,6 +52,35 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     async (request) => {
       const item = await itemService.createItem(request.user!.id, request.body)
       return item
+    },
+  )
+
+  fastify.patch<UpdateItemRoute>(
+    '/:id',
+    { schema: UpdateItemSchema },
+    async (request) => {
+      const { id: itemId } = request.params
+      const userId = request.user!.id
+      const { title, body } = request.body
+
+      return itemService.updateItem({
+        itemId,
+        userId,
+        title,
+        body,
+      })
+    },
+  )
+
+  fastify.delete<DeleteItemRoute>(
+    '/:id',
+    { schema: DeleteItemSchema },
+    async (request, response) => {
+      const { id: itemId } = request.params
+      const userId = request.user!.id
+
+      await itemService.deleteItem({ itemId, userId })
+      response.status(204)
     },
   )
 })
