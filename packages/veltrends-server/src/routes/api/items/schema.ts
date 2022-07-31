@@ -1,5 +1,6 @@
 import { Static, Type } from '@sinclair/typebox'
 import { FastifySchema } from 'fastify'
+import { PaginationSchema } from '../../../lib/pagination.js'
 import { Nullable } from '../../../lib/typebox.js'
 import { UserSchema } from '../../../schema/userSchema.js'
 
@@ -71,4 +72,10 @@ export interface GetItemsRoute {
   Querystring: {
     cursor?: string
   }
+}
+
+export const GetItemsSchema: FastifySchema = {
+  response: {
+    200: PaginationSchema(ItemSchema),
+  },
 }
