@@ -22,6 +22,14 @@ server.setErrorHandler(async (error, request, reply) => {
       statusCode: error.statusCode,
       payload: error.payload,
     }
+  } else {
+    if (error.statusCode === 400) {
+      return {
+        name: 'BadRequest',
+        message: error.message,
+        statusCode: 400,
+      }
+    }
   }
   return error
 })
