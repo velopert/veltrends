@@ -39,10 +39,9 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   setClientCookie(cookie)
   try {
     const me = await getMyAccount()
-    console.log('출력2!')
+    console.log(me)
     return me
   } catch (e) {
-    console.log('출력2!')
     const error = extractError(e)
     if (error.name === 'UnauthorizedError') {
       // console.log(error.payload)

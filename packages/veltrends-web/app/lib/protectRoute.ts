@@ -1,4 +1,5 @@
 import { type AuthResult, getMyAccount } from './api/auth'
+import { setClientCookie } from './client'
 
 let getMyAccountPromise: Promise<AuthResult> | null = null
 export async function getMemoMyAccount() {
@@ -14,6 +15,8 @@ export const checkIsLoggedIn = async (request: Request) => {
   if (!cookie || !cookie.includes('access_token')) {
     return false
   }
+
+  setClientCookie(cookie)
 
   try {
     await getMemoMyAccount()
