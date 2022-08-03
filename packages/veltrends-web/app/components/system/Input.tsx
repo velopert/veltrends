@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
 
@@ -9,7 +9,7 @@ export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, Props>(({ errorMessage, ...rest }: Props, ref) => {
   return (
     <>
-      <StyledInput {...rest} ref={ref} />
+      <StyledInput {...rest} />
       {errorMessage ? <Message>{errorMessage}</Message> : null}
     </>
   )

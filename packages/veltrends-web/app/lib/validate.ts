@@ -11,4 +11,5 @@ export const validate = {
     }, 0)
     return counter > 1
   },
+  link: (text: string) => /^(http|https):\/\/[^ "]+$/.test(text),
 }
