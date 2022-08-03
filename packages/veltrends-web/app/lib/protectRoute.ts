@@ -1,6 +1,5 @@
 import { type AuthResult, getMyAccount } from './api/auth'
 import { applyAuth } from './applyAuth'
-import { setClientCookie } from './client'
 
 let getMyAccountPromise: Promise<AuthResult> | null = null
 export async function getMemoMyAccount() {
