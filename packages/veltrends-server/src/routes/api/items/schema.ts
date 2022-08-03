@@ -8,7 +8,7 @@ const CreateItemSchema = Type.Object({
   title: Type.String(),
   body: Type.String(),
   link: Type.String(),
-  tags: Type.Array(Type.String()),
+  tags: Type.Optional(Type.Array(Type.String())),
 })
 
 export type CreateItemBodyType = Static<typeof CreateItemSchema>

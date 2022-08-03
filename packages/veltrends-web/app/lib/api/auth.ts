@@ -1,6 +1,7 @@
 import { DataFunctionArgs, LoaderFunction, redirect } from '@remix-run/node'
 import axios from 'axios'
 import { client } from '../client'
+import { User } from './types'
 
 export async function register(params: AuthParams) {
   const response = await axios.post<AuthResult>('http://localhost:4000/api/auth/register', params)
@@ -47,9 +48,4 @@ export interface AuthResult {
 export interface Tokens {
   accessToken: string
   refreshToken: string
-}
-
-export interface User {
-  id: number
-  username: string
 }
