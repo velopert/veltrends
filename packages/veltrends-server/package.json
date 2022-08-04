@@ -24,6 +24,11 @@
     "dotenv": "^16.0.1",
     "fastify": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
+    "metascraper": "^5.29.18",
+    "metascraper-author": "^5.29.15",
+    "metascraper-image": "^5.29.15",
+    "metascraper-logo-favicon": "^5.30.0",
+    "metascraper-publisher": "^5.29.15",
     "prisma": "^4.0.0"
   },
   "scripts": {

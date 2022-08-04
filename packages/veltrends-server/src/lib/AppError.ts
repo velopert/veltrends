@@ -9,6 +9,7 @@ type ErrorName =
   | 'RefreshTokenError'
   | 'NotFoundError'
   | 'ForbiddenError'
+  | 'InvalidURLError'
 
 type ErrorInfo = {
   statusCode: number
@@ -60,6 +61,10 @@ const statusCodeMap: Record<ErrorName, ErrorInfo> = {
   ForbiddenError: {
     message: 'Forbidden',
     statusCode: 403,
+  },
+  InvalidURLError: {
+    message: 'Invalid URL',
+    statusCode: 422,
   },
 }
 
