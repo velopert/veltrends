@@ -38,7 +38,6 @@ export default function Login({ error }: Props) {
 
 export function CatchBoundary() {
   const caught = useCatch<ThrownResponse<number, AppError>>()
-  console.log(caught)
 
   return <Login error={caught.data} />
 }

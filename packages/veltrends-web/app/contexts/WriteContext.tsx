@@ -1,12 +1,19 @@
 import { createContext, useContext, useMemo, useState } from 'react'
+import { type AppError } from '~/lib/error'
 
 interface WriteContextState {
-  link: string
+  form: {
+    link: string
+    title: string
+    body: string
+  }
+  error?: AppError
 }
 
 interface WriteContextActions {
-  setLink(link: string): void
+  change(key: keyof WriteContextState['form'], value: string): void
   reset(): void
+  setError(error?: AppError): void
 }
 
 interface WriteContextType {
@@ -20,20 +27,37 @@ interface Props {
   children: React.ReactNode
 }
 
-export function WriteProvider({ children }: Props) {
-  const [state, setState] = useState<WriteContextState>({
+const initialState = {
+  form: {
     link: '',
-  })
+    title: '',
+    body: '',
+  },
+  error: undefined,
+}
 
-  const actions = useMemo(
+export function WriteProvider({ children }: Props) {
+  const [state, setState] = useState<WriteContextState>(initialState)
+
+  const actions: WriteContextActions = useMemo(
     () => ({
       reset() {
-        setState({
-          link: '',
-        })
+        setState(initialState)
       },
-      setLink(link: string) {
-        setState((prev) => ({ ...prev, link }))
+      change(key, value) {
+        setState((prev) => ({
+          ...prev,
+          form: {
+            ...prev.form,
+            [key]: value,
+          },
+        }))
+      },
+      setError(error) {
+        setState((prev) => ({
+          ...prev,
+          error,
+        }))
       },
     }),
     [],
