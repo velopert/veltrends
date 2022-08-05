@@ -54,6 +54,7 @@ class ItemService {
       },
       include: {
         user: true,
+        publisher: true,
       },
     })
     return item
@@ -66,6 +67,7 @@ class ItemService {
       },
       include: {
         user: true,
+        publisher: true,
       },
     })
     if (!item) {
@@ -94,6 +96,7 @@ class ItemService {
           },
           include: {
             user: true,
+            publisher: true,
           },
           take: limit,
         }),
