@@ -21,7 +21,7 @@ export interface Publisher {
   id: number
   name: string
   domain: string
-  favicon: string
+  favicon: string | null
 }
 
 export interface User {
