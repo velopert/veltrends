@@ -1,21 +1,74 @@
 import { json, type LoaderFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import LinkCardList from '~/components/home/LinkCardList'
 import TabLayout from '~/components/layouts/TabLayout'
 import { getItems } from '~/lib/api/items'
 import { type GetItemsResult } from '~/lib/api/types'
+import { parseUrlParams } from '~/lib/parseUrlParams'
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const list = await getItems()
+  const { cursor } = parseUrlParams<{ cursor?: string }>(request.url)
+  const parsedCursor = cursor !== undefined ? parseInt(cursor, 10) : undefined
+  const list = await getItems(parsedCursor)
   return json(list)
 }
 
 export default function Index() {
   const data = useLoaderData<GetItemsResult>()
+  const [pages, setPages] = useState([data])
+  const fetcher = useFetcher()
+
+  const ref = useRef<HTMLDivElement>(null)
+
+  const fetchNext = useCallback(() => {
+    const { endCursor, hasNextPage } = pages.at(-1)?.pageInfo ?? {
+      endCursor: null,
+      hasNextPage: false,
+    }
+
+    if (fetcher.state === 'loading') return
+
+    if (!hasNextPage) return
+    fetcher.load(`/?index&cursor=${endCursor}`)
+  }, [fetcher, pages])
+
+  useEffect(() => {
+    if (!fetcher.data) return
+    if (pages.includes(fetcher.data)) return
+    setPages(pages.concat(fetcher.data))
+  }, [fetcher.data, pages])
+
+  useEffect(() => {
+    if (!ref.current) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            fetchNext()
+          }
+        })
+      },
+      {
+        root: ref.current.parentElement,
+        rootMargin: '64px',
+        threshold: 1,
+      },
+    )
+    observer.observe(ref.current)
+    return () => {
+      observer.disconnect()
+    }
+  }, [fetchNext])
+
+  const items = pages.flatMap((page) => page.list)
+
   return (
     <StyledTabLayout>
-      <LinkCardList items={data.list} />
+      <LinkCardList items={items} />
+      <div ref={ref}>lalaland</div>
+      <h2>LOOOK</h2>
     </StyledTabLayout>
   )
 }
