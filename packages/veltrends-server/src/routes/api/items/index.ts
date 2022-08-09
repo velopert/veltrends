@@ -94,8 +94,8 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     async (request) => {
       const { id: itemId } = request.params
       const userId = request.user!.id
-      const likes = await itemService.likeItem({ userId, itemId })
-      return { id: itemId, likes }
+      const itemStats = await itemService.likeItem({ userId, itemId })
+      return { id: itemId, itemStats }
     },
   )
   fastify.delete<UnlikeItemRoute>(
@@ -104,8 +104,8 @@ const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
     async (request) => {
       const { id: itemId } = request.params
       const userId = request.user!.id
-      const likes = await itemService.unlikeItem({ userId, itemId })
-      return { id: itemId, likes }
+      const itemStats = await itemService.unlikeItem({ userId, itemId })
+      return { id: itemId, itemStats }
     },
   )
 })

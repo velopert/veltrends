@@ -13,6 +13,16 @@ const CreateItemSchema = Type.Object({
 
 export type CreateItemBodyType = Static<typeof CreateItemSchema>
 
+const ItemStatsSchema = Type.Object({
+  id: Type.Integer(),
+  likes: Type.Integer(),
+})
+
+ItemStatsSchema.example = {
+  id: 1,
+  likes: 10,
+}
+
 const ItemSchema = Type.Object({
   id: Type.Integer(),
   title: Type.String(),
@@ -29,10 +39,7 @@ const ItemSchema = Type.Object({
     domain: Type.String(),
     favicon: Nullable(Type.String()),
   }),
-  itemStats: Type.Object({
-    id: Type.Integer(),
-    likes: Type.Integer(),
-  }),
+  itemStats: ItemStatsSchema,
 })
 
 ItemSchema.example = {
@@ -46,6 +53,10 @@ ItemSchema.example = {
   user: {
     id: 1,
     username: 'velooo',
+  },
+  itemStats: {
+    id: 1,
+    likes: 1,
   },
 }
 
@@ -75,12 +86,15 @@ const UpdateItemBodySchema = Type.Object({
 
 const ItemLikeSchema = Type.Object({
   id: Type.Integer(),
-  likes: Type.Integer(),
+  itemStats: ItemStatsSchema,
 })
 
 ItemLikeSchema.example = {
   id: 1,
-  likes: 10,
+  itemStats: {
+    id: 1,
+    likes: 1,
+  },
 }
 
 type UpdateItemBodyType = Static<typeof UpdateItemBodySchema>
