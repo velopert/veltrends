@@ -69,6 +69,16 @@ const UpdateItemBodySchema = Type.Object({
   tags: Type.Array(Type.String()),
 })
 
+const ItemLikeSchema = Type.Object({
+  id: Type.Integer(),
+  likes: Type.Integer(),
+})
+
+ItemLikeSchema.example = {
+  id: 1,
+  likes: 10,
+}
+
 type UpdateItemBodyType = Static<typeof UpdateItemBodySchema>
 
 export const GetItemSchema: FastifySchema = {
@@ -100,6 +110,20 @@ export const DeleteItemSchema: FastifySchema = {
   },
 }
 
+export const LikeItemSchema: FastifySchema = {
+  params: ItemParamsSchema,
+  response: {
+    200: ItemLikeSchema,
+  },
+}
+
+export const UnlikeItemSchema: FastifySchema = {
+  params: ItemParamsSchema,
+  response: {
+    200: ItemLikeSchema,
+  },
+}
+
 export interface GetItemRoute {
   Params: ItemParamsType
 }
@@ -116,5 +140,13 @@ export interface UpdateItemRoute {
 }
 
 export interface DeleteItemRoute {
+  Params: ItemParamsType
+}
+
+export interface LikeItemRoute {
+  Params: ItemParamsType
+}
+
+export interface UnlikeItemRoute {
   Params: ItemParamsType
 }

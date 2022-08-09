@@ -49,6 +49,7 @@ model Item {
   publisherId Int
 
   itemsTags ItemsTags[]
+  itemStats ItemStats?
 
   @@index([createdAt(sort: Desc)])
 }
@@ -99,4 +100,15 @@ model ItemLike {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([itemId, userId])
+}
+
+model ItemStats {
+  id     Int  @id @default(autoincrement())
+  itemId Int  @unique
+  likes  Int  @default(0)
+  clicks Int  @default(0)
+  score  Int  @default(0)
+  item   Item @relation(fields: [itemId], references: [id])
+
+  updatedAt DateTime @default(now()) @updatedAt
 }
