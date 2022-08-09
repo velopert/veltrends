@@ -15,6 +15,12 @@ export interface Item {
   author: string
   user: User
   publisher: Publisher
+  itemStats: ItemStats
+}
+
+export interface ItemStats {
+  id: number
+  likes: number
 }
 
 export interface Publisher {
@@ -33,3 +39,10 @@ export interface PageInfo {
   endCursor: number | null
   hasNextPage: boolean
 }
+
+export interface LikeItemResult {
+  id: number
+  itemStats: ItemStats
+}
+
+export type UnlikeItemResult = LikeItemResult
