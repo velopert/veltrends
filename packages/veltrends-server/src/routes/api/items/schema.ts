@@ -29,6 +29,10 @@ const ItemSchema = Type.Object({
     domain: Type.String(),
     favicon: Nullable(Type.String()),
   }),
+  itemStats: Type.Object({
+    id: Type.Integer(),
+    likes: Type.Integer(),
+  }),
 })
 
 ItemSchema.example = {
