@@ -6,10 +6,19 @@ import { swaggerConfig } from './config/swagger.js'
 import AppError from './lib/AppError.js'
 import 'dotenv/config'
 import { authPlugin } from './plugins/authPlugin.js'
+import cors from '@fastify/cors'
 
 const server = Fastify({
   logger: true,
 })
+
+if (process.env.NODE_ENV === 'development') {
+  server.register(cors, {
+    origin: /localhost/,
+    allowedHeaders: ['Cookie'],
+    credentials: true,
+  })
+}
 
 await server.register(fastifySwagger, swaggerConfig)
 server.register(fastifyCookie)
