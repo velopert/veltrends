@@ -29,7 +29,7 @@ export const itemsRoute: FastifyPluginAsync = async (fastify) => {
     { schema: GetItemSchema },
     async (request) => {
       const { id } = request.params
-      const item = await itemService.getItem(id)
+      const item = await itemService.getItem(id, request.user?.id)
 
       return item
     },
@@ -43,6 +43,7 @@ export const itemsRoute: FastifyPluginAsync = async (fastify) => {
       return itemService.getPublicItems({
         mode: 'recent',
         cursor: cursor ? parseInt(cursor, 10) : null,
+        userId: request.user?.id,
       })
     },
   )
