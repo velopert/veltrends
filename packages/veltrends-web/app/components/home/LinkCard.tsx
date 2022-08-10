@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { useDateDistance } from '~/hooks/useDateDistance'
+import { useLikeManager } from '~/hooks/useLikeManager'
+import { likeItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import { Globe, HeartOutline } from '../vectors'
@@ -9,8 +11,10 @@ interface Props {
 }
 
 function LinkCard({ item }: Props) {
-  const { thumbnail, title, publisher, body, author, user, createdAt } = item
+  const { thumbnail, title, publisher, body, author, user, createdAt, id } = item
   const dateDistance = useDateDistance(createdAt)
+  const { like, unlike } = useLikeManager()
+  const toggleLike = () => {}
 
   return (
     <Block>
@@ -23,7 +27,11 @@ function LinkCard({ item }: Props) {
       <h3>{title}</h3>
       <p>{body}</p>
       <Footer>
-        <StyledHeartOutline />
+        <StyledHeartOutline
+          onClick={() => {
+            likeItem(id)
+          }}
+        />
         <UserInfo>
           by <b>{user.username}</b> · {dateDistance}
         </UserInfo>

@@ -21,6 +21,7 @@ export interface Item {
 export interface ItemStats {
   id: number
   likes: number
+  isLiked: boolean
 }
 
 export interface Publisher {

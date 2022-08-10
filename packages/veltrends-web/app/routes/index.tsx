@@ -16,31 +16,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(list)
 }
 
-export const action: ActionFunction = async ({ request }) => {
-  const params = parseUrlParams<LikeActionParams>(request.url)
-  if (params.type === 'like' || params.type === 'unlike') {
-    const handle = params.type === 'like' ? likeItem : unlikeItem
-    const result = await handle(params.itemId)
-    return json({
-      type: params.type,
-      itemId: params.itemId,
-      itemStats: result.itemStats,
-    })
-  }
-  return null
-}
-
-interface LikeActionParams {
-  type: 'like' | 'unlike'
-  itemId: number
-}
-
-export interface LikeActionResult {
-  type: 'like' | 'unlike'
-  itemId: number
-  likes: number
-}
-
 export default function Index() {
   const data = useLoaderData<GetItemsResult>()
   const [pages, setPages] = useState([data])

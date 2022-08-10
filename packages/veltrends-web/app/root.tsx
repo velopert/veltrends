@@ -9,6 +9,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import { PROTECTED_ROUTES } from './constants'
+import { ItemStatsProvider } from './contexts/ItemStatsContext'
 import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
 import { getMyAccount } from './lib/api/auth'
@@ -71,7 +72,9 @@ export default function App() {
       <body>
         <GlobalStyle />
         <UserContext.Provider value={data}>
-          <Outlet />
+          <ItemStatsProvider>
+            <Outlet />
+          </ItemStatsProvider>
         </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />

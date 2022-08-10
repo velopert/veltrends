@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { type User } from '~/lib/api/auth'
+import { type User } from '~/lib/api/types'
 
 /**
  * null: not logged in
