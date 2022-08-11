@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { useItemOverride } from '~/contexts/ItemStatsContext'
-import { likeItem } from '~/lib/api/items'
+import { useItemOverride } from '~/contexts/ItemOverrideContext'
+import { likeItem, unlikeItem } from '~/lib/api/items'
 import { type ItemStats } from '~/lib/api/types'
 
 export function useLikeManager() {
@@ -31,7 +31,7 @@ export function useLikeManager() {
           itemStats: { ...initialStats, likes: initialStats.likes - 1 },
           isLiked: false,
         })
-        const result = await likeItem(id)
+        const result = await unlikeItem(id)
         actions.set(id, {
           itemStats: result.itemStats,
           isLiked: false,

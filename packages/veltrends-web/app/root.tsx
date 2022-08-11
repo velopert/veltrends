@@ -9,7 +9,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import { PROTECTED_ROUTES } from './constants'
-import { ItemOverrideProvider } from './contexts/ItemStatsContext'
+import { ItemOverrideProvider } from './contexts/ItemOverrideContext'
 import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
 import { getMyAccount } from './lib/api/auth'
