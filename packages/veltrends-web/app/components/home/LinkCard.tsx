@@ -13,11 +13,12 @@ interface Props {
 }
 
 function LinkCard({ item }: Props) {
-  const { thumbnail, title, publisher, body, author, user, createdAt, id, itemStats } = item
+  const { thumbnail, title, publisher, body, author, user, createdAt, id } = item
   const itemOverride = useItemOverrideById(id)
   const dateDistance = useDateDistance(createdAt)
   const { like, unlike } = useLikeManager()
 
+  const itemStats = itemOverride?.itemStats ?? item.itemStats
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likes = itemOverride?.itemStats.likes ?? itemStats.likes
 
