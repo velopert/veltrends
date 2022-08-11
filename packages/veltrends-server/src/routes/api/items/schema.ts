@@ -16,7 +16,6 @@ export type CreateItemBodyType = Static<typeof CreateItemSchema>
 const ItemStatsSchema = Type.Object({
   id: Type.Integer(),
   likes: Type.Integer(),
-  isLiked: Type.Boolean(),
 })
 
 ItemStatsSchema.example = {
@@ -41,6 +40,7 @@ const ItemSchema = Type.Object({
     favicon: Nullable(Type.String()),
   }),
   itemStats: ItemStatsSchema,
+  isLiked: Type.Boolean(),
 })
 
 ItemSchema.example = {
@@ -58,8 +58,8 @@ ItemSchema.example = {
   itemStats: {
     id: 1,
     likes: 1,
-    isLiked: true,
   },
+  isLiked: true,
 }
 
 export const WriteItemSchema: FastifySchema = {
@@ -89,6 +89,7 @@ const UpdateItemBodySchema = Type.Object({
 const ItemLikeSchema = Type.Object({
   id: Type.Integer(),
   itemStats: ItemStatsSchema,
+  isLiked: Type.Boolean(),
 })
 
 ItemLikeSchema.example = {
@@ -96,8 +97,8 @@ ItemLikeSchema.example = {
   itemStats: {
     id: 1,
     likes: 1,
-    isLiked: true,
   },
+  isLiked: true,
 }
 
 type UpdateItemBodyType = Static<typeof UpdateItemBodySchema>

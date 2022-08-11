@@ -95,13 +95,10 @@ class ItemService {
     return this.mergeItemLiked(item, itemLikedMap?.[id])
   }
 
-  private mergeItemLiked<T extends Item & { itemStats: ItemStats | null }>(
-    item: T,
-    itemLike?: ItemLike,
-  ) {
+  private mergeItemLiked<T extends Item>(item: T, itemLike?: ItemLike) {
     return {
       ...item,
-      itemStats: { ...item.itemStats, isLiked: !!itemLike ?? false },
+      isLiked: !!itemLike,
     }
   }
 
@@ -248,7 +245,7 @@ class ItemService {
     }
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemLikes({ itemId, likes })
-    return { ...itemStats, isLiked: true }
+    return itemStats
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
@@ -262,7 +259,7 @@ class ItemService {
     })
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemLikes({ itemId, likes })
-    return { ...itemStats, isLiked: false }
+    return itemStats
   }
 
   private async getItemLikedMap(params: GetItemLikedParams) {

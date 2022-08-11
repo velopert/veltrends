@@ -16,12 +16,12 @@ export interface Item {
   user: User
   publisher: Publisher
   itemStats: ItemStats
+  isLiked: boolean
 }
 
 export interface ItemStats {
   id: number
   likes: number
-  isLiked: boolean
 }
 
 export interface Publisher {
@@ -44,6 +44,7 @@ export interface PageInfo {
 export interface LikeItemResult {
   id: number
   itemStats: ItemStats
+  isLiked: boolean
 }
 
 export type UnlikeItemResult = LikeItemResult
