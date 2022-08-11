@@ -18,6 +18,7 @@ export function useLikeManager() {
           isLiked: true,
         })
       } catch (e) {
+        /* @todo: handle eror */
         console.error(e)
       }
     },
@@ -36,6 +37,7 @@ export function useLikeManager() {
           isLiked: false,
         })
       } catch (e) {
+        /* @todo: handle eror */
         console.error(e)
       }
     },
