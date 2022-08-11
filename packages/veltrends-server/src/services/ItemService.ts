@@ -249,14 +249,17 @@ class ItemService {
   }
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
-    await db.itemLike.delete({
-      where: {
-        itemId_userId: {
-          itemId,
-          userId,
+    try {
+      await db.itemLike.delete({
+        where: {
+          itemId_userId: {
+            itemId,
+            userId,
+          },
         },
-      },
-    })
+      })
+    } catch (e) {}
+
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemLikes({ itemId, likes })
     return itemStats
