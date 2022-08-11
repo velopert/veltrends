@@ -5,21 +5,31 @@ import { type ItemStats } from '~/lib/api/types'
 
 export function useLikeManager() {
   const { actions } = useItemOverride()
-  const concurrentCounterRef = useRef<Map<number, number>>(new Map())
+  const abortControllers = useRef(new Map<number, AbortController>()).current
+  const getAbortController = useCallback(
+    (id: number) => {
+      const controller = abortControllers.get(id)
+      if (controller) {
+        return controller
+      }
+      const newController = new AbortController()
+      abortControllers.set(id, newController)
+      return newController
+    },
+    [abortControllers],
+  )
 
   const like = useCallback(
     async (id: number, initialStats: ItemStats) => {
-      const counters = concurrentCounterRef.current
+      const controller = getAbortController(id)
 
       try {
+        controller.abort()
         actions.set(id, {
           itemStats: { ...initialStats, likes: initialStats.likes + 1 },
           isLiked: true,
         })
-        const counter = (counters.get(id) ?? 0) + 1
-        counters.set(id, counter)
         const result = await likeItem(id)
-        if (counters.get(id) !== counter) return
         actions.set(id, {
           itemStats: result.itemStats,
           isLiked: true,
@@ -29,20 +39,18 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions],
+    [actions, getAbortController],
   )
   const unlike = useCallback(
     async (id: number, initialStats: ItemStats) => {
-      const counters = concurrentCounterRef.current
+      const controller = getAbortController(id)
       try {
+        controller.abort()
         actions.set(id, {
           itemStats: { ...initialStats, likes: initialStats.likes - 1 },
           isLiked: false,
         })
-        const counter = (counters.get(id) ?? 0) + 1
-        counters.set(id, counter)
         const result = await unlikeItem(id)
-        if (counters.get(id) !== counter) return
         actions.set(id, {
           itemStats: result.itemStats,
           isLiked: false,
@@ -52,7 +60,7 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions],
+    [actions, getAbortController],
   )
 
   return { like, unlike }
