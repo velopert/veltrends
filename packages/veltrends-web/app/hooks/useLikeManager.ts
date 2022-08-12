@@ -6,30 +6,21 @@ import { type ItemStats } from '~/lib/api/types'
 export function useLikeManager() {
   const { actions } = useItemOverride()
   const abortControllers = useRef(new Map<number, AbortController>()).current
-  const getAbortController = useCallback(
-    (id: number) => {
-      const controller = abortControllers.get(id)
-      if (controller) {
-        return controller
-      }
-      const newController = new AbortController()
-      abortControllers.set(id, newController)
-      return newController
-    },
-    [abortControllers],
-  )
 
   const like = useCallback(
     async (id: number, initialStats: ItemStats) => {
-      const controller = getAbortController(id)
+      const prevController = abortControllers.get(id)
 
       try {
-        controller.abort()
+        prevController?.abort()
         actions.set(id, {
           itemStats: { ...initialStats, likes: initialStats.likes + 1 },
           isLiked: true,
         })
-        const result = await likeItem(id)
+        const controller = new AbortController()
+        abortControllers.set(id, controller)
+        const result = await likeItem(id, controller)
+        abortControllers.delete(id)
         actions.set(id, {
           itemStats: result.itemStats,
           isLiked: true,
@@ -39,18 +30,22 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions, getAbortController],
+    [actions, abortControllers],
   )
   const unlike = useCallback(
     async (id: number, initialStats: ItemStats) => {
-      const controller = getAbortController(id)
+      const prevController = abortControllers.get(id)
+
       try {
-        controller.abort()
+        prevController?.abort()
         actions.set(id, {
           itemStats: { ...initialStats, likes: initialStats.likes - 1 },
           isLiked: false,
         })
-        const result = await unlikeItem(id)
+        const controller = new AbortController()
+        abortControllers.set(id, controller)
+        const result = await unlikeItem(id, controller)
+        abortControllers.delete(id)
         actions.set(id, {
           itemStats: result.itemStats,
           isLiked: false,
@@ -60,7 +55,7 @@ export function useLikeManager() {
         console.error(e)
       }
     },
-    [actions, getAbortController],
+    [actions, abortControllers],
   )
 
   return { like, unlike }
