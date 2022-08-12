@@ -7,6 +7,8 @@ import BasicLayout from '~/components/layouts/BasicLayout'
 import { useEffect } from 'react'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 
+/** @todo: redirect to home when already logged in */
+
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
   const username = form.get('username')
