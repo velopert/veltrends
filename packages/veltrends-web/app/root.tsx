@@ -41,7 +41,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   setClientCookie(cookie)
   try {
     const me = await getMyAccount()
-    console.log(me)
     return me
   } catch (e) {
     const error = extractError(e)

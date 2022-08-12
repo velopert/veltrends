@@ -4,6 +4,7 @@ import AuthForm from '~/components/auth/AuthForm'
 import { register } from '~/lib/api/auth'
 import { type AppError, extractError } from '~/lib/error'
 import BasicLayout from '~/components/layouts/BasicLayout'
+import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export default function Register({ error }: Props) {
+  useAuthRedirect()
   return (
     <BasicLayout title="회원가입" hasBackButton>
       <AuthForm mode="register" error={error} />

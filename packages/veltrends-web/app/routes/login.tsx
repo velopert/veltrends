@@ -1,9 +1,11 @@
 import { type ActionFunction, json } from '@remix-run/node'
-import { type ThrownResponse, useCatch } from '@remix-run/react'
+import { type ThrownResponse, useCatch, useActionData, useNavigate } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
 import { login } from '~/lib/api/auth'
 import { type AppError, extractError } from '~/lib/error'
 import BasicLayout from '~/components/layouts/BasicLayout'
+import { useEffect } from 'react'
+import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
@@ -29,6 +31,12 @@ interface Props {
 }
 
 export default function Login({ error }: Props) {
+  const actionData = useActionData()
+  useAuthRedirect()
+
+  useEffect(() => {
+    if (!actionData) return
+  }, [actionData])
   return (
     <BasicLayout title="로그인" hasBackButton>
       <AuthForm mode="login" error={error} />
