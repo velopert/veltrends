@@ -8,7 +8,7 @@ export function useProtectedRoute() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/login?redirect=/write')
+      navigate('/auth/login?redirect=/write')
     }
   }, [user, navigate])
 
