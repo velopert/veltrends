@@ -1,17 +1,14 @@
-import { useNavigate } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
-import { useDialog } from '~/contexts/DialogContext'
 import { useItemOverrideById } from '~/contexts/ItemOverrideContext'
 import { useUser } from '~/contexts/UserContext'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
-import { likeItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import LikeButton from '../system/LikeButton'
-import { Globe, HeartOutline } from '../vectors'
+import { Globe } from '../vectors'
 
 interface Props {
   item: Item
