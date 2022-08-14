@@ -6,6 +6,7 @@ import { useItemOverrideById } from '~/contexts/ItemOverrideContext'
 import { useUser } from '~/contexts/UserContext'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
+import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { likeItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
@@ -27,19 +28,11 @@ function LinkCard({ item }: Props) {
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likes = itemOverride?.itemStats.likes ?? itemStats.likes
 
-  const navigate = useNavigate()
-
-  const { open } = useDialog()
+  const openLoginDialog = useOpenLoginDialog()
 
   const toggleLike = () => {
     if (!currentUser) {
-      open({
-        title: '헤헤헤',
-        description: '호호호호',
-        onConfirm() {
-          navigate('/auth/login')
-        },
-      })
+      openLoginDialog('like')
       return
     }
     if (isLiked) {
