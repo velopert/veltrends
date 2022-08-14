@@ -8,7 +8,10 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
+import Dialog from './components/system/Dialog'
+import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
+import { DialogProvider } from './contexts/DialogContext'
 import { ItemOverrideProvider } from './contexts/ItemOverrideContext'
 import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
@@ -70,11 +73,13 @@ export default function App() {
       </head>
       <body>
         <GlobalStyle />
-        <UserContext.Provider value={data}>
-          <ItemOverrideProvider>
-            <Outlet />
-          </ItemOverrideProvider>
-        </UserContext.Provider>
+        <DialogProvider>
+          <UserContext.Provider value={data}>
+            <ItemOverrideProvider>
+              <Outlet />
+            </ItemOverrideProvider>
+          </UserContext.Provider>
+        </DialogProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -3,18 +3,29 @@ import { colors } from '~/lib/colors'
 
 interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth'
+  variant?: 'primary' | 'secondary'
 }
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
 
-function Button({ layoutMode = 'inline', ...rest }: Props) {
-  return <StyledButton layoutMode={layoutMode} {...rest} />
+function Button({ layoutMode = 'inline', variant = 'primary', ...rest }: Props) {
+  return <StyledButton layoutMode={layoutMode} variant={variant} {...rest} />
+}
+
+const variantStyles = {
+  primary: css`
+    background: ${colors.primary};
+    color: white;
+  `,
+  secondary: css`
+    background: ${colors.secondary};
+    color: ${colors.primary};
+  `,
 }
 
 const StyledButton = styled.button<ButtonProps>`
   display: flex;
-  background: ${colors.primary};
+  ${(props) => variantStyles[props.variant!]}
   border: none;
-  color: white;
   height: 48px;
   font-size: 16px;
   align-items: center;
