@@ -17,6 +17,7 @@ export function useOpenLoginDialog() {
       open({
         description,
         title: '로그인 후 이용해주세요.',
+        confirmText: '로그인',
         onConfirm: () => navigate(`/auth/login?next=${location.pathname}`),
       })
     },

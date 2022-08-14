@@ -7,11 +7,12 @@ interface Props {
   visible: boolean
   title: string
   description: string
+  confirmText?: string
   onClose(): void
   onConfirm(): void
 }
 
-function Dialog({ visible, title, description, onClose, onConfirm }: Props) {
+function Dialog({ visible, title, description, confirmText, onClose, onConfirm }: Props) {
   return (
     <StyledModal visible={visible}>
       <Title>{title}</Title>
@@ -20,7 +21,7 @@ function Dialog({ visible, title, description, onClose, onConfirm }: Props) {
         <Button variant="secondary" onClick={onClose}>
           닫기
         </Button>
-        <Button onClick={onConfirm}>로그인</Button>
+        <Button onClick={onConfirm}>{confirmText ?? '확인'}</Button>
       </Footer>
     </StyledModal>
   )
