@@ -3,6 +3,7 @@ import requireAuthPlugin, {
   createAuthorizedRoute,
 } from '../../../plugins/requireAuthPlugin.js'
 import ItemService from '../../../services/ItemService.js'
+import { commentsRoute } from './comments/index.js'
 import {
   DeleteItemRoute,
   DeleteItemSchema,
@@ -47,6 +48,8 @@ export const itemsRoute: FastifyPluginAsync = async (fastify) => {
       })
     },
   )
+
+  fastify.register(commentsRoute, { prefix: '/:id/comments' })
 }
 
 const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {

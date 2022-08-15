@@ -20,6 +20,9 @@ model User {
 
   Item  Item[]
   Token Token[]
+
+  comments          Comment[] @relation("user")
+  mentionedComments Comment[] @relation("mentionUser")
 }
 
 model Token {
@@ -50,6 +53,8 @@ model Item {
 
   itemsTags ItemsTags[]
   itemStats ItemStats?
+  comments  Comment[]
+  itemLikes ItemLike[]
 
   @@index([createdAt(sort: Desc)])
 }
@@ -99,16 +104,53 @@ model ItemLike {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  item Item @relation(fields: [itemId], references: [id])
+
   @@unique([itemId, userId])
 }
 
 model ItemStats {
-  id     Int  @id @default(autoincrement())
-  itemId Int  @unique
-  likes  Int  @default(0)
-  clicks Int  @default(0)
-  score  Int  @default(0)
-  item   Item @relation(fields: [itemId], references: [id])
+  id            Int  @id @default(autoincrement())
+  itemId        Int  @unique
+  likes         Int  @default(0)
+  clicks        Int  @default(0)
+  score         Int  @default(0)
+  commentsCount Int  @default(0)
+  item          Item @relation(fields: [itemId], references: [id])
 
   updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Comment {
+  id   Int    @id @default(autoincrement())
+  text String
+
+  item        Item  @relation(fields: [itemId], references: [id])
+  user        User  @relation("user", fields: [userId], references: [id])
+  mentionUser User? @relation("mentionUser", fields: [mentionUserId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  likesCount Int @default(0)
+
+  mentionUserId   Int?
+  parentCommentId Int
+  itemId          Int
+  commentLikes    CommentLike[]
+  userId          Int
+}
+
+model CommentLike {
+  id        Int @id @default(autoincrement())
+  commentId Int
+  userId    Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  item Comment @relation(fields: [commentId], references: [id])
+
+  @@unique([commentId, userId])
 }

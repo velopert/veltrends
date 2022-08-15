@@ -74,11 +74,11 @@ export interface WriteItemRoute {
   Body: CreateItemBodyType
 }
 
-const ItemParamsSchema = Type.Object({
+export const ItemParamsSchema = Type.Object({
   id: Type.Integer(),
 })
 
-type ItemParamsType = Static<typeof ItemParamsSchema>
+export type ItemParamsType = Static<typeof ItemParamsSchema>
 
 const UpdateItemBodySchema = Type.Object({
   title: Type.String(),
