@@ -10,11 +10,15 @@ export function createRouteSchema<T extends Record<string, FastifySchema>>(
 type RouteSchema = {
   params?: TSchema
   body?: TSchema
+  querystring?: TSchema
 }
 
 type RouteType<T extends RouteSchema> = {
   Params: T['params'] extends TSchema ? Static<T['params']> : never
   Body: T['body'] extends TSchema ? Static<T['body']> : never
+  Querystring: T['querystring'] extends TSchema
+    ? Static<T['querystring']>
+    : never
 }
 
 export type RoutesType<T extends Record<string, RouteSchema>> = {

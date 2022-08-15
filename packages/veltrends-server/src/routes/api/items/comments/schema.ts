@@ -1,7 +1,7 @@
-import { Static, TObject, TSchema, Type } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 import { createRouteSchema, RoutesType } from '../../../../lib/routeSchema.js'
 import { Nullable } from '../../../../lib/typebox.js'
-import { ItemParamsSchema, ItemParamsType } from '../schema.js'
+import { ItemParamsSchema } from '../schema.js'
 
 const CreateCommentBodySchema = Type.Object({
   text: Type.String(),
