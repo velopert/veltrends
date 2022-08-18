@@ -14,8 +14,19 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
+  fastify.get<CommentsRoute['GetComment']>(
+    '/:commentId',
+    {
+      schema: CommentsRouteSchema.GetComment,
+    },
+    async (request) => {
+      return commentService.getComment(request.params.commentId, true)
+    },
+  )
+
   fastify.get<CommentsRoute['GetSubcomments']>(
     '/:commentId/subcomments',
+    { schema: CommentsRouteSchema.GetSubcomments },
     async (request) => {
       return commentService.getSubcomments(request.params.commentId)
     },
@@ -33,6 +44,7 @@ const authorizedCommentsRoute = createAuthorizedRoute(async (fastify) => {
       const { parentCommentId, text } = request.body
       const { id } = request.params
       const userId = request.user?.id!
+
       return commentService.createComment({
         parentCommentId: parentCommentId ?? undefined,
         text,
@@ -44,47 +56,60 @@ const authorizedCommentsRoute = createAuthorizedRoute(async (fastify) => {
 
   fastify.post<CommentsRoute['LikeComment']>(
     '/:commentId/likes',
+    { schema: CommentsRouteSchema.LikeComment },
     async (request) => {
-      const { id } = request.params
+      const { id, commentId } = request.params
       const userId = request.user?.id!
-      return commentService.likeComment({
-        commentId: id,
+      const likes = await commentService.likeComment({
+        commentId,
         userId,
       })
+      return {
+        id: commentId,
+        likes,
+      }
     },
   )
 
   fastify.delete<CommentsRoute['UnlikeComment']>(
     '/:commentId/likes',
+    { schema: CommentsRouteSchema.UnlikeComment },
     async (request) => {
-      const { id } = request.params
+      const { commentId } = request.params
       const userId = request.user?.id!
-      return commentService.likeComment({
-        commentId: id,
+      const likes = await commentService.unlikeComment({
+        commentId,
         userId,
       })
+      return {
+        id: commentId,
+        likes,
+      }
     },
   )
 
   fastify.delete<CommentsRoute['DeleteComment']>(
     '/:commentId',
-    async (request) => {
-      const { id } = request.params
+    { schema: CommentsRouteSchema.DeleteComment },
+    async (request, response) => {
+      const { commentId } = request.params
       const userId = request.user?.id!
       await commentService.deleteComment({
-        commentId: id,
+        commentId,
         userId,
       })
+      response.status(204)
     },
   )
   fastify.patch<CommentsRoute['UpdateComment']>(
     '/:commentId',
+    { schema: CommentsRouteSchema.UpdateComment },
     async (request) => {
-      const { id } = request.params
+      const { commentId } = request.params
       const userId = request.user?.id!
       const { text } = request.body
-      await commentService.updateComment({
-        commentId: id,
+      return commentService.updateComment({
+        commentId,
         text,
         userId,
       })

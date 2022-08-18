@@ -142,6 +142,10 @@ model Comment {
   itemId          Int
   commentLikes    CommentLike[]
   userId          Int
+
+  @@index(deletedAt)
+  @@index(createdAt)
+  @@index(parentCommentId)
 }
 
 model CommentLike {
@@ -152,7 +156,7 @@ model CommentLike {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  item Comment @relation(fields: [commentId], references: [id])
+  Comment Comment @relation(fields: [commentId], references: [id])
 
   @@unique([commentId, userId])
   @@index(commentId)
