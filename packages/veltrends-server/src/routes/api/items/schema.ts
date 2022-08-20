@@ -16,6 +16,7 @@ export type CreateItemBodyType = Static<typeof CreateItemSchema>
 const ItemStatsSchema = Type.Object({
   id: Type.Integer(),
   likes: Type.Integer(),
+  commentsCount: Type.Integer(),
 })
 
 ItemStatsSchema.example = {

@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import { useItemOverrideById } from '~/contexts/ItemOverrideContext'
@@ -39,16 +40,20 @@ function LinkCard({ item }: Props) {
     }
   }
 
+  const link = `/items/${item.id}`
+
   return (
     <Block>
-      {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
-      <Publisher>
-        {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
-        {author ? `${author} · ` : ''}
-        {publisher.name}
-      </Publisher>
-      <h3>{title}</h3>
-      <p>{body}</p>
+      <StyledLink to={link}>
+        {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
+        <Publisher>
+          {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+          {author ? `${author} · ` : ''}
+          {publisher.name}
+        </Publisher>
+        <h3>{title}</h3>
+        <p>{body}</p>
+      </StyledLink>
       <AnimatePresence initial={false}>
         {likes === 0 ? null : (
           <LikesCount
@@ -70,6 +75,12 @@ function LinkCard({ item }: Props) {
     </Block>
   )
 }
+
+const StyledLink = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+`
 
 const Block = styled.div`
   display: flex;

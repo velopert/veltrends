@@ -34,6 +34,6 @@
   },
   "scripts": {
     "start": "ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
-    "start:dev": "NODE_ENV=development nodemon --watch ./src --exec \"yarn start\" -e ts"
+    "dev": "NODE_ENV=development nodemon --watch ./src --exec \"yarn start\" -e ts"
   }
 }

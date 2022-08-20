@@ -6,7 +6,7 @@ import FullHeightPage from '../system/FullHeightPage'
 
 interface Props {
   hasBackButton?: boolean
-  title?: string
+  title?: React.ReactNode
   children?: React.ReactNode
   onGoBack?(): void
 }

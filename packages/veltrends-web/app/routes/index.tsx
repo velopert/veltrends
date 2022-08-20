@@ -48,8 +48,6 @@ export default function Index() {
   return (
     <StyledTabLayout>
       <LinkCardList items={items} />
-      <div ref={ref}>lalaland</div>
-      <h2>LOOOK</h2>
     </StyledTabLayout>
   )
 }
