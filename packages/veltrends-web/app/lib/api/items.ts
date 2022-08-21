@@ -1,5 +1,5 @@
 import { client } from '../client'
-import { type Item, type GetItemsResult, LikeItemResult } from './types'
+import { type Item, type GetItemsResult, type LikeItemResult, type Comment } from './types'
 import qs from 'qs'
 
 export async function createItem(params: CreateItemParams) {
@@ -48,4 +48,9 @@ interface CreateItemParams {
   link: string
   title: string
   body: string
+}
+
+export async function getComments(itemId: number) {
+  const response = await client.get<Comment[]>(`/api/items/${itemId}/comments`)
+  return response.data
 }

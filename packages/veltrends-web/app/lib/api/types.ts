@@ -49,3 +49,19 @@ export interface LikeItemResult {
 }
 
 export type UnlikeItemResult = LikeItemResult
+
+export interface Comment {
+  id: number
+  text: string
+  createdAt: string
+  updatedAt: string
+  likesCount: number
+  subcommentsCount: number
+  user: User
+  subcomments?: Comment[]
+}
+
+export interface User {
+  id: number
+  username: string
+}
