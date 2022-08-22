@@ -1,16 +1,19 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { colors } from '~/lib/colors'
 import { HeartFill, HeartOutline } from '../vectors'
 import { AnimatePresence, motion } from 'framer-motion'
 
+type Size = 'small' | 'medium'
+
 interface Props {
-  onClick(): void
-  isLiked: boolean
+  onClick?(): void
+  isLiked?: boolean
+  size?: Size
 }
 
-function LikeButton({ onClick, isLiked }: Props) {
+function LikeButton({ onClick, isLiked, size = 'medium' }: Props) {
   return (
-    <StyledButton onClick={onClick}>
+    <StyledButton onClick={onClick} size={size}>
       <AnimatePresence initial={false}>
         {isLiked ? (
           <SvgWrapper key="fill" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
@@ -31,13 +34,30 @@ function LikeButton({ onClick, isLiked }: Props) {
   )
 }
 
-const StyledButton = styled.div`
+const StyledButton = styled.button<{ size: Size }>`
   padding: 0;
   border: none;
   outline: none;
   background: none;
-  width: 24px;
-  height: 24px;
+  display: inline-flex;
+  ${(props) =>
+    props.size === 'medium' &&
+    css`
+      width: 24px;
+      height: 24px;
+    `}
+
+  ${(props) =>
+    props.size === 'small' &&
+    css`
+      width: 16px;
+      height: 16px;
+    `}
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
   position: relative;
 `
 

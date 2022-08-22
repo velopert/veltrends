@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { type Comment } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
+import LikeButton from '../system/LikeButton'
+import { SpeechBubble } from '../vectors'
 import SubcommentList from './SubcommentList'
 
 interface Props {
@@ -10,7 +12,7 @@ interface Props {
 }
 
 function CommentItem({ comment, isSubcomment }: Props) {
-  const { user, text, createdAt, subcomments } = comment
+  const { user, text, createdAt, subcomments, likesCount } = comment
   const dateDistance = useDateDistance(createdAt)
   return (
     <Block>
@@ -19,6 +21,16 @@ function CommentItem({ comment, isSubcomment }: Props) {
         <Time>{dateDistance}</Time>
       </CommentHead>
       <Text>{text}</Text>
+      <CommentFooter>
+        <LikeBlock>
+          <LikeButton size="small" />
+          <LikeCount>{likesCount === 0 ? '' : likesCount.toLocaleString()}</LikeCount>
+        </LikeBlock>
+        <ReplyButton>
+          <SpeechBubble />
+          답글 달기
+        </ReplyButton>
+      </CommentFooter>
       {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
     </Block>
   )
@@ -54,6 +66,37 @@ const Text = styled.p`
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: keep-all;
+`
+
+const CommentFooter = styled.div`
+  font-size: 12px;
+  color: ${colors.gray3};
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+`
+
+const LikeBlock = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const LikeCount = styled.span`
+  margin-left: 4px;
+  min-width: 24px;
+`
+
+const ReplyButton = styled.button`
+  background: none;
+  outline: none;
+  border: none;
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+  display: flex;
+  align-items: center;
 `
 
 export default CommentItem
