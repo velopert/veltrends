@@ -29,7 +29,12 @@ class CommentService {
 
   redact(comments: Comment[]) {
     return comments.map((c) => {
-      if (!c.deletedAt) return c
+      if (!c.deletedAt)
+        return {
+          ...c,
+          isDeleted: false,
+        }
+
       const someDate = new Date(0)
       return {
         ...c,
@@ -44,6 +49,7 @@ class CommentService {
         },
         mentionUser: null,
         subcomments: [],
+        isDeleted: true,
       }
     })
   }
@@ -53,14 +59,18 @@ class CommentService {
     const subcommentsMap = new Map<number, Comment[]>()
     comments.forEach((c) => {
       if (!c.parentCommentId) return
+      if (c.deletedAt !== null) return
       const array = subcommentsMap.get(c.parentCommentId) ?? []
       array.push(c)
       subcommentsMap.set(c.parentCommentId, array)
     })
-    const merged = rootComments.map((c) => ({
-      ...c,
-      subcomments: subcommentsMap.get(c.id) ?? [],
-    }))
+    const merged = rootComments
+      .map((c) => ({
+        ...c,
+        subcomments: subcommentsMap.get(c.id) ?? [],
+      }))
+      .filter((c) => c.deletedAt === null || c.subcomments.length !== 0)
+
     return merged
   }
 

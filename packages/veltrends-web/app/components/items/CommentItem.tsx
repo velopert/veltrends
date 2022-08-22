@@ -12,9 +12,18 @@ interface Props {
 }
 
 function CommentItem({ comment, isSubcomment }: Props) {
-  const { user, text, createdAt, subcomments, likesCount, mentionUser } = comment
+  const { user, text, createdAt, subcomments, likesCount, mentionUser, isDeleted } = comment
 
   const dateDistance = useDateDistance(createdAt)
+
+  if (isDeleted) {
+    return (
+      <Block>
+        <DeletedText>삭제된 댓글입니다.</DeletedText>
+        {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
+      </Block>
+    )
+  }
   return (
     <Block>
       <CommentHead>
@@ -107,6 +116,11 @@ const ReplyButton = styled.button`
 const Mention = styled.span`
   color: ${colors.primary};
   margin-right: 4px;
+`
+
+const DeletedText = styled(Text)`
+  color: ${colors.gray2};
+  margin: 0;
 `
 
 export default CommentItem
