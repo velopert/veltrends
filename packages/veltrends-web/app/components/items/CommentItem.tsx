@@ -12,7 +12,8 @@ interface Props {
 }
 
 function CommentItem({ comment, isSubcomment }: Props) {
-  const { user, text, createdAt, subcomments, likesCount } = comment
+  const { user, text, createdAt, subcomments, likesCount, mentionUser } = comment
+
   const dateDistance = useDateDistance(createdAt)
   return (
     <Block>
@@ -20,7 +21,10 @@ function CommentItem({ comment, isSubcomment }: Props) {
         <Username>{user.username}</Username>
         <Time>{dateDistance}</Time>
       </CommentHead>
-      <Text>{text}</Text>
+      <Text>
+        {mentionUser ? <Mention>@{mentionUser.username}</Mention> : null}
+        {text}
+      </Text>
       <CommentFooter>
         <LikeBlock>
           <LikeButton size="small" />
@@ -61,11 +65,12 @@ const Time = styled.div`
 
 const Text = styled.p`
   margin-top: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   color: ${colors.gray5};
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: keep-all;
+  font-size: 14px;
 `
 
 const CommentFooter = styled.div`
@@ -97,6 +102,11 @@ const ReplyButton = styled.button`
   }
   display: flex;
   align-items: center;
+`
+
+const Mention = styled.span`
+  color: ${colors.primary};
+  margin-right: 4px;
 `
 
 export default CommentItem

@@ -21,6 +21,7 @@ class CommentService {
       },
       include: {
         user: true,
+        mentionUser: true,
       },
     })
     return this.groupSubcomments(this.redact(comments))
@@ -112,6 +113,7 @@ class CommentService {
 
     const rootParentCommentId = parentComment?.parentCommentId
     const targetParentCommentId = rootParentCommentId ?? parentCommentId
+    const shouldMention = !!rootParentCommentId && parentComment?.userId
 
     const comment = db.comment.create({
       data: {
@@ -119,7 +121,7 @@ class CommentService {
         text,
         userId,
         parentCommentId: targetParentCommentId,
-        mentionUserId: parentComment?.userId,
+        mentionUserId: shouldMention ? parentComment?.userId : null,
       },
       include: {
         user: true,

@@ -58,6 +58,7 @@ export interface Comment {
   likesCount: number
   subcommentsCount: number
   user: User
+  mentionUser: User | null
   subcomments?: Comment[]
 }
 

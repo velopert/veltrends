@@ -22,5 +22,6 @@ const List = styled.div`
   flex-direction: column;
   padding-top: 12px;
   gap: 12px;
+  display: flex;
 `
 export default SubcommentList
