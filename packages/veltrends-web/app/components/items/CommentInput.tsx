@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
+import { useCommentInputStore } from '~/stores/useCommentInputStore'
 
 function CommentInput() {
-  return <DummyInput>댓글을 입력하세요</DummyInput>
+  const open = useCommentInputStore((store) => store.open)
+  return <DummyInput onClick={open}>댓글을 입력하세요</DummyInput>
 }
 
 const DummyInput = styled.div`

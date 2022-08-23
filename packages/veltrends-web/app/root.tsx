@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Dialog from './components/system/Dialog'
 import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
@@ -61,6 +62,8 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 })
 
+const queryClient = new QueryClient()
+
 export default function App() {
   const data = useLoaderData<User | null>()
 
@@ -73,13 +76,15 @@ export default function App() {
       </head>
       <body>
         <GlobalStyle />
-        <DialogProvider>
-          <UserContext.Provider value={data}>
-            <ItemOverrideProvider>
-              <Outlet />
-            </ItemOverrideProvider>
-          </UserContext.Provider>
-        </DialogProvider>
+        <QueryClientProvider client={queryClient}>
+          <DialogProvider>
+            <UserContext.Provider value={data}>
+              <ItemOverrideProvider>
+                <Outlet />
+              </ItemOverrideProvider>
+            </UserContext.Provider>
+          </DialogProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -54,3 +54,17 @@ export async function getComments(itemId: number) {
   const response = await client.get<Comment[]>(`/api/items/${itemId}/comments`)
   return response.data
 }
+
+export async function createComment({
+  itemId,
+  parentCommentId,
+}: {
+  itemId: number
+  parentCommentId?: number
+}) {
+  const response = await client.post<Comment>(`/api/items/${itemId}`, {
+    itemId,
+    parentCommentId,
+  })
+  return response.data
+}
