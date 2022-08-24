@@ -27,6 +27,7 @@ class CommentService {
     return this.groupSubcomments(this.redact(comments))
   }
 
+  /** @todo: rename to serialize */
   redact(comments: Comment[]) {
     return comments.map((c) => {
       if (!c.deletedAt)
@@ -125,7 +126,7 @@ class CommentService {
     const targetParentCommentId = rootParentCommentId ?? parentCommentId
     const shouldMention = !!rootParentCommentId && parentComment?.userId
 
-    const comment = db.comment.create({
+    const comment = await db.comment.create({
       data: {
         itemId,
         text,
@@ -158,7 +159,7 @@ class CommentService {
 
     await this.countAndSyncComments(itemId)
 
-    return { ...comment, subcomments: [] }
+    return { ...comment, isDeleted: false, subcomments: [] }
   }
   async likeComment({ userId, commentId }: CommentParams) {
     console.log({

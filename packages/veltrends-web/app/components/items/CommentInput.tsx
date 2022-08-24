@@ -1,10 +1,23 @@
 import styled from 'styled-components'
+import { useUser } from '~/contexts/UserContext'
+import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { colors } from '~/lib/colors'
 import { useCommentInputStore } from '~/stores/useCommentInputStore'
 
 function CommentInput() {
+  const user = useUser()
+  const openLoginDialog = useOpenLoginDialog()
   const open = useCommentInputStore((store) => store.open)
-  return <DummyInput onClick={open}>댓글을 입력하세요</DummyInput>
+
+  const onClick = () => {
+    if (!user) {
+      openLoginDialog('comment')
+      return
+    }
+
+    open()
+  }
+  return <DummyInput onClick={onClick}>댓글을 입력하세요</DummyInput>
 }
 
 const DummyInput = styled.div`

@@ -3,13 +3,19 @@ import styled from 'styled-components'
 
 interface Props {
   visible: boolean
+  onClick?(): void
 }
 
-function Overlay({ visible }: Props) {
+function Overlay({ visible, onClick }: Props) {
   return (
     <AnimatePresence initial={false}>
       {visible && (
-        <Fill initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}></Fill>
+        <Fill
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClick}
+        ></Fill>
       )}
     </AnimatePresence>
   )
