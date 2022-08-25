@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { type Comment } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
+import { useCommentInputStore } from '~/stores/useCommentInputStore'
 import LikeButton from '../system/LikeButton'
 import { SpeechBubble } from '../vectors'
 import SubcommentList from './SubcommentList'
@@ -13,6 +14,11 @@ interface Props {
 
 function CommentItem({ comment, isSubcomment }: Props) {
   const { user, text, createdAt, subcomments, likesCount, mentionUser, isDeleted } = comment
+  const { open } = useCommentInputStore()
+
+  const onReply = () => {
+    open(comment.id)
+  }
 
   const dateDistance = useDateDistance(createdAt)
 
@@ -39,7 +45,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
           <LikeButton size="small" />
           <LikeCount>{likesCount === 0 ? '' : likesCount.toLocaleString()}</LikeCount>
         </LikeBlock>
-        <ReplyButton>
+        <ReplyButton onClick={onReply}>
           <SpeechBubble />
           답글 달기
         </ReplyButton>

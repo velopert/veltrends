@@ -10,11 +10,12 @@ import LoadingIndicator from '../system/LoadingIndicator'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { type Comment } from '~/lib/api/types'
+import produce from 'immer'
 
 interface Props {}
 
 function CommentInputOverlay() {
-  const { visible, close } = useCommentInputStore()
+  const { visible, close, parentCommentId } = useCommentInputStore()
   const [text, setText] = useState('')
   const itemId = useItemId()
   const queryClient = useQueryClient()
@@ -28,14 +29,28 @@ function CommentInputOverlay() {
   const { mutate, isLoading } = useCreateCommentMutation({
     onSuccess(data) {
       if (!itemId) return
+
       queryClient.setQueryData(
         useCommentsQuery.extractKey(itemId),
-        (prevComments: Comment[] | undefined) => (prevComments ? [...prevComments, data] : [data]),
+        (prevComments: Comment[] | undefined) => {
+          if (!prevComments) return
+          if (parentCommentId) {
+            return produce(prevComments, (draft) => {
+              const rootComment =
+                draft.find((c) => c.id === parentCommentId) ?? // first find from 0 level comments
+                draft.find((c) => c.subcomments?.find((sc) => sc.id === parentCommentId)) // next, find from subcomments
+              rootComment?.subcomments?.push(data)
+            })
+          } else {
+            return prevComments.concat(data)
+          }
+        },
       )
-      queryClient.invalidateQueries(useCommentsQuery.extractKey(itemId))
+
+      // queryClient.invalidateQueries(useCommentsQuery.extractKey(itemId))
       setTimeout(() => {
         scrollToCommentId(data.id)
-      }, 50)
+      }, 0)
       close()
     },
   })
@@ -49,6 +64,7 @@ function CommentInputOverlay() {
   const onClick = () => {
     if (!itemId) return
     mutate({
+      parentCommentId: parentCommentId ?? undefined,
       itemId,
       text,
     })

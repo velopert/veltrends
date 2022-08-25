@@ -27,6 +27,7 @@ interface ErrorPayloads {
   RefreshTokenError: undefined
   NotFoundError: undefined
   ForbiddenError: undefined
+  InvalidURLError: undefined
 }
 
 const statusCodeMap: Record<ErrorName, ErrorInfo> = {

@@ -1,6 +1,6 @@
 import { Comment } from '@prisma/client'
-import AppError from '../lib/AppError.js'
 import db from '../lib/db.js'
+import AppError from '../lib/NextAppError.js'
 
 class CommentService {
   private static instance: CommentService
@@ -86,7 +86,7 @@ class CommentService {
       },
     })
     if (!comment || comment.deletedAt) {
-      throw new AppError('NotFoundError')
+      throw new AppError('NotFound')
     }
     if (withSubcomments) {
       const subcomments = await this.getSubcomments(commentId)
@@ -118,13 +118,20 @@ class CommentService {
     parentCommentId,
     userId,
   }: CreateCommentParams) {
+    if (text.length > 300 || text.length === 0) {
+      throw new AppError('BadRequest', {
+        message: 'text is invalid',
+      })
+    }
+
     const parentComment = parentCommentId
       ? await this.getComment(parentCommentId)
       : null
 
     const rootParentCommentId = parentComment?.parentCommentId
     const targetParentCommentId = rootParentCommentId ?? parentCommentId
-    const shouldMention = !!rootParentCommentId && parentComment?.userId
+    const shouldMention =
+      !!rootParentCommentId && parentComment?.userId !== userId
 
     const comment = await db.comment.create({
       data: {
@@ -231,7 +238,7 @@ class CommentService {
   async deleteComment({ userId, commentId }: CommentParams) {
     const comment = await this.getComment(commentId)
     if (comment.userId !== userId) {
-      throw new AppError('ForbiddenError')
+      throw new AppError('Forbidden')
     }
     await db.comment.update({
       where: {
@@ -245,7 +252,7 @@ class CommentService {
   async updateComment({ userId, commentId, text }: UpdateCommentParams) {
     const comment = await this.getComment(commentId)
     if (comment.userId !== userId) {
-      throw new AppError('ForbiddenError')
+      throw new AppError('Forbidden')
     }
     await db.comment.update({
       where: {
