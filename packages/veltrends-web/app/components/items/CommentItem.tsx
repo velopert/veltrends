@@ -25,7 +25,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
     )
   }
   return (
-    <Block>
+    <Block data-comment-id={comment.id}>
       <CommentHead>
         <Username>{user.username}</Username>
         <Time>{dateDistance}</Time>
@@ -69,7 +69,7 @@ const Time = styled.div`
   color: ${colors.gray2};
   font-size: 12px;
   line-height: 1.5;
-  margin-left: 4px;
+  margin-left: 8px;
 `
 
 const Text = styled.p`

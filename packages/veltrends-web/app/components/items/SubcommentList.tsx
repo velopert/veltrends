@@ -20,8 +20,8 @@ function SubcommentList({ comments }: Props) {
 const List = styled.div`
   padding-left: 24px;
   flex-direction: column;
-  padding-top: 12px;
-  gap: 12px;
+  padding-top: 24px;
+  gap: 24px;
   display: flex;
 `
 export default SubcommentList

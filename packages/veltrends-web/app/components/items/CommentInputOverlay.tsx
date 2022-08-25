@@ -3,20 +3,39 @@ import styled from 'styled-components'
 import { colors } from '~/lib/colors'
 import { useCommentInputStore } from '~/stores/useCommentInputStore'
 import Overlay from '../system/Overlay'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useItemId } from '~/hooks/useItemId'
 import { useCreateCommentMutation } from '~/hooks/mutation/useCreateCommentMutation'
 import LoadingIndicator from '../system/LoadingIndicator'
+import { useQueryClient } from '@tanstack/react-query'
+import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
+import { type Comment } from '~/lib/api/types'
+
+interface Props {}
 
 function CommentInputOverlay() {
-  const { visible, close, parentCommentId } = useCommentInputStore()
+  const { visible, close } = useCommentInputStore()
   const [text, setText] = useState('')
   const itemId = useItemId()
+  const queryClient = useQueryClient()
+
+  const scrollToCommentId = (commentId: number) => {
+    const comment = document.body.querySelector<HTMLDivElement>(`[data-comment-id="${commentId}"]`)
+    if (!comment) return
+    comment.scrollIntoView()
+  }
 
   const { mutate, isLoading } = useCreateCommentMutation({
     onSuccess(data) {
-      // @todo: do sth with data
-      console.log('hello world')
+      if (!itemId) return
+      queryClient.setQueryData(
+        useCommentsQuery.extractKey(itemId),
+        (prevComments: Comment[] | undefined) => (prevComments ? [...prevComments, data] : [data]),
+      )
+      queryClient.invalidateQueries(useCommentsQuery.extractKey(itemId))
+      setTimeout(() => {
+        scrollToCommentId(data.id)
+      }, 50)
       close()
     },
   })
@@ -49,6 +68,7 @@ function CommentInputOverlay() {
             }}
           >
             <Input
+              autoFocus
               placeholder="댓글을 입력하세요."
               onChange={(e) => {
                 setText(e.target.value)
