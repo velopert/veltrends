@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { type Comment } from '~/lib/api/types'
 import produce from 'immer'
+import { useDialog } from '~/contexts/DialogContext'
 
 interface Props {}
 
@@ -53,6 +54,12 @@ function CommentInputOverlay() {
       }, 0)
       close()
     },
+    onError() {
+      open({
+        title: '오류',
+        description: '댓글 작성 실패',
+      })
+    },
   })
 
   useEffect(() => {
@@ -61,8 +68,17 @@ function CommentInputOverlay() {
     }
   }, [visible])
 
+  const { open } = useDialog()
+
   const onClick = () => {
     if (!itemId) return
+    if (text.length === 0) {
+      open({
+        title: '오류',
+        description: '댓글을 입력하지 않으셨습니다.',
+      })
+      return
+    }
     mutate({
       parentCommentId: parentCommentId ?? undefined,
       itemId,

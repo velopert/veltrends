@@ -13,7 +13,6 @@ import Dialog from './components/system/Dialog'
 import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
 import { DialogProvider } from './contexts/DialogContext'
-import { ItemOverrideProvider } from './contexts/ItemOverrideContext'
 import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
 import { getMyAccount } from './lib/api/auth'
@@ -79,9 +78,7 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <DialogProvider>
             <UserContext.Provider value={data}>
-              <ItemOverrideProvider>
-                <Outlet />
-              </ItemOverrideProvider>
+              <Outlet />
             </UserContext.Provider>
           </DialogProvider>
         </QueryClientProvider>

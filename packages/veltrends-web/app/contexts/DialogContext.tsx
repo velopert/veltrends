@@ -10,7 +10,8 @@ interface DialogConfig {
   description: string
   confirmText?: string
   onClose?(): void
-  onConfirm(): void
+  onConfirm?(): void
+  mode?: 'OK' | 'YESNO'
 }
 
 const DialogContext = createContext<DialogContextValue | null>(null)
@@ -34,7 +35,7 @@ export function DialogProvider({ children }: Props) {
   }, [config])
 
   const confirm = useCallback(() => {
-    config?.onConfirm()
+    config?.onConfirm?.()
     setVisible(false)
   }, [config])
 
@@ -49,6 +50,7 @@ export function DialogProvider({ children }: Props) {
         confirmText={config?.confirmText}
         onClose={close}
         onConfirm={confirm}
+        mode={config?.mode ?? 'OK'}
       />
     </DialogContext.Provider>
   )

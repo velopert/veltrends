@@ -10,17 +10,28 @@ interface Props {
   confirmText?: string
   onClose(): void
   onConfirm(): void
+  mode?: 'OK' | 'YESNO'
 }
 
-function Dialog({ visible, title, description, confirmText, onClose, onConfirm }: Props) {
+function Dialog({
+  visible,
+  title,
+  description,
+  confirmText,
+  onClose,
+  onConfirm,
+  mode = 'OK',
+}: Props) {
   return (
     <StyledModal visible={visible}>
       <Title>{title}</Title>
       <Description>{description}</Description>
       <Footer>
-        <Button variant="secondary" onClick={onClose}>
-          닫기
-        </Button>
+        {mode === 'YESNO' && (
+          <Button variant="secondary" onClick={onClose}>
+            닫기
+          </Button>
+        )}
         <Button onClick={onConfirm}>{confirmText ?? '확인'}</Button>
       </Footer>
     </StyledModal>

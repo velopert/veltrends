@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
-import { useItemOverrideById } from '~/contexts/ItemOverrideContext'
+import { useItemOverrideById } from '~/stores/useItemOverrideStore'
 import { useUser } from '~/contexts/UserContext'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
