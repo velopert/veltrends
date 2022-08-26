@@ -1,5 +1,11 @@
 import { client } from '../client'
-import { type Item, type GetItemsResult, type LikeItemResult, type Comment } from './types'
+import {
+  type Item,
+  type GetItemsResult,
+  type LikeItemResult,
+  type Comment,
+  LikeCommentResult,
+} from './types'
 import qs from 'qs'
 
 export async function createItem(params: CreateItemParams) {
@@ -69,5 +75,12 @@ export async function createComment({
     parentCommentId,
     text,
   })
+  return response.data
+}
+
+export async function likeComment({ itemId, commentId }: { itemId: number; commentId: number }) {
+  const response = await client.post<LikeCommentResult>(
+    `/api/items/${itemId}/comments/${commentId}/likes`,
+  )
   return response.data
 }

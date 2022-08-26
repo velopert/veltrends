@@ -134,7 +134,7 @@ model Comment {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  likesCount       Int @default(0)
+  likes            Int @default(0)
   subcommentsCount Int @default(0)
 
   mentionUserId   Int?

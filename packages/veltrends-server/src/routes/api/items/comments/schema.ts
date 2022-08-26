@@ -23,10 +23,12 @@ export let CommentSchema = Type.Object({
   text: Type.String(),
   createdAt: Type.String(),
   updatedAt: Type.String(),
-  likesCount: Type.Number(),
+  likes: Type.Number(),
   subcommentsCount: Type.Number(),
   user: UserSchema,
   mentionUser: Type.Optional(Nullable(UserSchema)),
+  isDeleted: Type.Boolean(),
+  isLiked: Type.Boolean(),
 })
 
 const CommentLikeSchema = Type.Object({
@@ -39,12 +41,13 @@ CommentSchema = Type.Object({
   text: Type.String(),
   createdAt: Type.String(),
   updatedAt: Type.String(),
-  likesCount: Type.Number(),
+  likes: Type.Number(),
   subcommentsCount: Type.Number(),
   user: UserSchema,
   mentionUser: Type.Optional(Nullable(UserSchema)),
   subcomments: Type.Optional(Type.Array(CommentSchema)),
   isDeleted: Type.Boolean(),
+  isLiked: Type.Boolean(),
 })
 
 export const CommentsRouteSchema = createRouteSchema({

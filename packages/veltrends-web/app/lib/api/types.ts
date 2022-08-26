@@ -60,10 +60,16 @@ export interface Comment {
   user: User
   mentionUser: User | null
   subcomments?: Comment[]
+  isLiked: boolean
   isDeleted: boolean
 }
 
 export interface User {
   id: number
   username: string
+}
+
+export interface LikeCommentResult {
+  id: number
+  likes: number
 }

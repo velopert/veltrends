@@ -10,7 +10,10 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
     '/',
     { schema: CommentsRouteSchema.GetComments },
     async (request) => {
-      return commentService.getComments(request.params.id)
+      return commentService.getComments({
+        itemId: request.params.id,
+        userId: request.user?.id,
+      })
     },
   )
 
@@ -20,7 +23,11 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
       schema: CommentsRouteSchema.GetComment,
     },
     async (request) => {
-      return commentService.getComment(request.params.commentId, true)
+      return commentService.getComment({
+        commentId: request.params.commentId,
+        userId: request.user?.id,
+        withSubcomments: true,
+      })
     },
   )
 
@@ -28,7 +35,10 @@ export const commentsRoute: FastifyPluginAsync = async (fastify) => {
     '/:commentId/subcomments',
     { schema: CommentsRouteSchema.GetSubcomments },
     async (request) => {
-      return commentService.getSubcomments(request.params.commentId)
+      return commentService.getSubcomments({
+        commentId: request.params.commentId,
+        userId: request.user?.id,
+      })
     },
   )
 
