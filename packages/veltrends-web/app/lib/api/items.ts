@@ -4,7 +4,8 @@ import {
   type GetItemsResult,
   type LikeItemResult,
   type Comment,
-  LikeCommentResult,
+  type LikeCommentResult,
+  type UnlikeCommentResult,
 } from './types'
 import qs from 'qs'
 
@@ -78,9 +79,39 @@ export async function createComment({
   return response.data
 }
 
-export async function likeComment({ itemId, commentId }: { itemId: number; commentId: number }) {
+export async function likeComment({
+  itemId,
+  commentId,
+  controller,
+}: {
+  itemId: number
+  commentId: number
+  controller?: AbortController
+}) {
   const response = await client.post<LikeCommentResult>(
     `/api/items/${itemId}/comments/${commentId}/likes`,
+    {},
+    {
+      signal: controller?.signal,
+    },
+  )
+  return response.data
+}
+
+export async function unlikeComment({
+  itemId,
+  commentId,
+  controller,
+}: {
+  itemId: number
+  commentId: number
+  controller?: AbortController
+}) {
+  const response = await client.delete<UnlikeCommentResult>(
+    `/api/items/${itemId}/comments/${commentId}/likes`,
+    {
+      signal: controller?.signal,
+    },
   )
   return response.data
 }

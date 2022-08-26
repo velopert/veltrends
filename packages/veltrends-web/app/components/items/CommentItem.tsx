@@ -1,8 +1,13 @@
 import styled from 'styled-components'
+import { useUser } from '~/contexts/UserContext'
+import { useCommentLike } from '~/hooks/useCommentLike'
 import { useDateDistance } from '~/hooks/useDateDistance'
+import { useItemId } from '~/hooks/useItemId'
+import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { type Comment } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import { useCommentInputStore } from '~/stores/useCommentInputStore'
+import { useCommentLikeById } from '~/stores/useCommentLikesStore'
 import LikeButton from '../system/LikeButton'
 import { SpeechBubble } from '../vectors'
 import SubcommentList from './SubcommentList'
@@ -13,8 +18,38 @@ interface Props {
 }
 
 function CommentItem({ comment, isSubcomment }: Props) {
-  const { user, text, createdAt, subcomments, likesCount, mentionUser, isDeleted } = comment
+  const { user, text, createdAt, subcomments, mentionUser, isDeleted } = comment
+  const itemId = useItemId()
+  const commentLike = useCommentLikeById(comment.id)
+  const { like, unlike } = useCommentLike()
   const { open } = useCommentInputStore()
+  const openLoginDialog = useOpenLoginDialog()
+  const currentUser = useUser()
+
+  const likes = commentLike?.likes ?? comment.likes
+  const isLiked = commentLike?.isLiked ?? comment.isLiked
+
+  const toggleLike = () => {
+    if (!itemId) return
+    if (!currentUser) {
+      openLoginDialog('commentLike')
+      return
+    }
+
+    if (isLiked) {
+      unlike({
+        commentId: comment.id,
+        itemId,
+        prevLikes: likes,
+      })
+    } else {
+      like({
+        commentId: comment.id,
+        itemId,
+        prevLikes: likes,
+      })
+    }
+  }
 
   const onReply = () => {
     open(comment.id)
@@ -42,8 +77,8 @@ function CommentItem({ comment, isSubcomment }: Props) {
       </Text>
       <CommentFooter>
         <LikeBlock>
-          <LikeButton size="small" />
-          <LikeCount>{likesCount === 0 ? '' : likesCount.toLocaleString()}</LikeCount>
+          <LikeButton size="small" isLiked={isLiked} onClick={toggleLike} />
+          <LikeCount>{likes === 0 ? '' : likes.toLocaleString()}</LikeCount>
         </LikeBlock>
         <ReplyButton onClick={onReply}>
           <SpeechBubble />

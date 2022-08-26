@@ -55,7 +55,7 @@ export interface Comment {
   text: string
   createdAt: string
   updatedAt: string
-  likesCount: number
+  likes: number
   subcommentsCount: number
   user: User
   mentionUser: User | null
@@ -73,3 +73,5 @@ export interface LikeCommentResult {
   id: number
   likes: number
 }
+
+export type UnlikeCommentResult = LikeCommentResult
