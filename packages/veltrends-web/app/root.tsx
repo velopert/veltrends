@@ -10,6 +10,7 @@ import {
 } from '@remix-run/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Dialog from './components/system/Dialog'
+import GlobalBottomSheetModal from './components/system/GlobalBottomSheetModal'
 import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
 import { DialogProvider } from './contexts/DialogContext'
@@ -81,6 +82,7 @@ export default function App() {
               <Outlet />
             </UserContext.Provider>
           </DialogProvider>
+          <GlobalBottomSheetModal />
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

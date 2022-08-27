@@ -1,6 +1,6 @@
 import create from 'zustand'
 
-type CommentInputStore = {
+interface CommentInputStore {
   visible: boolean
   parentCommentId: number | null
   open(parentCommentId?: number | null): void

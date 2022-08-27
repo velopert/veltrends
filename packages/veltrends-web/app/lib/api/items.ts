@@ -115,3 +115,8 @@ export async function unlikeComment({
   )
   return response.data
 }
+
+export async function deleteComment({ itemId, commentId }: { itemId: number; commentId: number }) {
+  const response = await client.delete(`/api/items/${itemId}/comments/${commentId}`)
+  return response.data
+}

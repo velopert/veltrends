@@ -15,6 +15,12 @@ const GlobalStyle = createGlobalStyle`
   button, input {
     font-family: inherit;
   }
+  button {
+    padding: 0;
+    background: none;
+    border: none;
+    outline: none;
+  }
 `
 
 export default GlobalStyle

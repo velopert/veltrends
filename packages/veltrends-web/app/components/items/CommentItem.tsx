@@ -2,14 +2,16 @@ import styled from 'styled-components'
 import { useUser } from '~/contexts/UserContext'
 import { useCommentLike } from '~/hooks/useCommentLike'
 import { useDateDistance } from '~/hooks/useDateDistance'
+import { useDeleteComment } from '~/hooks/useDeleteComment'
 import { useItemId } from '~/hooks/useItemId'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { type Comment } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
+import { useBottomSheetModalStore } from '~/stores/useBottomSheetModalStore'
 import { useCommentInputStore } from '~/stores/useCommentInputStore'
 import { useCommentLikeById } from '~/stores/useCommentLikesStore'
 import LikeButton from '../system/LikeButton'
-import { SpeechBubble } from '../vectors'
+import { SpeechBubble, MoreVert } from '../vectors'
 import SubcommentList from './SubcommentList'
 
 interface Props {
@@ -25,6 +27,24 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const { open } = useCommentInputStore()
   const openLoginDialog = useOpenLoginDialog()
   const currentUser = useUser()
+  const isMyComment = comment.user.id === currentUser?.id
+  const openBottomSheetModal = useBottomSheetModalStore((store) => store.open)
+  const deleteComment = useDeleteComment()
+
+  const onClickMore = () => {
+    openBottomSheetModal([
+      {
+        name: '수정',
+        onClick: () => {},
+      },
+      {
+        name: '삭제',
+        onClick: () => {
+          deleteComment(comment.id)
+        },
+      },
+    ])
+  }
 
   const likes = commentLike?.likes ?? comment.likes
   const isLiked = commentLike?.isLiked ?? comment.isLiked
@@ -68,8 +88,15 @@ function CommentItem({ comment, isSubcomment }: Props) {
   return (
     <Block data-comment-id={comment.id}>
       <CommentHead>
-        <Username>{user.username}</Username>
-        <Time>{dateDistance}</Time>
+        <LeftGroup>
+          <Username>{user.username}</Username>
+          <Time>{dateDistance}</Time>
+        </LeftGroup>
+        {isMyComment && (
+          <MoreButton onClick={onClickMore}>
+            <MoreVert />
+          </MoreButton>
+        )}
       </CommentHead>
       <Text>
         {mentionUser ? <Mention>@{mentionUser.username}</Mention> : null}
@@ -97,7 +124,26 @@ const Block = styled.div`
 
 const CommentHead = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const LeftGroup = styled.div`
+  display: flex;
   align-items: flex-end;
+`
+
+const MoreButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: ${colors.gray5};
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 `
 
 const Username = styled.div`

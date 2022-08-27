@@ -227,7 +227,7 @@ class CommentService {
 
     await this.countAndSyncComments(itemId)
 
-    return { ...comment, isDeleted: false, subcomments: [] }
+    return { ...comment, isDeleted: false, subcomments: [], isLiked: false }
   }
   async likeComment({ userId, commentId }: CommentParams) {
     console.log({
