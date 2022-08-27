@@ -24,7 +24,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const itemId = useItemId()
   const commentLike = useCommentLikeById(comment.id)
   const { like, unlike } = useCommentLike()
-  const { open } = useCommentInputStore()
+  const { write, edit } = useCommentInputStore()
   const openLoginDialog = useOpenLoginDialog()
   const currentUser = useUser()
   const isMyComment = comment.user.id === currentUser?.id
@@ -35,7 +35,9 @@ function CommentItem({ comment, isSubcomment }: Props) {
     openBottomSheetModal([
       {
         name: '수정',
-        onClick: () => {},
+        onClick: () => {
+          edit(comment.id, text)
+        },
       },
       {
         name: '삭제',
@@ -72,7 +74,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
   }
 
   const onReply = () => {
-    open(comment.id)
+    write(comment.id)
   }
 
   const dateDistance = useDateDistance(createdAt)

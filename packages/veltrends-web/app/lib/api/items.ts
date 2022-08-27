@@ -120,3 +120,19 @@ export async function deleteComment({ itemId, commentId }: { itemId: number; com
   const response = await client.delete(`/api/items/${itemId}/comments/${commentId}`)
   return response.data
 }
+
+export async function editComment({
+  itemId,
+  text,
+  commentId,
+}: {
+  itemId: number
+  commentId?: number
+  text: string
+}) {
+  const response = await client.patch<Comment>(`/api/items/${itemId}/comments/${commentId}`, {
+    itemId,
+    text,
+  })
+  return response.data
+}

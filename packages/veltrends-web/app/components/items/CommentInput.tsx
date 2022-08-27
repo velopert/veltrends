@@ -7,7 +7,7 @@ import { useCommentInputStore } from '~/stores/useCommentInputStore'
 function CommentInput() {
   const user = useUser()
   const openLoginDialog = useOpenLoginDialog()
-  const open = useCommentInputStore((store) => store.open)
+  const write = useCommentInputStore((store) => store.write)
 
   const onClick = () => {
     if (!user) {
@@ -15,7 +15,7 @@ function CommentInput() {
       return
     }
 
-    open()
+    write()
   }
   return <DummyInput onClick={onClick}>댓글을 입력하세요</DummyInput>
 }

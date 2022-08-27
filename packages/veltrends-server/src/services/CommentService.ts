@@ -171,6 +171,7 @@ class CommentService {
     return subcomments.map((sc) => ({
       ...sc,
       isLiked: !!commentLikedMap[sc.id],
+      isDeleted: false,
     }))
   }
   async createComment({

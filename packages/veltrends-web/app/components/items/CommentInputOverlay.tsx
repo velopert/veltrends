@@ -7,16 +7,17 @@ import { useCallback, useEffect, useState } from 'react'
 import { useItemId } from '~/hooks/useItemId'
 import { useCreateCommentMutation } from '~/hooks/mutation/useCreateCommentMutation'
 import LoadingIndicator from '../system/LoadingIndicator'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { type Comment } from '~/lib/api/types'
 import produce from 'immer'
 import { useDialog } from '~/contexts/DialogContext'
+import { editComment } from '~/lib/api/items'
 
 interface Props {}
 
 function CommentInputOverlay() {
-  const { visible, close, parentCommentId } = useCommentInputStore()
+  const { visible, close, parentCommentId, commentId, defaultText } = useCommentInputStore()
   const [text, setText] = useState('')
   const itemId = useItemId()
   const queryClient = useQueryClient()
@@ -27,7 +28,7 @@ function CommentInputOverlay() {
     comment.scrollIntoView()
   }
 
-  const { mutate, isLoading } = useCreateCommentMutation({
+  const { mutate: write, isLoading: isLoadingWrite } = useCreateCommentMutation({
     onSuccess(data) {
       if (!itemId) return
 
@@ -62,6 +63,22 @@ function CommentInputOverlay() {
     },
   })
 
+  const { mutate: edit, isLoading: isLoadingEdit } = useMutation(editComment, {
+    onSuccess() {
+      if (!itemId) return
+      queryClient.invalidateQueries(useCommentsQuery.extractKey(itemId))
+      close()
+    },
+    onError() {
+      open({
+        title: '오류',
+        description: '댓글 수정 실패',
+      })
+    },
+  })
+
+  const isLoading = isLoadingWrite || isLoadingEdit
+
   useEffect(() => {
     if (visible) {
       setText('')
@@ -79,12 +96,29 @@ function CommentInputOverlay() {
       })
       return
     }
-    mutate({
+    if (commentId) {
+      edit({
+        itemId,
+        commentId,
+        text,
+      })
+      return
+    }
+
+    write({
       parentCommentId: parentCommentId ?? undefined,
       itemId,
       text,
     })
   }
+
+  const buttonText = commentId ? '수정' : '등록'
+
+  useEffect(() => {
+    if (defaultText !== '') {
+      setText(defaultText)
+    }
+  }, [defaultText])
 
   return (
     <>
@@ -108,7 +142,7 @@ function CommentInputOverlay() {
               value={text}
             />
             <TransparentButton onClick={onClick} disabled={isLoading}>
-              {isLoading ? <LoadingIndicator /> : '등록'}
+              {isLoadingWrite ? <LoadingIndicator /> : buttonText}
             </TransparentButton>
           </Footer>
         )}
