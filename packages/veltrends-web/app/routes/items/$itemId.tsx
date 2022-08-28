@@ -1,13 +1,17 @@
 import { json, LoaderFunction } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData, useNavigate, useParams } from '@remix-run/react'
 import { useState } from 'react'
+import MoreVertButton from '~/components/base/MoreVertButton'
 import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 import CommentList from '~/components/items/CommentList'
 import ItemViewer from '~/components/items/ItemViewer'
 import BasicLayout from '~/components/layouts/BasicLayout'
+import { useDialog } from '~/contexts/DialogContext'
+import { useUser } from '~/contexts/UserContext'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
-import { getComments, getItem } from '~/lib/api/items'
+import { deleteItem, getComments, getItem } from '~/lib/api/items'
 import { type Comment, type Item as ItemType } from '~/lib/api/types'
+import { useBottomSheetModalStore } from '~/stores/useBottomSheetModalStore'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // @todo: validate itemId
@@ -27,13 +31,50 @@ interface ItemLoaderData {
 
 function Item() {
   const loaderData = useLoaderData<ItemLoaderData>()
+  const navigate = useNavigate()
+
+  const { open: openBottomSheetModal } = useBottomSheetModalStore()
+  const { open: openDialog } = useDialog()
+
+  const user = useUser()
+  const isMyItem = user?.id === loaderData.item.user.id
 
   const { data: comments } = useCommentsQuery(loaderData.item.id, {
     initialData: loaderData.comments,
   })
 
+  const onClickMore = () => {
+    openBottomSheetModal([
+      {
+        name: '수정',
+        onClick() {},
+      },
+      {
+        name: '삭제',
+        onClick() {
+          openDialog({
+            title: '삭제',
+            description: '정말로 삭제하시겠습니까?',
+            mode: 'YESNO',
+            cancelText: '취소',
+            confirmText: '삭제',
+            async onConfirm() {
+              /** @todo: show fullscreen spinner on loading */
+              await deleteItem(loaderData.item.id)
+              navigate('/')
+            },
+          })
+        },
+      },
+    ])
+  }
+
   return (
-    <BasicLayout hasBackButton title={null}>
+    <BasicLayout
+      hasBackButton
+      title={null}
+      headerRight={isMyItem && <MoreVertButton onClick={onClickMore} />}
+    >
       <ItemViewer item={loaderData.item} />
       {/* `comments` is always valid due to SSR */}
       <CommentList comments={comments!} />

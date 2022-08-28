@@ -20,6 +20,7 @@ const variantStyles = {
     background: ${colors.secondary};
     color: ${colors.primary};
   `,
+  /** @todo: destructive */
 }
 
 const StyledButton = styled.button<ButtonProps>`

@@ -117,7 +117,7 @@ model ItemStats {
   clicks        Int  @default(0)
   score         Int  @default(0)
   commentsCount Int  @default(0)
-  item          Item @relation(fields: [itemId], references: [id])
+  item          Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime @default(now()) @updatedAt
 }

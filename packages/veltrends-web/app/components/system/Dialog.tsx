@@ -7,6 +7,7 @@ interface Props {
   visible: boolean
   title: string
   description: string
+  cancelText?: string
   confirmText?: string
   onClose(): void
   onConfirm(): void
@@ -17,6 +18,7 @@ function Dialog({
   visible,
   title,
   description,
+  cancelText,
   confirmText,
   onClose,
   onConfirm,
@@ -29,7 +31,7 @@ function Dialog({
       <Footer>
         {mode === 'YESNO' && (
           <Button variant="secondary" onClick={onClose}>
-            닫기
+            {cancelText ?? '닫기'}
           </Button>
         )}
         <Button onClick={onConfirm}>{confirmText ?? '확인'}</Button>

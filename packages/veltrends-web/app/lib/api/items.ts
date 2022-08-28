@@ -57,6 +57,10 @@ interface CreateItemParams {
   body: string
 }
 
+export async function deleteItem(itemId: number) {
+  return client.delete(`/api/items/${itemId}`)
+}
+
 export async function getComments(itemId: number) {
   const response = await client.get<Comment[]>(`/api/items/${itemId}/comments`)
   return response.data

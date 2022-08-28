@@ -13,7 +13,7 @@ function Header({ title = <Logo />, headerLeft, headerRight }: Props) {
     <Block>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}
       <Title>{title}</Title>
-      {headerRight && <HeaderSide position="right">{headerLeft}</HeaderSide>}
+      {headerRight && <HeaderSide position="right">{headerRight}</HeaderSide>}
     </Block>
   )
 }
