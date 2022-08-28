@@ -41,15 +41,21 @@ function ItemViewer({ item }: Props) {
 
   return (
     <Block>
-      {thumbnail ? <Thumbnail src={thumbnail} /> : null}
+      {thumbnail ? (
+        <a href={item.link}>
+          <Thumbnail src={thumbnail} />
+        </a>
+      ) : null}
       <Content>
-        <Publisher>
-          {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
-          {author ? `${author} · ` : ''}
-          {publisher.name}
-        </Publisher>
-        <Title>{title}</Title>
-        <Body>{body}</Body>
+        <a href={item.link}>
+          <Publisher>
+            {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+            {author ? `${author} · ` : ''}
+            {publisher.name}
+          </Publisher>
+          <Title>{title}</Title>
+          <Body>{body}</Body>
+        </a>
         <AnimatePresence initial={false}>
           {likes === 0 ? null : (
             <LikesCount
@@ -76,6 +82,9 @@ function ItemViewer({ item }: Props) {
 const Block = styled.div`
   display: flex;
   flex-direction: column;
+  & > a {
+    display: block;
+  }
 `
 const Thumbnail = styled.img`
   width: 100%;
@@ -87,6 +96,11 @@ const Thumbnail = styled.img`
 const Content = styled.div`
   padding: 16px;
   border-bottom: 1px solid ${colors.gray0};
+  a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
 `
 
 const Publisher = styled.div`
