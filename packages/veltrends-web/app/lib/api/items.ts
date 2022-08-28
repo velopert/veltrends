@@ -51,6 +51,23 @@ export async function unlikeItem(itemId: number, controller?: AbortController) {
   return response.data
 }
 
+export async function updateItem({
+  itemId,
+  title,
+  body,
+}: {
+  itemId: number
+  title: string
+  body: string
+}) {
+  const response = await client.patch<Item>(`/api/items/${itemId}`, {
+    title,
+    body,
+    tags: [],
+  })
+  return response.data
+}
+
 interface CreateItemParams {
   link: string
   title: string

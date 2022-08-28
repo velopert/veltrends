@@ -3,7 +3,7 @@ import { colors } from '~/lib/colors'
 import Button from '../system/Button'
 
 interface Props {
-  description: string
+  description?: string
   children: React.ReactNode
   buttonText: string
   onSubmit(e: React.FormEvent<HTMLFormElement>): void
@@ -12,7 +12,7 @@ interface Props {
 function WriteFormTemplate({ description, children, buttonText, onSubmit }: Props) {
   return (
     <StyledForm onSubmit={onSubmit}>
-      <h3>{description}</h3>
+      {description && <h3>{description}</h3>}
       <Content>{children}</Content>
       <Button>{buttonText}</Button>
     </StyledForm>

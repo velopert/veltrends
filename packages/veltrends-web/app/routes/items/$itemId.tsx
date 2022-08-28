@@ -1,6 +1,5 @@
-import { json, LoaderFunction } from '@remix-run/node'
-import { useLoaderData, useNavigate, useParams } from '@remix-run/react'
-import { useState } from 'react'
+import { json, type LoaderFunction } from '@remix-run/node'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import MoreVertButton from '~/components/base/MoreVertButton'
 import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 import CommentList from '~/components/items/CommentList'
@@ -47,7 +46,9 @@ function Item() {
     openBottomSheetModal([
       {
         name: '수정',
-        onClick() {},
+        onClick() {
+          navigate(`/write/edit?itemId=${loaderData.item.id}`)
+        },
       },
       {
         name: '삭제',
