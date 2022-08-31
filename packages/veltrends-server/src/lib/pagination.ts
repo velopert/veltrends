@@ -6,7 +6,8 @@ export const PaginationSchema = <T extends TSchema>(type: T) =>
     list: Type.Array(type),
     totalCount: Type.Integer(),
     pageInfo: Type.Object({
-      endCursor: Nullable(Type.Integer()),
+      nextOffset: Type.Optional(Nullable(Type.Integer())),
+      endCursor: Type.Optional(Nullable(Type.Integer())),
       hasNextPage: Type.Boolean(),
     }),
   })
@@ -15,7 +16,8 @@ export interface PaginationType<T> {
   list: T[]
   totalCount: number
   pageInfo: {
-    endCursor: number | null
+    nextOffset?: number | null
+    endCursor?: number | null
     hasNextPage: boolean
   }
 }

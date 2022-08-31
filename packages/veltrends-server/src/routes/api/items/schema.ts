@@ -44,6 +44,8 @@ const ItemSchema = Type.Object({
   isLiked: Type.Boolean(),
 })
 
+export type ItemType = Static<typeof ItemSchema>
+
 ItemSchema.example = {
   id: 1,
   title: 'HLELLO',
