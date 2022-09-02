@@ -6,15 +6,16 @@ import FullHeightPage from '../system/FullHeightPage'
 interface Props {
   children?: React.ReactNode
   className?: string
+  header?: React.ReactNode
 }
 
 /**
  * Shows content with a header and a tab bar
  */
-function TabLayout({ children, className }: Props) {
+function TabLayout({ header, children, className }: Props) {
   return (
     <FullHeightPage>
-      <Header />
+      {header ?? <Header />}
       <Content className={className}>{children}</Content>
       <Footer />
     </FullHeightPage>

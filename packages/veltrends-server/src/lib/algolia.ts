@@ -1,3 +1,4 @@
+import { Publisher } from '@prisma/client'
 import algoliasearch from 'algoliasearch'
 import { ItemType } from '../routes/api/items/schema.js'
 import { PaginationType } from './pagination.js'
@@ -36,11 +37,28 @@ const algolia = {
     }
     return pagination
   },
+  sync(item: ItemSchemaForAlgolia) {
+    return index.saveObject({ ...item, objectID: item.id })
+  },
+  delete(objectID: number) {
+    return index.deleteObject(objectID.toString())
+  },
 }
 
 interface SearchOption {
   offset?: number
   length?: number
+}
+
+interface ItemSchemaForAlgolia {
+  id: number
+  title: string
+  body: string
+  author: string | null
+  link: string | null
+  thumbnail: string | null
+  username: string
+  publisher: Publisher
 }
 
 export default algolia

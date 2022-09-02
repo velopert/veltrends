@@ -1,9 +1,10 @@
-import { Item, ItemLike, ItemStats } from '@prisma/client'
+import { Item, ItemLike, ItemStats, Publisher, User } from '@prisma/client'
+import algolia from '../lib/algolia.js'
 import AppError from '../lib/AppError.js'
 import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
-import { CreateItemBodyType } from '../routes/api/items/schema.js'
+import { CreateItemBodyType, ItemType } from '../routes/api/items/schema.js'
 
 class ItemService {
   private static instance: ItemService
@@ -69,6 +70,19 @@ class ItemService {
     const itemLikedMap = userId
       ? await this.getItemLikedMap({ itemIds: [item.id], userId })
       : null
+
+    algolia
+      .sync({
+        id: item.id,
+        author: item.author,
+        body: item.body,
+        link: item.link,
+        thumbnail: item.thumbnail,
+        title: item.title,
+        username: item.user.username,
+        publisher: item.publisher,
+      })
+      .catch(console.error)
 
     return this.mergeItemLiked(itemWithItemStats, itemLikedMap?.[item.id])
   }
@@ -165,6 +179,34 @@ class ItemService {
     return []
   }
 
+  async getItemsByIds(itemIds: number[]) {
+    const result = await db.item.findMany({
+      where: {
+        id: {
+          in: itemIds,
+        },
+      },
+      include: {
+        user: true,
+        publisher: true,
+        itemStats: true,
+      },
+    })
+
+    type FullItem = Item & {
+      user: User
+      publisher: Publisher
+      itemStats: ItemStats | null
+    }
+
+    const itemMap = result.reduce<Record<number, FullItem>>((acc, item) => {
+      acc[item.id] = item
+      return acc
+    }, {})
+
+    return itemMap
+  }
+
   async updateItem({ itemId, userId, title, body }: UpdateItemParams) {
     const item = await this.getItem(itemId)
     if (item.userId !== userId) {
@@ -189,6 +231,20 @@ class ItemService {
       ? await this.getItemLikedMap({ itemIds: [item.id], userId })
       : null
 
+    algolia
+      .sync({
+        id: item.id,
+        author: item.author,
+        body: item.body,
+        link: item.link,
+        thumbnail: item.thumbnail,
+        title: item.title,
+        username: item.user.username,
+        publisher: item.publisher,
+      })
+      .then(console.log)
+      .catch(console.error)
+
     return this.mergeItemLiked(updatedItem, itemLikedMap?.[item.id])
   }
 
@@ -202,6 +258,7 @@ class ItemService {
         id: itemId,
       },
     })
+    algolia.delete(itemId).catch(console.error)
   }
 
   async countLikes(itemId: number) {

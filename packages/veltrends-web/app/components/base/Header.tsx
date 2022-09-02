@@ -6,13 +6,14 @@ interface Props {
   title?: React.ReactNode
   headerLeft?: React.ReactNode
   headerRight?: React.ReactNode
+  className?: string
 }
 
-function Header({ title = <Logo />, headerLeft, headerRight }: Props) {
+function Header({ title = <Logo />, headerLeft, headerRight, className }: Props) {
   return (
-    <Block>
+    <Block className={className}>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}
-      <Title>{title}</Title>
+      <Title className="title">{title}</Title>
       {headerRight && <HeaderSide position="right">{headerRight}</HeaderSide>}
     </Block>
   )
