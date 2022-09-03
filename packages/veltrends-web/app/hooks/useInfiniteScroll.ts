@@ -13,7 +13,7 @@ export function useInfiniteScroll(ref: React.RefObject<any>, fetchNext: () => vo
       },
       {
         root: ref.current.parentElement,
-        rootMargin: '64px',
+        rootMargin: '300px',
         threshold: 1,
       },
     )

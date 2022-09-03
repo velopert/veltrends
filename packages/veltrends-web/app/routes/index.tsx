@@ -48,6 +48,7 @@ export default function Index() {
   return (
     <StyledTabLayout>
       <LinkCardList items={items} />
+      <div ref={ref} />
     </StyledTabLayout>
   )
 }

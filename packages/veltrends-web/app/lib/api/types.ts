@@ -1,8 +1,10 @@
-export interface GetItemsResult {
-  list: Item[]
+interface Pagination<T> {
+  list: T[]
   totalCount: number
   pageInfo: PageInfo
 }
+
+export type GetItemsResult = Pagination<Item>
 
 export interface Item {
   id: number
@@ -26,7 +28,7 @@ export interface ItemStats {
 }
 
 export interface Publisher {
-  id: number
+  id?: number
   name: string
   domain: string
   favicon: string | null
@@ -38,7 +40,8 @@ export interface User {
 }
 
 export interface PageInfo {
-  endCursor: number | null
+  nextOffset?: number | null
+  endCursor?: number | null
   hasNextPage: boolean
 }
 
@@ -75,3 +78,21 @@ export interface LikeCommentResult {
 }
 
 export type UnlikeCommentResult = LikeCommentResult
+
+export interface SearchResultItem {
+  id: number
+  link: string
+  publisher: Publisher
+  author: null
+  likes: number
+  title: string
+  body: string
+  highlight: Highlight
+}
+
+export interface Highlight {
+  title: string
+  body: string
+}
+
+export type SearchItemsResult = Pagination<SearchResultItem>

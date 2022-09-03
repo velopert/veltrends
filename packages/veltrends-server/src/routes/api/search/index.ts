@@ -22,6 +22,7 @@ export const searchRoute: FastifyPluginAsync = async (fastify) => {
           return {
             id: item.id,
             link: item.link,
+            author: item.author === '' ? null : item.author,
             publisher: item.publisher,
             likes: item.itemStats?.likes,
             title: item.title,
