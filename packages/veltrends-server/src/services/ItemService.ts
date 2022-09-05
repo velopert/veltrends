@@ -4,6 +4,7 @@ import AppError from '../lib/AppError.js'
 import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
+import { calculateRankingScore } from '../lib/ranking.js'
 import { CreateItemBodyType, ItemType } from '../routes/api/items/schema.js'
 
 class ItemService {
@@ -302,6 +303,7 @@ class ItemService {
     }
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemLikes({ itemId, likes })
+    this.recalculateRanking(itemId, likes).catch(console.error)
     return itemStats
   }
 
@@ -319,6 +321,7 @@ class ItemService {
 
     const likes = await this.countLikes(itemId)
     const itemStats = await this.updateItemLikes({ itemId, likes })
+    this.recalculateRanking(itemId, likes).catch(console.error)
     return itemStats
   }
 
@@ -337,6 +340,23 @@ class ItemService {
       acc[current.itemId] = current
       return acc
     }, {} as Record<number, ItemLike>)
+  }
+
+  async recalculateRanking(itemId: number, likesCount?: number) {
+    const item = await db.item.findUnique({ where: { id: itemId } })
+    if (!item) return
+    const likes = likesCount ?? (await this.countLikes(itemId))
+    const age =
+      (Date.now() - new Date(item.createdAt).getTime()) / 1000 / 60 / 60
+    const score = calculateRankingScore(likes, age)
+    return db.itemStats.update({
+      where: {
+        itemId,
+      },
+      data: {
+        score,
+      },
+    })
   }
 }
 

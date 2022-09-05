@@ -31,6 +31,7 @@
     "metascraper-image": "^5.29.15",
     "metascraper-logo-favicon": "^5.30.0",
     "metascraper-publisher": "^5.29.15",
+    "p-queue": "^7.3.0",
     "prisma": "^4.0.0"
   },
   "scripts": {
