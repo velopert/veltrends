@@ -1,13 +1,14 @@
 import PQueue from 'p-queue'
 import db from '../lib/db.js'
 import { calculateRankingScore } from '../lib/ranking.js'
+import cron from 'node-cron'
 
 async function findRecalculateTargets() {
   const data = await db.itemStats.findMany({
     where: {
-      score: {
-        lte: 0.001,
-      },
+      // score: {
+      //   lte: 0.001,
+      // },
     },
     select: {
       itemId: true,
@@ -23,9 +24,11 @@ async function findRecalculateTargets() {
 }
 
 async function recalculate() {
-  const queue = new PQueue({ concurrency: 10 })
+  // @todo: increase concurrency after migrating to postresql
+  const queue = new PQueue({ concurrency: 1 })
   const targets = await findRecalculateTargets()
   const now = Date.now()
+  console.log(`Recalculating ${targets.length} items`)
   targets.forEach((itemStat) => {
     queue.add(async () => {
       const hourAge =
@@ -43,9 +46,8 @@ async function recalculate() {
     })
   })
 
-  return queue.onIdle()
+  await queue.onIdle()
+  console.log(`Recalculated successfully.`)
 }
 
-function main() {
-  // register crons
-}
+cron.schedule('*/5 * * * *', recalculate)

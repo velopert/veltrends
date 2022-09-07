@@ -6,6 +6,7 @@
   "type": "module",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/node-cron": "^3.0.4",
     "nodemon": "^2.0.18",
     "pino-pretty": "^8.1.0",
     "ts-node": "^10.8.2",
@@ -31,11 +32,13 @@
     "metascraper-image": "^5.29.15",
     "metascraper-logo-favicon": "^5.30.0",
     "metascraper-publisher": "^5.29.15",
+    "node-cron": "^3.0.2",
     "p-queue": "^7.3.0",
     "prisma": "^4.0.0"
   },
   "scripts": {
     "start": "ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
+    "worker:ranking": "ts-node-esm --transpileOnly ./src/workers/ranking.ts",
     "dev": "NODE_ENV=development nodemon --watch ./src --exec \"yarn start\" -e ts"
   }
 }
