@@ -156,6 +156,7 @@ export interface GetItemRoute {
 export interface GetItemsRoute {
   Querystring: {
     cursor?: string
+    mode?: 'recent' | 'trending'
   }
 }
 

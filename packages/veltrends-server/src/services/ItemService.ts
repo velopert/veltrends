@@ -127,7 +127,7 @@ class ItemService {
         db.item.count(),
         db.item.findMany({
           orderBy: {
-            createdAt: 'desc',
+            id: 'desc',
           },
           where: {
             id: params.cursor
@@ -163,7 +163,7 @@ class ItemService {
               },
             },
             orderBy: {
-              createdAt: 'desc',
+              id: 'desc',
             },
           })) > 0
         : false
@@ -176,8 +176,94 @@ class ItemService {
           hasNextPage,
         },
       })
+    } else if (params.mode === 'trending') {
+      /** @todo:
+       * pagination
+       */
+      const totalCount = await db.itemStats.count({
+        where: {
+          score: {
+            gte: 0.001,
+          },
+        },
+      })
+      const list = await db.item.findMany({
+        where: {
+          itemStats: {
+            score: {
+              gte: 0.001,
+            },
+          },
+        },
+        orderBy: [
+          {
+            itemStats: {
+              score: 'desc',
+            },
+          },
+          {
+            itemStats: {
+              itemId: 'desc',
+            },
+          },
+        ],
+        include: {
+          user: true,
+          publisher: true,
+          itemStats: true,
+        },
+        take: limit,
+      })
+
+      const itemLikedMap = params.userId
+        ? await this.getItemLikedMap({
+            itemIds: list.map((item) => item.id),
+            userId: params.userId,
+          })
+        : null
+      const listWithLiked = list.map((item) =>
+        this.mergeItemLiked(item, itemLikedMap?.[item.id]),
+      )
+
+      const endCursor = list.at(-1)?.id ?? null
+
+      const hasNextPage = endCursor
+        ? (await db.item.count({
+            where: {
+              itemStats: {
+                itemId: {
+                  not: endCursor,
+                },
+                score: {
+                  gte: 0.001,
+                  lte: list.at(-1)?.itemStats?.score,
+                },
+              },
+            },
+            orderBy: [
+              {
+                itemStats: {
+                  score: 'desc',
+                },
+              },
+              {
+                itemStats: {
+                  itemId: 'desc',
+                },
+              },
+            ],
+          })) > 0
+        : false
+
+      return createPagination({
+        list: listWithLiked,
+        totalCount,
+        pageInfo: {
+          endCursor: hasNextPage ? endCursor : null,
+          hasNextPage,
+        },
+      })
     }
-    return []
   }
 
   async getItemsByIds(itemIds: number[]) {

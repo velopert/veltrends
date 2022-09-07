@@ -50,4 +50,5 @@ async function recalculate() {
   console.log(`Recalculated successfully.`)
 }
 
+recalculate()
 cron.schedule('*/5 * * * *', recalculate)

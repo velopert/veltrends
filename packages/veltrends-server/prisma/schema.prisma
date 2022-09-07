@@ -120,6 +120,9 @@ model ItemStats {
   item          Item  @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([score(sort: Desc), itemId(sort: Desc)])
+  @@index([likes(sort: Desc), itemId(sort: Desc)])
 }
 
 model Comment {
