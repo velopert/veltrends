@@ -1,6 +1,7 @@
 import { Item, ItemLike, ItemStats, Publisher, User } from '@prisma/client'
 import algolia from '../lib/algolia.js'
 import AppError from '../lib/AppError.js'
+import NextAppError from '../lib/NextAppError.js'
 import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
@@ -163,6 +164,116 @@ class ItemService {
     return { totalCount, list, endCursor, hasNextPage }
   }
 
+  async getPastItems({
+    limit,
+    cursor,
+    startDate,
+    endDate,
+  }: {
+    limit: number
+    cursor?: number | null
+    startDate?: string
+    endDate?: string
+  }) {
+    if (!startDate || !endDate) {
+      throw new NextAppError('BadRequest', {
+        message: 'startDate or endDate is missing',
+      })
+    }
+
+    const dateDiff = new Date(endDate).getTime() - new Date(startDate).getTime()
+
+    // throw error if not yyyy-mm-dd format
+    if (
+      [startDate, endDate].some((date) => !/^\d{4}-\d{2}-\d{2}$/.test(date))
+    ) {
+      throw new NextAppError('BadRequest', {
+        message: 'startDate or endDate is not yyyy-mm-dd format',
+      })
+    }
+
+    if (dateDiff > 6 * 24 * 60 * 60 * 1000) {
+      throw new NextAppError('BadRequest', {
+        message: 'Date range bigger than 7 days',
+      })
+    }
+
+    const d1 = new Date(`${startDate} 00:00:00`)
+    const d2 = new Date(`${endDate} 23:59:59`)
+
+    const [totalCount, list] = await Promise.all([
+      db.item.count({
+        where: {
+          createdAt: {
+            gte: d1,
+            lte: d2,
+          },
+        },
+      }),
+      db.item.findMany({
+        orderBy: [
+          {
+            itemStats: {
+              likes: 'desc',
+            },
+          },
+          {
+            id: 'desc',
+          },
+        ],
+        where: {
+          id: cursor
+            ? {
+                lt: cursor,
+              }
+            : undefined,
+          createdAt: {
+            gte: d1,
+            lte: d2,
+          },
+        },
+        include: {
+          user: true,
+          publisher: true,
+          itemStats: true,
+        },
+        take: limit,
+      }),
+    ])
+
+    const endCursor = list.at(-1)?.id ?? null
+    const hasNextPage = endCursor
+      ? (await db.item.count({
+          where: {
+            id: {
+              lt: endCursor,
+            },
+            createdAt: {
+              gte: d1,
+              lte: d2,
+            },
+          },
+          orderBy: [
+            {
+              itemStats: {
+                likes: 'desc',
+              },
+            },
+            {
+              id: 'desc',
+            },
+          ],
+        })) > 0
+      : false
+
+    return {
+      totalCount,
+      list,
+      endCursor,
+      hasNextPage,
+    }
+  }
+
   async getTrendingItems({
     limit,
     cursor,
@@ -268,17 +379,22 @@ class ItemService {
       cursor,
       limit,
       userId,
+      endDate,
+      startDate,
     }: GetItemsParams & PaginationOptionType & { userId?: number } = {
       mode: 'recent',
     },
   ) {
     const { totalCount, endCursor, hasNextPage, list } = await (() => {
+      const _limit = limit ?? 20
+
       if (mode === 'trending') {
-        return this.getTrendingItems({ limit: limit ?? 20, cursor })
+        return this.getTrendingItems({ limit: _limit, cursor })
       }
       if (mode === 'past') {
+        return this.getPastItems({ limit: _limit, cursor, startDate, endDate })
       }
-      return this.getRecentItems({ limit: limit ?? 20, cursor })
+      return this.getRecentItems({ limit: _limit, cursor })
     })()
 
     const itemLikedMap = userId
@@ -482,14 +598,11 @@ class ItemService {
   }
 }
 
-type GetItemsParams =
-  | {
-      mode: 'trending' | 'recent'
-    }
-  | {
-      mode: 'past'
-      date: string
-    }
+type GetItemsParams = {
+  mode: 'trending' | 'recent' | 'past'
+  startDate?: string
+  endDate?: string
+}
 
 interface UpdateItemParams {
   itemId: number

@@ -57,10 +57,10 @@ export default class AppError extends Error {
 
   constructor(
     public name: ErrorName,
-    public payload?: ErrorPayloadWithDefault[ErrorName],
+    public payload?: ErrorPayloadWithDefault[ErrorName] & { message?: string },
   ) {
     const errorInfo = errors[name]
-    super(errorInfo.message)
+    super(payload.message ?? errorInfo.message)
     this.statusCode = errorInfo.statusCode
   }
 }
