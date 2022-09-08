@@ -121,176 +121,185 @@ class ItemService {
     limit,
     cursor,
   }: {
-    limit?: number
-    cursor?: number
-  }) {}
-
-  async getPublicItems(
-    params: GetPublicItemsParams &
-      PaginationOptionType & { userId?: number } = { mode: 'recent' },
-  ) {
-    const limit = params.limit ?? 20
-    if (params.mode === 'recent') {
-      const [totalCount, list] = await Promise.all([
-        db.item.count(),
-        db.item.findMany({
-          orderBy: {
-            id: 'desc',
-          },
-          where: {
-            id: params.cursor
-              ? {
-                  lt: params.cursor,
-                }
-              : undefined,
-          },
-          include: {
-            user: true,
-            publisher: true,
-            itemStats: true,
-          },
-          take: limit,
-        }),
-      ])
-      const itemLikedMap = params.userId
-        ? await this.getItemLikedMap({
-            itemIds: list.map((item) => item.id),
-            userId: params.userId,
-          })
-        : null
-      const listWithLiked = list.map((item) =>
-        this.mergeItemLiked(item, itemLikedMap?.[item.id]),
-      )
-
-      const endCursor = list.at(-1)?.id ?? null
-      const hasNextPage = endCursor
-        ? (await db.item.count({
-            where: {
-              id: {
-                lt: endCursor,
-              },
-            },
-            orderBy: {
-              id: 'desc',
-            },
-          })) > 0
-        : false
-
-      return createPagination({
-        list: listWithLiked,
-        totalCount,
-        pageInfo: {
-          endCursor,
-          hasNextPage,
+    limit: number
+    cursor?: number | null
+  }) {
+    const [totalCount, list] = await Promise.all([
+      db.item.count(),
+      db.item.findMany({
+        orderBy: {
+          id: 'desc',
         },
-      })
-    } else if (params.mode === 'trending') {
-      /** @todo:
-       * pagination
-       */
-      const totalCount = await db.itemStats.count({
         where: {
-          score: {
-            gte: 0.001,
-          },
-        },
-      })
-      const cursorItem = params.cursor
-        ? await db.item.findUnique({
-            where: { id: params.cursor },
-            include: {
-              itemStats: true,
-            },
-          })
-        : null
-
-      const list = await db.item.findMany({
-        where: {
-          ...(params.cursor
+          id: cursor
             ? {
-                id: { lt: params.cursor },
+                lt: cursor,
               }
-            : {}),
-          itemStats: {
-            score: {
-              gte: 0.001,
-              ...(cursorItem
-                ? {
-                    lte: cursorItem.itemStats?.score,
-                  }
-                : {}),
-            },
-          },
+            : undefined,
         },
-        orderBy: [
-          {
-            itemStats: {
-              score: 'desc',
-            },
-          },
-          {
-            itemStats: {
-              itemId: 'desc',
-            },
-          },
-        ],
         include: {
           user: true,
           publisher: true,
           itemStats: true,
         },
         take: limit,
-      })
+      }),
+    ])
 
-      const itemLikedMap = params.userId
-        ? await this.getItemLikedMap({
-            itemIds: list.map((item) => item.id),
-            userId: params.userId,
-          })
-        : null
-      const listWithLiked = list.map((item) =>
-        this.mergeItemLiked(item, itemLikedMap?.[item.id]),
-      )
+    const endCursor = list.at(-1)?.id ?? null
+    const hasNextPage = endCursor
+      ? (await db.item.count({
+          where: {
+            id: {
+              lt: endCursor,
+            },
+          },
+          orderBy: {
+            id: 'desc',
+          },
+        })) > 0
+      : false
 
-      const endCursor = list.at(-1)?.id ?? null
+    return { totalCount, list, endCursor, hasNextPage }
+  }
 
-      const hasNextPage = endCursor
-        ? (await db.item.count({
-            where: {
-              itemStats: {
-                itemId: {
-                  lt: endCursor,
-                },
-                score: {
-                  gte: 0.001,
-                  lte: list.at(-1)?.itemStats?.score,
-                },
+  async getTrendingItems({
+    limit,
+    cursor,
+  }: {
+    limit: number
+    cursor?: number | null
+  }) {
+    const totalCount = await db.itemStats.count({
+      where: {
+        score: {
+          gte: 0.001,
+        },
+      },
+    })
+    const cursorItem = cursor
+      ? await db.item.findUnique({
+          where: { id: cursor },
+          include: {
+            itemStats: true,
+          },
+        })
+      : null
+
+    const list = await db.item.findMany({
+      where: {
+        ...(cursor
+          ? {
+              id: { lt: cursor },
+            }
+          : {}),
+        itemStats: {
+          score: {
+            gte: 0.001,
+            ...(cursorItem
+              ? {
+                  lte: cursorItem.itemStats?.score,
+                }
+              : {}),
+          },
+        },
+      },
+      orderBy: [
+        {
+          itemStats: {
+            score: 'desc',
+          },
+        },
+        {
+          itemStats: {
+            itemId: 'desc',
+          },
+        },
+      ],
+      include: {
+        user: true,
+        publisher: true,
+        itemStats: true,
+      },
+      take: limit,
+    })
+
+    const endCursor = list.at(-1)?.id ?? null
+
+    const hasNextPage = endCursor
+      ? (await db.item.count({
+          where: {
+            itemStats: {
+              itemId: {
+                lt: endCursor,
+              },
+              score: {
+                gte: 0.001,
+                lte: list.at(-1)?.itemStats?.score,
               },
             },
-            orderBy: [
-              {
-                itemStats: {
-                  score: 'desc',
-                },
+          },
+          orderBy: [
+            {
+              itemStats: {
+                score: 'desc',
               },
-              {
-                itemStats: {
-                  itemId: 'desc',
-                },
+            },
+            {
+              itemStats: {
+                itemId: 'desc',
               },
-            ],
-          })) > 0
-        : false
+            },
+          ],
+        })) > 0
+      : false
 
-      return createPagination({
-        list: listWithLiked,
-        totalCount,
-        pageInfo: {
-          endCursor: hasNextPage ? endCursor : null,
-          hasNextPage,
-        },
-      })
+    return {
+      totalCount,
+      list,
+      endCursor,
+      hasNextPage,
     }
+  }
+
+  async getPublicItems(
+    {
+      mode,
+      cursor,
+      limit,
+      userId,
+    }: GetPublicItemsParams & PaginationOptionType & { userId?: number } = {
+      mode: 'recent',
+    },
+  ) {
+    const { totalCount, endCursor, hasNextPage, list } = await (() => {
+      if (mode === 'trending') {
+        return this.getTrendingItems({ limit: limit ?? 20, cursor })
+      }
+      if (mode === 'past') {
+      }
+      return this.getRecentItems({ limit: limit ?? 20, cursor })
+    })()
+
+    const itemLikedMap = userId
+      ? await this.getItemLikedMap({
+          itemIds: list.map((item) => item.id),
+          userId: userId,
+        })
+      : null
+
+    const listWithLiked = list.map((item) =>
+      this.mergeItemLiked(item, itemLikedMap?.[item.id]),
+    )
+
+    return createPagination({
+      list: listWithLiked,
+      totalCount,
+      pageInfo: {
+        endCursor: hasNextPage ? endCursor : null,
+        hasNextPage,
+      },
+    })
   }
 
   async getItemsByIds(itemIds: number[]) {
