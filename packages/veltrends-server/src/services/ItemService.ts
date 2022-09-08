@@ -117,6 +117,14 @@ class ItemService {
     }
   }
 
+  async getRecentItems({
+    limit,
+    cursor,
+  }: {
+    limit?: number
+    cursor?: number
+  }) {}
+
   async getPublicItems(
     params: GetPublicItemsParams &
       PaginationOptionType & { userId?: number } = { mode: 'recent' },
@@ -187,11 +195,30 @@ class ItemService {
           },
         },
       })
+      const cursorItem = params.cursor
+        ? await db.item.findUnique({
+            where: { id: params.cursor },
+            include: {
+              itemStats: true,
+            },
+          })
+        : null
+
       const list = await db.item.findMany({
         where: {
+          ...(params.cursor
+            ? {
+                id: { lt: params.cursor },
+              }
+            : {}),
           itemStats: {
             score: {
               gte: 0.001,
+              ...(cursorItem
+                ? {
+                    lte: cursorItem.itemStats?.score,
+                  }
+                : {}),
             },
           },
         },
@@ -232,7 +259,7 @@ class ItemService {
             where: {
               itemStats: {
                 itemId: {
-                  not: endCursor,
+                  lt: endCursor,
                 },
                 score: {
                   gte: 0.001,
