@@ -6,6 +6,7 @@ import {
   type Comment,
   type LikeCommentResult,
   type UnlikeCommentResult,
+  type ListMode,
 } from './types'
 import qs from 'qs'
 
@@ -14,11 +15,11 @@ export async function createItem(params: CreateItemParams) {
   return response.data
 }
 
-export async function getItems(cursor?: number) {
+export async function getItems({ mode, cursor }: { mode: ListMode; cursor?: number }) {
   const response = await client.get<GetItemsResult>(
     '/api/items'.concat(
       qs.stringify(
-        { cursor },
+        { mode, cursor },
         {
           addQueryPrefix: true,
         },
