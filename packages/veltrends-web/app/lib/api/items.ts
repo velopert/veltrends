@@ -15,11 +15,21 @@ export async function createItem(params: CreateItemParams) {
   return response.data
 }
 
-export async function getItems({ mode, cursor }: { mode: ListMode; cursor?: number }) {
+export async function getItems({
+  mode,
+  cursor,
+  startDate,
+  endDate,
+}: {
+  mode: ListMode
+  cursor?: number
+  startDate?: string
+  endDate?: string
+}) {
   const response = await client.get<GetItemsResult>(
     '/api/items'.concat(
       qs.stringify(
-        { mode, cursor },
+        { mode, cursor, startDate, endDate },
         {
           addQueryPrefix: true,
         },

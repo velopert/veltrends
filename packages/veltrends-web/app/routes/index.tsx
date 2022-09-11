@@ -1,38 +1,59 @@
 import { json, type LoaderFunction } from '@remix-run/node'
-import { useFetcher, useLoaderData, useNavigate } from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { useAnimation } from 'framer-motion'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import LinkCardList from '~/components/home/LinkCardList'
 import ListModeSelector from '~/components/home/ListModeSelector'
+import WeekSelector from '~/components/home/WeekSelector'
 import TabLayout from '~/components/layouts/TabLayout'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
-import { ListMode, type GetItemsResult } from '~/lib/api/types'
+import { type ListMode, type GetItemsResult } from '~/lib/api/types'
 import { parseUrlParams } from '~/lib/parseUrlParams'
+import { getWeekRangeFromDate } from '~/lib/week'
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { cursor, mode } = parseUrlParams<{ cursor?: string; mode?: string }>(request.url)
-  const parsedCursor = cursor !== undefined ? parseInt(cursor, 10) : undefined
+  const { mode } = parseUrlParams<{ mode?: string }>(request.url)
   const fallbackedMode = mode ?? 'trending'
 
-  console.log(fallbackedMode)
-  // @todo: throw error if invalid error
+  const range = mode === 'past' ? getWeekRangeFromDate(new Date()) : undefined
+  const startDate = range?.[0]
+  const endDate = range?.[1]
 
-  const list = await getItems({ mode: fallbackedMode as any, cursor: parsedCursor })
+  // @todo: throw error if invalid error
+  const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
   return json(list)
 }
 
 export default function Index() {
-  const data = useLoaderData<GetItemsResult>()
-  const [pages, setPages] = useState([data])
-  const fetcher = useFetcher()
-  const [mode, setMode] = useState<ListMode>('trending')
+  const initialData = useLoaderData<GetItemsResult>()
+  const [searchParams] = useSearchParams()
+  const [mode, setMode] = useState<ListMode>((searchParams.get('mode') as any) ?? 'trending')
   const navigate = useNavigate()
+  const defaultDateRange = useMemo(() => getWeekRangeFromDate(new Date()), [])
+  const startDate = searchParams.get('startDate')
+  const endDate = searchParams.get('endDate')
+  const [dateRange, setDateRange] = useState(
+    startDate && endDate ? [startDate, endDate] : defaultDateRange,
+  )
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
+    ['items', mode],
+    ({ pageParam }) => getItems({ mode, cursor: pageParam }),
+    {
+      initialData: {
+        pageParams: [undefined],
+        pages: [initialData],
+      },
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.pageInfo.hasNextPage) return null
+        return lastPage.pageInfo.endCursor
+      },
+    },
+  )
 
   useEffect(() => {
     const nextUrl = mode === 'trending' ? '/' : `/?mode=${mode}`
@@ -42,31 +63,19 @@ export default function Index() {
   const ref = useRef<HTMLDivElement>(null)
 
   const fetchNext = useCallback(() => {
-    const { endCursor, hasNextPage } = pages.at(-1)?.pageInfo ?? {
-      endCursor: null,
-      hasNextPage: false,
-    }
-
-    if (fetcher.state === 'loading') return
-
     if (!hasNextPage) return
-    fetcher.load(`/?index&cursor=${endCursor}`)
-  }, [fetcher, pages])
-
-  useEffect(() => {
-    if (!fetcher.data) return
-    if (pages.includes(fetcher.data)) return
-    setPages(pages.concat(fetcher.data))
-  }, [fetcher.data, pages])
+    fetchNextPage()
+  }, [fetchNextPage, hasNextPage])
 
   useInfiniteScroll(ref, fetchNext)
 
-  const items = pages.flatMap((page) => page.list)
+  const items = data?.pages.flatMap((page) => page.list)
 
   return (
     <StyledTabLayout>
       <ListModeSelector mode={mode} onSelectMode={setMode} />
-      <LinkCardList items={items} />
+      {mode === 'past' && <WeekSelector dateRange={dateRange} />}
+      {items ? <LinkCardList items={items} /> : null}
       <div ref={ref} />
     </StyledTabLayout>
   )
