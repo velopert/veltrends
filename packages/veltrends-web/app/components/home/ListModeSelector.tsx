@@ -50,6 +50,8 @@ function ListModeSelector({ mode, onSelectMode }: Props) {
     return gaps + sizes
   }, [currentIndex, elementSizes])
 
+  /** @todo: implement with link instead of onClick */
+
   return (
     <Block>
       {modeProps.map((props, index) => (

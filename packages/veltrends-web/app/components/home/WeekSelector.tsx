@@ -20,6 +20,7 @@ function WeekSelector({ dateRange }: Props) {
   }, [dateRange])
   const [, setSearchParams] = useSearchParams()
 
+  /* @todo: refactor to link */
   const onClickPrev = () => {
     const [start, end] = addWeekToRange(dateRange, -1)
     setSearchParams({ mode: 'past', start, end })
