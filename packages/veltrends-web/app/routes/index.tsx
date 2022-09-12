@@ -16,12 +16,14 @@ import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const { mode } = parseUrlParams<{ mode?: string }>(request.url)
+  const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(
+    request.url,
+  )
   const fallbackedMode = mode ?? 'trending'
 
   const range = mode === 'past' ? getWeekRangeFromDate(new Date()) : undefined
-  const startDate = range?.[0]
-  const endDate = range?.[1]
+  const startDate = start ?? range?.[0]
+  const endDate = end ?? range?.[1]
 
   // @todo: throw error if invalid error
   const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
@@ -30,19 +32,39 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const initialData = useLoaderData<GetItemsResult>()
-  const [searchParams] = useSearchParams()
+
+  const [searchParams, setSearchParams] = useSearchParams()
   const [mode, setMode] = useState<ListMode>((searchParams.get('mode') as any) ?? 'trending')
-  const navigate = useNavigate()
   const defaultDateRange = useMemo(() => getWeekRangeFromDate(new Date()), [])
-  const startDate = searchParams.get('startDate')
-  const endDate = searchParams.get('endDate')
+  const startDate = searchParams.get('start')
+  const endDate = searchParams.get('end')
   const [dateRange, setDateRange] = useState(
     startDate && endDate ? [startDate, endDate] : defaultDateRange,
   )
 
+  useEffect(() => {
+    if (mode === 'past') {
+      setDateRange(startDate && endDate ? [startDate, endDate] : defaultDateRange)
+    }
+  }, [startDate, endDate, mode, defaultDateRange])
+
+  useEffect(() => {
+    const nextMode = (searchParams.get('mode') as ListMode) ?? 'trending'
+    if (nextMode !== mode) {
+      setMode(nextMode)
+    }
+  }, [mode, searchParams])
+
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ['items', mode],
-    ({ pageParam }) => getItems({ mode, cursor: pageParam }),
+    ['items', mode, mode === 'past' ? { dateRange: dateRange } : undefined].filter(
+      (item) => !!item,
+    ),
+    ({ pageParam }) =>
+      getItems({
+        mode,
+        cursor: pageParam,
+        ...(mode === 'past' ? { startDate: dateRange[0], endDate: dateRange[1] } : {}),
+      }),
     {
       initialData: {
         pageParams: [undefined],
@@ -55,11 +77,6 @@ export default function Index() {
     },
   )
 
-  useEffect(() => {
-    const nextUrl = mode === 'trending' ? '/' : `/?mode=${mode}`
-    navigate(nextUrl, { replace: true })
-  }, [mode, navigate])
-
   const ref = useRef<HTMLDivElement>(null)
 
   const fetchNext = useCallback(() => {
@@ -71,9 +88,13 @@ export default function Index() {
 
   const items = data?.pages.flatMap((page) => page.list)
 
+  const onSelectMode = (mode: ListMode) => {
+    setSearchParams({ mode })
+  }
+
   return (
     <StyledTabLayout>
-      <ListModeSelector mode={mode} onSelectMode={setMode} />
+      <ListModeSelector mode={mode} onSelectMode={onSelectMode} />
       {mode === 'past' && <WeekSelector dateRange={dateRange} />}
       {items ? <LinkCardList items={items} /> : null}
       <div ref={ref} />

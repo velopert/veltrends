@@ -62,7 +62,13 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 })
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 5,
+    },
+  },
+})
 
 export default function App() {
   const data = useLoaderData<User | null>()
