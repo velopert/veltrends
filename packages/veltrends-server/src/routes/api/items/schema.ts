@@ -24,7 +24,7 @@ ItemStatsSchema.example = {
   likes: 10,
 }
 
-const ItemSchema = Type.Object({
+export const ItemSchema = Type.Object({
   id: Type.Integer(),
   title: Type.String(),
   body: Type.String(),

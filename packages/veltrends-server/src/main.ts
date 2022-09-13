@@ -7,6 +7,7 @@ import AppError from './lib/AppError.js'
 import 'dotenv/config'
 import { authPlugin } from './plugins/authPlugin.js'
 import cors from '@fastify/cors'
+import { isNextAppError } from './lib/NextAppError.js'
 
 const server = Fastify({
   logger: true,
@@ -24,6 +25,15 @@ await server.register(fastifySwagger, swaggerConfig)
 server.register(fastifyCookie)
 server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode ?? 500
+  if (isNextAppError(error)) {
+    console.log(error)
+    return {
+      name: error.name,
+      message: error.message,
+      statusCode: error.statusCode,
+      payload: error.payload,
+    }
+  }
   if (error instanceof AppError) {
     return {
       name: error.name,

@@ -21,8 +21,10 @@ model User {
   Item  Item[]
   Token Token[]
 
-  comments          Comment[] @relation("user")
-  mentionedComments Comment[] @relation("mentionUser")
+  comments          Comment[]     @relation("user")
+  mentionedComments Comment[]     @relation("mentionUser")
+  CommentLike       CommentLike[]
+  Bookmark          Bookmark[]
 }
 
 model Token {
@@ -55,6 +57,7 @@ model Item {
   itemStats ItemStats?
   comments  Comment[]
   itemLikes ItemLike[]
+  Bookmark  Bookmark[]
 
   @@index([createdAt(sort: Desc)])
 }
@@ -159,8 +162,24 @@ model CommentLike {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  Comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([commentId, userId])
   @@index(commentId)
+}
+
+model Bookmark {
+  id     Int @id @default(autoincrement())
+  userId Int
+  itemId Int
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  item Item @relation(fields: [itemId], references: [id])
+
+  @@unique([userId, itemId])
+  @@index(createdAt)
+  @@index(userId)
 }

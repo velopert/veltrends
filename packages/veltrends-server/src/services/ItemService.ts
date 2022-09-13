@@ -563,7 +563,7 @@ class ItemService {
     return itemStats
   }
 
-  private async getItemLikedMap(params: GetItemLikedParams) {
+  async getItemLikedMap(params: GetItemLikedParams) {
     const { itemIds, userId } = params
     const list = await db.itemLike.findMany({
       where: {
