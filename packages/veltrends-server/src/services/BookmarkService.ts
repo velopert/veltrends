@@ -1,3 +1,4 @@
+import { Bookmark } from '@prisma/client'
 import db from '../lib/db.js'
 import AppError from '../lib/NextAppError.js'
 import ItemService from './ItemService.js'
@@ -77,17 +78,10 @@ class BookmarkService {
     })
 
     const itemService = ItemService.getInstance()
-    const itemLikedMap = await itemService.getItemLikedMap({
-      itemIds: bookmarks.map((b) => b.itemId),
-      userId,
-    })
 
     const list = bookmarks.map((b) => ({
       ...b,
-      item: {
-        ...b.item,
-        isLiked: !!itemLikedMap[b.itemId],
-      },
+      item: itemService.serialize(b.item),
     }))
 
     const endCursor = list.at(-1)?.id ?? null
@@ -128,6 +122,28 @@ class BookmarkService {
         id: bookmarkId,
       },
     })
+  }
+
+  async getBookmarkMap({
+    itemIds,
+    userId,
+  }: {
+    itemIds: number[]
+    userId: number
+  }) {
+    const bookmarks = await db.bookmark.findMany({
+      where: {
+        userId,
+        itemId: {
+          in: itemIds,
+        },
+      },
+    })
+
+    return bookmarks.reduce((acc, current) => {
+      acc[current.itemId] = current
+      return acc
+    }, {} as Record<number, Bookmark>)
   }
 }
 

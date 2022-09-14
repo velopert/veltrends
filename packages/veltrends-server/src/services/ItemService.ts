@@ -1,4 +1,11 @@
-import { Item, ItemLike, ItemStats, Publisher, User } from '@prisma/client'
+import {
+  Bookmark,
+  Item,
+  ItemLike,
+  ItemStats,
+  Publisher,
+  User,
+} from '@prisma/client'
 import algolia from '../lib/algolia.js'
 import AppError from '../lib/AppError.js'
 import NextAppError from '../lib/NextAppError.js'
@@ -69,10 +76,6 @@ class ItemService {
     })
     const itemWithItemStats = { ...item, itemStats }
 
-    const itemLikedMap = userId
-      ? await this.getItemLikedMap({ itemIds: [item.id], userId })
-      : null
-
     algolia
       .sync({
         id: item.id,
@@ -86,7 +89,7 @@ class ItemService {
       })
       .catch(console.error)
 
-    return this.mergeItemLiked(itemWithItemStats, itemLikedMap?.[item.id])
+    return this.serialize(itemWithItemStats)
   }
 
   async getItem(id: number, userId: number | null = null) {
@@ -98,32 +101,35 @@ class ItemService {
         user: true,
         publisher: true,
         itemStats: true,
+        bookmarks: userId ? { where: { userId } } : false,
+        itemLikes: userId ? { where: { userId } } : false,
       },
     })
     if (!item) {
       throw new AppError('NotFoundError')
     }
 
-    const itemLikedMap = userId
-      ? await this.getItemLikedMap({ itemIds: [id], userId })
-      : null
-
-    return this.mergeItemLiked(item, itemLikedMap?.[id])
+    return this.serialize(item)
   }
 
-  private mergeItemLiked<T extends Item>(item: T, itemLike?: ItemLike) {
+  serialize<
+    T extends Item & { itemLikes?: ItemLike[]; bookmarks?: Bookmark[] },
+  >(item: T) {
     return {
       ...item,
-      isLiked: !!itemLike,
+      isLiked: !!item.itemLikes?.length,
+      isBookmarked: !!item.bookmarks?.length,
     }
   }
 
   async getRecentItems({
     limit,
     cursor,
+    userId,
   }: {
     limit: number
     cursor?: number | null
+    userId?: number
   }) {
     const [totalCount, list] = await Promise.all([
       db.item.count(),
@@ -142,6 +148,8 @@ class ItemService {
           user: true,
           publisher: true,
           itemStats: true,
+          bookmarks: userId ? { where: { userId } } : false,
+          itemLikes: userId ? { where: { userId } } : false,
         },
         take: limit,
       }),
@@ -169,11 +177,13 @@ class ItemService {
     cursor,
     startDate,
     endDate,
+    userId,
   }: {
     limit: number
     cursor?: number | null
     startDate?: string
     endDate?: string
+    userId?: number
   }) {
     if (!startDate || !endDate) {
       throw new NextAppError('BadRequest', {
@@ -236,6 +246,8 @@ class ItemService {
           user: true,
           publisher: true,
           itemStats: true,
+          bookmarks: userId ? { where: { userId } } : false,
+          itemLikes: userId ? { where: { userId } } : false,
         },
         take: limit,
       }),
@@ -277,9 +289,11 @@ class ItemService {
   async getTrendingItems({
     limit,
     cursor,
+    userId,
   }: {
     limit: number
     cursor?: number | null
+    userId?: number
   }) {
     const totalCount = await db.itemStats.count({
       where: {
@@ -331,6 +345,8 @@ class ItemService {
         user: true,
         publisher: true,
         itemStats: true,
+        bookmarks: userId ? { where: { userId } } : false,
+        itemLikes: userId ? { where: { userId } } : false,
       },
       take: limit,
     })
@@ -397,19 +413,10 @@ class ItemService {
       return this.getRecentItems({ limit: _limit, cursor })
     })()
 
-    const itemLikedMap = userId
-      ? await this.getItemLikedMap({
-          itemIds: list.map((item) => item.id),
-          userId: userId,
-        })
-      : null
-
-    const listWithLiked = list.map((item) =>
-      this.mergeItemLiked(item, itemLikedMap?.[item.id]),
-    )
+    const serializedList = list.map(this.serialize)
 
     return createPagination({
-      list: listWithLiked,
+      list: serializedList,
       totalCount,
       pageInfo: {
         endCursor: hasNextPage ? endCursor : null,
@@ -418,7 +425,7 @@ class ItemService {
     })
   }
 
-  async getItemsByIds(itemIds: number[]) {
+  async getItemsByIds(itemIds: number[], userId?: number) {
     const result = await db.item.findMany({
       where: {
         id: {
@@ -429,6 +436,8 @@ class ItemService {
         user: true,
         publisher: true,
         itemStats: true,
+        bookmarks: userId ? { where: { userId } } : false,
+        itemLikes: userId ? { where: { userId } } : false,
       },
     })
 
@@ -439,7 +448,7 @@ class ItemService {
     }
 
     const itemMap = result.reduce<Record<number, FullItem>>((acc, item) => {
-      acc[item.id] = item
+      acc[item.id] = this.serialize(item)
       return acc
     }, {})
 
@@ -463,12 +472,10 @@ class ItemService {
         user: true,
         publisher: true,
         itemStats: true,
+        bookmarks: userId ? { where: { userId } } : false,
+        itemLikes: userId ? { where: { userId } } : false,
       },
     })
-
-    const itemLikedMap = userId
-      ? await this.getItemLikedMap({ itemIds: [item.id], userId })
-      : null
 
     algolia
       .sync({
@@ -484,7 +491,7 @@ class ItemService {
       .then(console.log)
       .catch(console.error)
 
-    return this.mergeItemLiked(updatedItem, itemLikedMap?.[item.id])
+    return this.serialize(updatedItem)
   }
 
   async deleteItem({ userId, itemId }: ItemActionParams) {
@@ -561,23 +568,6 @@ class ItemService {
     const itemStats = await this.updateItemLikes({ itemId, likes })
     this.recalculateRanking(itemId, likes).catch(console.error)
     return itemStats
-  }
-
-  async getItemLikedMap(params: GetItemLikedParams) {
-    const { itemIds, userId } = params
-    const list = await db.itemLike.findMany({
-      where: {
-        userId,
-        itemId: {
-          in: itemIds,
-        },
-      },
-    })
-
-    return list.reduce((acc, current) => {
-      acc[current.itemId] = current
-      return acc
-    }, {} as Record<number, ItemLike>)
   }
 
   async recalculateRanking(itemId: number, likesCount?: number) {

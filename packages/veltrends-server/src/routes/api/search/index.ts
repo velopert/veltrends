@@ -14,6 +14,7 @@ export const searchRoute: FastifyPluginAsync = async (fastify) => {
       const hits = await algolia.search(q, { length: limit, offset })
       const items = await itemService.getItemsByIds(
         hits.list.map((item) => item.id),
+        request.user?.id,
       )
       const serializedList = hits.list
         .map((hit) => {

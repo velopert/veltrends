@@ -57,7 +57,7 @@ model Item {
   itemStats ItemStats?
   comments  Comment[]
   itemLikes ItemLike[]
-  Bookmark  Bookmark[]
+  bookmarks Bookmark[]
 
   @@index([createdAt(sort: Desc)])
 }
