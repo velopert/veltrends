@@ -32,12 +32,12 @@ export const bookmarksRoute = createAuthorizedRoute(async (fastify) => {
   )
 
   fastify.delete<BookmarksRoute['DeleteBookmark']>(
-    '/:bookmarkId',
+    '/',
     { schema: BookmarksRouteSchema.DeleteBookmark },
     async (request, reply) => {
-      const { bookmarkId } = request.params
+      const { itemId } = request.query
       const userId = request.user?.id!
-      await bookmarkService.deleteBookmark({ bookmarkId, userId })
+      await bookmarkService.deleteBookmark({ itemId, userId })
       reply.status(204)
     },
   )

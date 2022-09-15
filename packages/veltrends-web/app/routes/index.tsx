@@ -71,7 +71,7 @@ export default function Index() {
         pages: [initialData],
       },
       getNextPageParam: (lastPage) => {
-        if (!lastPage.pageInfo.hasNextPage) return null
+        if (!lastPage.pageInfo.hasNextPage) return undefined
         return lastPage.pageInfo.endCursor
       },
     },

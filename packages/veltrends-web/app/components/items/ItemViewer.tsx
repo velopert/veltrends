@@ -9,6 +9,8 @@ import { type Item } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import LikeButton from '../system/LikeButton'
 import { Globe } from '../vectors'
+import { useBookmarkManager } from '~/hooks/useBookmarkManager'
+import BookmarkButton from '../system/BookmarkButton'
 
 interface Props {
   item: Item
@@ -21,11 +23,25 @@ function ItemViewer({ item }: Props) {
 
   const itemStats = itemOverride?.itemStats ?? item.itemStats
   const isLiked = itemOverride?.isLiked ?? item.isLiked
-  const likes = itemOverride?.itemStats.likes ?? itemStats.likes
+  const likes = itemOverride?.itemStats?.likes ?? itemStats.likes
+  const isBookmarked = itemOverride?.isBookmarked ?? item.isBookmarked
 
   const { like, unlike } = useLikeManager()
+  const { create, remove } = useBookmarkManager()
   const openLoginDialog = useOpenLoginDialog()
   const currentUser = useUser()
+
+  const toggleBookmark = () => {
+    if (!currentUser) {
+      openLoginDialog('bookmark')
+      return
+    }
+    if (isBookmarked) {
+      remove(id)
+    } else {
+      create(id)
+    }
+  }
 
   const toggleLike = () => {
     if (!currentUser) {
@@ -69,7 +85,10 @@ function ItemViewer({ item }: Props) {
           )}
         </AnimatePresence>
         <Footer>
-          <LikeButton isLiked={isLiked} onClick={toggleLike} />
+          <IconButtons>
+            <LikeButton isLiked={isLiked} onClick={toggleLike} />
+            <BookmarkButton isActive={isBookmarked} onClick={toggleBookmark} />
+          </IconButtons>
           <UserInfo>
             by <b>{user.username}</b> · {dateDistance}
           </UserInfo>
@@ -157,6 +176,12 @@ const Footer = styled.div`
 const UserInfo = styled.div`
   color: ${colors.gray2};
   font-size: 14px;
+`
+
+const IconButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `
 
 export default ItemViewer

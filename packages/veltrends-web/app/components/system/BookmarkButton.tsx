@@ -5,14 +5,14 @@ import IconToggleButton from './IconToggleButton'
 
 interface Props {
   onClick?(): void
-  isLiked?: boolean
+  isActive?: boolean
 }
 
-function BookmarkButtton({ onClick, isLiked }: Props) {
+function BookmarkButton({ onClick, isActive }: Props) {
   return (
     <IconToggleButton
       onClick={onClick}
-      isActive={isLiked}
+      isActive={isActive}
       activeIcon={<StyledBookmarkFill key="fill" />}
       inactiveIcon={<StyledBookmarkOutline key="outline" />}
     />
@@ -27,4 +27,4 @@ const StyledBookmarkFill = styled(Bookmark)`
   color: ${colors.primary};
 `
 
-export default BookmarkButtton
+export default BookmarkButton

@@ -19,6 +19,7 @@ export interface Item {
   publisher: Publisher
   itemStats: ItemStats
   isLiked: boolean
+  isBookmarked: boolean
 }
 
 export interface ItemStats {
@@ -98,3 +99,11 @@ export interface Highlight {
 export type SearchItemsResult = Pagination<SearchResultItem>
 
 export type ListMode = 'recent' | 'trending' | 'past'
+
+export interface Bookmark {
+  id: number
+  item: Item
+  createdAt: string
+}
+
+export type GetBookmarksResult = Pagination<Bookmark>

@@ -131,6 +131,7 @@ class ItemService {
     cursor?: number | null
     userId?: number
   }) {
+    console.log({ userId })
     const [totalCount, list] = await Promise.all([
       db.item.count(),
       db.item.findMany({
@@ -154,6 +155,8 @@ class ItemService {
         take: limit,
       }),
     ])
+
+    console.log(JSON.stringify(list[0], null, 2))
 
     const endCursor = list.at(-1)?.id ?? null
     const hasNextPage = endCursor
@@ -405,12 +408,18 @@ class ItemService {
       const _limit = limit ?? 20
 
       if (mode === 'trending') {
-        return this.getTrendingItems({ limit: _limit, cursor })
+        return this.getTrendingItems({ limit: _limit, cursor, userId })
       }
       if (mode === 'past') {
-        return this.getPastItems({ limit: _limit, cursor, startDate, endDate })
+        return this.getPastItems({
+          limit: _limit,
+          cursor,
+          startDate,
+          endDate,
+          userId,
+        })
       }
-      return this.getRecentItems({ limit: _limit, cursor })
+      return this.getRecentItems({ limit: _limit, cursor, userId })
     })()
 
     const serializedList = list.map(this.serialize)
