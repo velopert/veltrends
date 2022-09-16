@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { type SearchResultItem } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import SearchResultCard from './SearchResultCard'
 
 interface Props {
@@ -24,5 +25,9 @@ const Block = styled.div`
   display: flex;
   gap: 24px;
   flex-direction: column;
+  ${media.desktop} {
+    width: 768px;
+    margin: 0 auto;
+  }
 `
 export default SearchResultCardList

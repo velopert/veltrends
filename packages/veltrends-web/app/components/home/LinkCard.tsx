@@ -12,6 +12,7 @@ import LikeButton from '../system/LikeButton'
 import { Globe } from '../vectors'
 import BookmarkButton from '../system/BookmarkButton'
 import { useBookmarkManager } from '~/hooks/useBookmarkManager'
+import { media } from '~/lib/media'
 
 interface Props {
   item: Item
@@ -70,18 +71,20 @@ function LinkCard({ item }: Props) {
         <h3>{title}</h3>
         <p>{body}</p>
       </StyledLink>
-      <AnimatePresence initial={false}>
-        {likes === 0 ? null : (
-          <LikesCount
-            key="likes"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 26, opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-          >
-            좋아요 {likes.toLocaleString()}개
-          </LikesCount>
-        )}
-      </AnimatePresence>
+      <LikeCountWrapper>
+        <AnimatePresence initial={false}>
+          {likes === 0 ? null : (
+            <LikesCount
+              key="likes"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 26, opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+            >
+              좋아요 {likes.toLocaleString()}개
+            </LikesCount>
+          )}
+        </AnimatePresence>
+      </LikeCountWrapper>
       <Footer>
         <IconButtons>
           <LikeButton isLiked={isLiked} onClick={toggleLike} />
@@ -119,13 +122,23 @@ const Block = styled.div`
     font-size: 14px;
     line-height: 1.5;
     color: ${colors.gray4};
+    ${media.tablet} {
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 84px;
+    }
   }
 `
 
 const Thumbnail = styled.img`
   width: 100%;
-  /* aspect-ratio: 288/192; */
   max-height: 40vh;
+  ${media.tablet} {
+    aspect-ratio: 288/192;
+  }
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 0 3px rgb(0 0 0 / 15%);
@@ -165,6 +178,12 @@ const Footer = styled.div`
   justify-content: space-between;
 `
 
+const LikeCountWrapper = styled.div`
+  ${media.tablet} {
+    height: 26px;
+  }
+`
+
 const UserInfo = styled.div`
   color: ${colors.gray2};
   font-size: 14px;
@@ -174,6 +193,10 @@ const IconButtons = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+`
+
+const EmptyLikeArea = styled.div`
+  height: 26px;
 `
 
 export default LinkCard

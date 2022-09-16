@@ -11,7 +11,7 @@ import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
 import { searchItems } from '~/lib/api/search'
 import SearchResultCardList from '~/components/search/SearchResultCardList'
 import { type SearchItemsResult } from '~/lib/api/types'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -56,6 +56,15 @@ export default function Search() {
       },
     },
   )
+
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    queryClient.setQueryData(['searchResults', debouncedSearchText], {
+      pageParams: [undefined],
+      pages: [data],
+    })
+  }, [data, debouncedSearchText, queryClient])
+
   const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 

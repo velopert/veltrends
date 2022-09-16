@@ -1,8 +1,7 @@
 import { json, type LoaderFunction } from '@remix-run/node'
-import { useFetcher, useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { useAnimation } from 'framer-motion'
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import LinkCardList from '~/components/home/LinkCardList'
@@ -12,6 +11,7 @@ import TabLayout from '~/components/layouts/TabLayout'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
 import { type ListMode, type GetItemsResult } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
 
@@ -94,10 +94,12 @@ export default function Index() {
 
   return (
     <StyledTabLayout>
-      <ListModeSelector mode={mode} onSelectMode={onSelectMode} />
-      {mode === 'past' && <WeekSelector dateRange={dateRange} />}
-      {items ? <LinkCardList items={items} /> : null}
-      <div ref={ref} />
+      <Content>
+        <ListModeSelector mode={mode} onSelectMode={onSelectMode} />
+        {mode === 'past' && <WeekSelector dateRange={dateRange} />}
+        {items ? <LinkCardList items={items} /> : null}
+        <div ref={ref} />
+      </Content>
     </StyledTabLayout>
   )
 }
@@ -106,4 +108,13 @@ const StyledTabLayout = styled(TabLayout)`
   padding-top: 16px;
   padding-left: 16px;
   padding-right: 16px;
+  padding-bottom: 16px;
+`
+
+const Content = styled.div`
+  ${media.wide} {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `

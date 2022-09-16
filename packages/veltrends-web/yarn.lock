@@ -6535,6 +6535,14 @@ safe-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sangte@^0.1.23:
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/sangte/-/sangte-0.1.23.tgz#459fec2b4f729defe8c5a8aa22886f4304e887a8"
+  integrity sha512-eIVmw06b87byBPi10y1sbaMzIgQoRXBTc4RWdXgiZBSe+Ucr94ipN1HrEx1RI+fbwNq1YNtjS6eDw+H9k2HJSw==
+  dependencies:
+    immer "^9.0.15"
+    use-sync-external-store "^1.2.0"
+
 scheduler@^0.23.0:
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.0.tgz#ba8041afc3d30eb206a487b6b384002e4e61fdfe"

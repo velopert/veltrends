@@ -1,5 +1,6 @@
 import { json, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
+import styled from 'styled-components'
 import MoreVertButton from '~/components/base/MoreVertButton'
 import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 import CommentList from '~/components/items/CommentList'
@@ -10,6 +11,7 @@ import { useUser } from '~/contexts/UserContext'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { deleteItem, getComments, getItem } from '~/lib/api/items'
 import { type Comment, type Item as ItemType } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import { useBottomSheetModalStore } from '~/stores/useBottomSheetModalStore'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -76,13 +78,25 @@ function Item() {
       title={null}
       headerRight={isMyItem && <MoreVertButton onClick={onClickMore} />}
     >
-      <ItemViewer item={loaderData.item} />
-      {/* `comments` is always valid due to SSR */}
-      <CommentList comments={comments!} />
-      <CommentInputOverlay />
+      <Content>
+        <ItemViewer item={loaderData.item} />
+        {/* `comments` is always valid due to SSR */}
+        <CommentList comments={comments!} />
+        <CommentInputOverlay />
+      </Content>
     </BasicLayout>
   )
 }
+
+const Content = styled.div`
+  ${media.tablet} {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 768px;
+    margin: 0 auto;
+    margin-top: 64px;
+  }
+`
 
 // @todo: handle 404
 

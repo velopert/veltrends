@@ -8,6 +8,7 @@ import TabLayout from '~/components/layouts/TabLayout'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getBookmarks } from '~/lib/api/bookmark'
 import { type GetBookmarksResult } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import { checkIsLoggedIn } from '~/lib/protectRoute'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -43,8 +44,10 @@ export default function Bookmarks() {
 
   return (
     <StyledTabLayout>
-      {items ? <LinkCardList items={items} /> : null}
-      <div ref={ref} />
+      <Content>
+        {items ? <LinkCardList items={items} /> : null}
+        <div ref={ref} />
+      </Content>
     </StyledTabLayout>
   )
 }
@@ -54,4 +57,12 @@ const StyledTabLayout = styled(TabLayout)`
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 16px;
+`
+
+const Content = styled.div`
+  ${media.wide} {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `
