@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
+import { media } from '~/lib/media'
 import { Logo } from '../vectors'
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
   className?: string
 }
 
-function Header({ title = <Logo />, headerLeft, headerRight, className }: Props) {
+function MobileHeader({ title = <Logo />, headerLeft, headerRight, className }: Props) {
   return (
     <Block className={className}>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}
@@ -28,6 +29,9 @@ const Block = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
+  ${media.mobile} {
+    display: none;
+  }
 `
 
 const Title = styled.div`
@@ -50,4 +54,4 @@ const HeaderSide = styled.div<{ position: 'left' | 'right' }>`
   align-items: center;
 `
 
-export default Header
+export default MobileHeader

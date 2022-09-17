@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Header from '~/components/base/Header'
+import MobileHeader from '~/components/base/MobileHeader'
 import TabLayout from '~/components/layouts/TabLayout'
 import SearchInput from '~/components/search/SearchInput'
 import { useDebounce } from 'use-debounce'
@@ -93,7 +93,7 @@ export default function Search() {
   )
 }
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled(MobileHeader)`
   & > .title {
     width: 100%;
   }

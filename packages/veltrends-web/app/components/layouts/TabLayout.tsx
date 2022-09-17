@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+import DesktopHeader from '../base/DesktopHeader'
 import Footer from '../base/Footer'
-import Header from '../base/Header'
+import MobileHeader from '../base/MobileHeader'
 import FullHeightPage from '../system/FullHeightPage'
 
 interface Props {
@@ -15,7 +16,12 @@ interface Props {
 function TabLayout({ header, children, className }: Props) {
   return (
     <FullHeightPage>
-      {header ?? <Header />}
+      {header ?? (
+        <>
+          <MobileHeader />
+          <DesktopHeader />
+        </>
+      )}
       <Content className={className}>{children}</Content>
       <Footer />
     </FullHeightPage>

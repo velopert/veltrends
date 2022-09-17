@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useGoBack } from '~/hooks/useGoBack'
-import Header from '../base/Header'
+import MobileHeader from '../base/MobileHeader'
 import HeaderBackButton from '../base/HeaderBackButton'
 import FullHeightPage from '../system/FullHeightPage'
 
@@ -16,7 +16,7 @@ function BasicLayout({ hasBackButton, title, children, onGoBack, headerRight }: 
 
   return (
     <FullHeightPage>
-      <Header
+      <MobileHeader
         title={title}
         headerLeft={hasBackButton ? <HeaderBackButton onClick={onGoBack ?? goBack} /> : undefined}
         headerRight={headerRight}
