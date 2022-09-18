@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
@@ -8,7 +9,9 @@ import SearchArea from './SearchArea'
 function DesktopHeader() {
   return (
     <Block>
-      <StyledLogo />
+      <HomeLink to="/">
+        <StyledLogo />
+      </HomeLink>
       <Content>
         <Addon></Addon>
         <Addon>
@@ -59,6 +62,11 @@ const Addon = styled.div`
 const Buttons = styled.div`
   display: flex;
   gap: 8px;
+`
+
+const HomeLink = styled(Link)`
+  display: block;
+  color: inherit;
 `
 
 export default DesktopHeader
