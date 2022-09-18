@@ -115,6 +115,7 @@ const Block = styled.div`
 `
 
 const Mode = styled.div<{ isActive?: boolean }>`
+  cursor: pointer;
   display: flex;
   align-items: center;
   color: ${colors.gray3};
