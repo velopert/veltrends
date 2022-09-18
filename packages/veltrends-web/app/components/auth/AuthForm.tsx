@@ -153,7 +153,10 @@ const ActionErrorMessage = styled.div`
 `
 
 const DesktopLogoLink = styled(Link)`
-  display: flex;
+  display: none;
+  ${media.mobile} {
+    display: flex;
+  }
   justify-content: center;
   margin-bottom: 48px;
   svg {
