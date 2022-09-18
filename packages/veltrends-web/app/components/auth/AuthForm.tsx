@@ -1,14 +1,15 @@
-import { json, type ActionFunction } from '@remix-run/node'
-import { Form, useActionData, useSearchParams, useTransition } from '@remix-run/react'
-import { useEffect, useMemo, useState } from 'react'
+import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 import { useForm } from '~/hooks/useForm'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
-import { AppError } from '~/lib/error'
-import { isValidPassword, isValidUsername } from '~/lib/regex'
+import { colors } from '~/lib/colors'
+import { type AppError } from '~/lib/error'
+import { media } from '~/lib/media'
 import { validate } from '~/lib/validate'
 import Button from '../system/Button'
 import LabelInput from '../system/LabelInput'
+import { Logo } from '../vectors'
 import QuestionLink from './QuestionLink'
 
 interface ActionData {
@@ -74,6 +75,9 @@ function AuthForm({ mode, error }: Props) {
 
   return (
     <StyledForm method="post" onSubmit={onSubmit}>
+      <DesktopLogoLink to="/">
+        <Logo />
+      </DesktopLogoLink>
       <InputGroup>
         <LabelInput
           label="아이디"
@@ -116,6 +120,12 @@ const StyledForm = styled(Form)`
   flex: 1;
 
   justify-content: space-between;
+
+  ${media.mobile} {
+    justify-content: center;
+    width: 460px;
+    align-self: center;
+  }
 `
 
 const InputGroup = styled.div`
@@ -130,12 +140,27 @@ const ActionsBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 24px;
+
+  ${media.mobile} {
+    margin-top: 24px;
+  }
 `
 
 const ActionErrorMessage = styled.div`
   text-align: center;
   color: red;
   font-size: 14px;
+`
+
+const DesktopLogoLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 48px;
+  svg {
+    color: ${colors.gray5};
+    height: 32px;
+    width: auto;
+  }
 `
 
 export default AuthForm
