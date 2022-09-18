@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/lib/colors'
 import { hover } from '~/lib/styles'
@@ -7,9 +8,31 @@ interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth'
   variant?: 'primary' | 'secondary' | 'text'
 }
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {}
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {
+  to?: string
+}
 
-function Button({ layoutMode = 'inline', variant = 'primary', size = 'medium', ...rest }: Props) {
+function Button({
+  layoutMode = 'inline',
+  variant = 'primary',
+  size = 'medium',
+  to,
+  ...rest
+}: Props) {
+  if (to) {
+    return (
+      <StyledLink
+        layoutMode={layoutMode}
+        variant={variant}
+        size={size}
+        to={to}
+        className={rest.className}
+        style={rest.style}
+      >
+        {rest.children}
+      </StyledLink>
+    )
+  }
   return <StyledButton layoutMode={layoutMode} variant={variant} size={size} {...rest} />
 }
 
@@ -51,7 +74,7 @@ const sizeStyles = {
   `,
 }
 
-const StyledButton = styled.button<ButtonProps>`
+const sharedStyles = css<ButtonProps>`
   display: flex;
   ${(props) => variantStyles[props.variant!]}
   ${(props) => sizeStyles[props.size!]}
@@ -72,6 +95,15 @@ const StyledButton = styled.button<ButtonProps>`
     css`
       width: 100%;
     `}
+`
+
+const StyledButton = styled.button<ButtonProps>`
+  ${sharedStyles}
+`
+
+const StyledLink = styled(Link)<ButtonProps>`
+  ${sharedStyles}
+  text-decoration: none;
 `
 
 export default Button

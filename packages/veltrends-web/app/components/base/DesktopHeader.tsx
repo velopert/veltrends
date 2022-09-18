@@ -17,10 +17,12 @@ function DesktopHeader() {
         <Addon>
           <SearchArea />
           <Buttons>
-            <Button variant="text" size="small">
+            <Button variant="text" size="small" to="/auth/login">
               로그인
             </Button>
-            <Button size="small">회원가입</Button>
+            <Button size="small" to="/auth/register">
+              회원가입
+            </Button>
           </Buttons>
         </Addon>
       </Content>
