@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
+import { mediaQuery } from '~/lib/media'
 import Button from '../system/Button'
 import { User } from '../vectors'
 import UserMenu from './UserMenu'
@@ -19,6 +20,9 @@ function UserAddon({ username }: { username: string }) {
 
   return (
     <Responsive>
+      <WriteButton to="/write" size="small" variant="secondary">
+        새 글 작성
+      </WriteButton>
       <Button variant="text" size="small" onClick={onOpen} ref={buttonRef}>
         <Block>
           <User />
@@ -42,6 +46,14 @@ const Block = styled.span`
     margin-right: 8px;
     width: 20px;
     height: 20px;
+  }
+`
+
+const WriteButton = styled(Button)`
+  margin-right: 8px;
+  display: none;
+  ${mediaQuery(700)} {
+    display: flex;
   }
 `
 

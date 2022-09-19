@@ -34,7 +34,7 @@ function UserMenu({ visible, onClose }: Props) {
         >
           <TriangleBorder />
           <Triangle />
-          <MenuItem isMobileHidden onClick={() => navigate('/write')}>
+          <MenuItem isDesktopHidden onClick={() => navigate('/write')}>
             새 글 등록
           </MenuItem>
           <MenuItem onClick={() => navigate('/account')}>내 계정</MenuItem>
@@ -56,7 +56,7 @@ const Block = styled(motion.div)`
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
 `
 
-const MenuItem = styled.div<{ isMobileHidden?: boolean }>`
+const MenuItem = styled.div<{ isDesktopHidden?: boolean }>`
   padding: 16px;
   cursor: pointer;
   &:hover {
@@ -64,11 +64,11 @@ const MenuItem = styled.div<{ isMobileHidden?: boolean }>`
     background: ${colors.gray0};
   }
   ${(props) =>
-    props.isMobileHidden &&
+    props.isDesktopHidden &&
     css`
-      display: none;
+      display: block;
       ${mediaQuery(700)} {
-        display: block;
+        display: none;
       }
     `}
 `
