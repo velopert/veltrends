@@ -1,4 +1,5 @@
 import { Link } from '@remix-run/react'
+import { forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 import { colors } from '~/lib/colors'
 import { hover } from '~/lib/styles'
@@ -12,29 +13,30 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonPro
   to?: string
 }
 
-function Button({
-  layoutMode = 'inline',
-  variant = 'primary',
-  size = 'medium',
-  to,
-  ...rest
-}: Props) {
-  if (to) {
+const Button = forwardRef<HTMLButtonElement, Props>(
+  ({ layoutMode = 'inline', variant = 'primary', size = 'medium', to, ...rest }, ref) => {
+    if (to) {
+      return (
+        <StyledLink
+          layoutMode={layoutMode}
+          variant={variant}
+          size={size}
+          to={to}
+          className={rest.className}
+          style={rest.style}
+          ref={ref as any}
+        >
+          {rest.children}
+        </StyledLink>
+      )
+    }
     return (
-      <StyledLink
-        layoutMode={layoutMode}
-        variant={variant}
-        size={size}
-        to={to}
-        className={rest.className}
-        style={rest.style}
-      >
-        {rest.children}
-      </StyledLink>
+      <StyledButton layoutMode={layoutMode} variant={variant} size={size} ref={ref} {...rest} />
     )
-  }
-  return <StyledButton layoutMode={layoutMode} variant={variant} size={size} {...rest} />
-}
+  },
+)
+
+Button.displayName = 'Button'
 
 const variantStyles = {
   primary: css`

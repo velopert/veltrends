@@ -1,12 +1,15 @@
 import { Link } from '@remix-run/react'
 import styled from 'styled-components'
+import { useUser } from '~/contexts/UserContext'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import Button from '../system/Button'
 import { Logo } from '../vectors'
 import SearchArea from './SearchArea'
+import UserAddon from './UserAddon'
 
 function DesktopHeader() {
+  const user = useUser()
   return (
     <Block>
       <HomeLink to="/">
@@ -16,14 +19,18 @@ function DesktopHeader() {
         <Addon></Addon>
         <Addon>
           <SearchArea />
-          <Buttons>
-            <Button variant="text" size="small" to="/auth/login">
-              로그인
-            </Button>
-            <Button size="small" to="/auth/register">
-              회원가입
-            </Button>
-          </Buttons>
+          {user ? (
+            <UserAddon username={user.username} />
+          ) : (
+            <Buttons>
+              <Button variant="text" size="small" to="/auth/login">
+                로그인
+              </Button>
+              <Button size="small" to="/auth/register">
+                회원가입
+              </Button>
+            </Buttons>
+          )}
         </Addon>
       </Content>
     </Block>
