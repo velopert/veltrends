@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
+import { media } from '~/lib/media'
 import Button from '../system/Button'
 
 interface Props {
@@ -27,6 +28,14 @@ const StyledForm = styled.form`
   padding-bottom: 24px;
   display: flex;
   flex-direction: column;
+
+  ${media.mobile} {
+    flex: 1;
+    justify-content: center;
+    width: 460px;
+    align-self: center;
+  }
+
   h3 {
     color: ${colors.gray5};
     line-height: 1.5;
@@ -40,6 +49,11 @@ const Content = styled.section`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  ${media.mobile} {
+    flex: initial;
+    padding-bottom: 24px;
+  }
 `
 
 export default WriteFormTemplate

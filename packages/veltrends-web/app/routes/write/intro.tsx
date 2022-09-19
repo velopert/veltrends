@@ -22,8 +22,8 @@ export const action: ActionFunction = async ({ request }) => {
   const body = form.get('body') as string
 
   try {
-    await createItem({ link, title, body })
-    return redirect('/')
+    const item = await createItem({ link, title, body })
+    return redirect(`/items/${item.id}`)
   } catch (e) {
     const error = extractError(e)
     throw json(error, {

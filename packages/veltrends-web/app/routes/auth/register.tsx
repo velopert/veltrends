@@ -35,7 +35,7 @@ interface Props {
 export default function Register({ error }: Props) {
   useAuthRedirect()
   return (
-    <BasicLayout title="회원가입" hasBackButton>
+    <BasicLayout title="회원가입" hasBackButton desktopHeaderVisible={false}>
       <AuthForm mode="register" error={error} />
     </BasicLayout>
   )
