@@ -7,6 +7,8 @@ import {
   validateToken,
 } from '../lib/tokens.js'
 import { Token, User } from '@prisma/client'
+import NextAppError from '../lib/NextAppError.js'
+import { validate } from '../lib/validate.js'
 
 const SALT_ROUNDS = 10
 
@@ -157,6 +159,60 @@ class UserService {
     } catch (e) {
       throw new AppError('RefreshTokenError')
     }
+  }
+
+  async changePassword({
+    oldPassword,
+    newPassword,
+    userId,
+  }: {
+    oldPassword: string
+    newPassword: string
+    userId: number
+  }) {
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!validate.password(newPassword)) {
+      throw new NextAppError('BadRequest', { message: 'Password is invalid' })
+    }
+
+    try {
+      if (!user) {
+        throw new Error()
+      }
+
+      const result = await bcrypt.compare(oldPassword, user.passwordHash)
+      if (!result) {
+        throw new Error()
+      }
+    } catch (e) {
+      throw new NextAppError('Forbidden', {
+        message: 'Password does not match',
+      })
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS)
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        passwordHash,
+      },
+    })
+    return true
+  }
+
+  unregister(userId: number) {
+    return db.user.delete({
+      where: {
+        id: userId,
+      },
+    })
   }
 }
 

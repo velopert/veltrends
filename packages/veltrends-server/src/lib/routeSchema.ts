@@ -11,6 +11,7 @@ type RouteSchema = {
   params?: TSchema
   body?: TSchema
   querystring?: TSchema
+  response?: unknown
 }
 
 type RouteType<T extends RouteSchema> = {

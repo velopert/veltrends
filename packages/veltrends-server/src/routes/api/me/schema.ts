@@ -1,27 +1,49 @@
-import { FastifySchema } from 'fastify'
-import { appErrorSchema, createAppErrorSchema } from '../../../lib/AppError.js'
+import { Type } from '@sinclair/typebox'
+import { createAppErrorSchema } from '../../../lib/AppError.js'
+import { createRouteSchema, RoutesType } from '../../../lib/routeSchema.js'
 import { UserSchema } from '../../../schema/userSchema.js'
 
-export const getMeSchema: FastifySchema = {
-  response: {
-    200: UserSchema,
-    401: createAppErrorSchema(
-      {
-        name: 'UnauthorizedError',
-        message: 'Unauthorized',
-        statusCode: 401,
-        payload: {
-          isExpiredToken: true,
-        },
-      },
-      {
-        type: 'object',
-        properties: {
-          isExpiredToken: {
-            type: 'boolean',
-          },
-        },
-      },
-    ),
+const UnauthorizedErrorSchema = createAppErrorSchema(
+  {
+    name: 'UnauthorizedError',
+    message: 'Unauthorized',
+    statusCode: 401,
+    payload: {
+      isExpiredToken: true,
+    },
   },
-}
+  Type.Object({
+    isExpiredToken: Type.Boolean(),
+  }),
+)
+
+export const MeRouteSchema = createRouteSchema({
+  GetAccount: {
+    response: {
+      200: UserSchema,
+      401: UnauthorizedErrorSchema,
+    },
+  },
+  UpdatePassword: {
+    body: Type.Object({
+      oldPassword: Type.String(),
+      newPassword: Type.String(),
+    }),
+    response: {
+      204: Type.Null(),
+      401: UnauthorizedErrorSchema,
+      403: createAppErrorSchema({
+        name: 'ForbiddenError',
+        message: 'Password does not match',
+        statusCode: 403,
+      }),
+    },
+  },
+  Unregister: {
+    response: {
+      204: Type.Null(),
+    },
+  },
+})
+
+export type MeRoute = RoutesType<typeof MeRouteSchema>

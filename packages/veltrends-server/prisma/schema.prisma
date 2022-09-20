@@ -29,7 +29,7 @@ model User {
 
 model Token {
   id              Int      @id @default(autoincrement())
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          Int
   rotationCounter Int      @default(1)
   createdAt       DateTime @default(now())

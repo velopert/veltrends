@@ -1,14 +1,15 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import AppError from '../../../lib/AppError.js'
+import { clearCookie, setTokenCookie } from '../../../lib/cookies.js'
 import UserService from '../../../services/UserService.js'
-import { loginSchema, registerSchema, AuthBodyType } from './schema.js'
+import { AuthRouteSchema, AuthRoute } from './schema.js'
 
 const authRoute: FastifyPluginAsync = async (fastify) => {
   const userService = UserService.getInstance()
 
-  fastify.post<{ Body: AuthBodyType }>(
+  fastify.post<AuthRoute['Login']>(
     '/login',
-    { schema: loginSchema },
+    { schema: AuthRouteSchema.Login },
     async (request, reply) => {
       const authResult = await userService.login(request.body)
       setTokenCookie(reply, authResult.tokens)
@@ -16,10 +17,10 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.post<{ Body: AuthBodyType }>(
+  fastify.post<AuthRoute['Register']>(
     '/register',
     {
-      schema: registerSchema,
+      schema: AuthRouteSchema.Register,
     },
     async (request, reply) => {
       const authResult = await userService.register(request.body)
@@ -28,9 +29,9 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.post<{ Body: { refreshToken?: string } }>(
+  fastify.post<AuthRoute['RefreshToken']>(
     '/refresh',
-    { schema: registerSchema },
+    { schema: AuthRouteSchema.RefreshToken },
     async (request, reply) => {
       const refreshToken =
         request.body.refreshToken ?? request.cookies.refresh_token ?? ''
@@ -42,22 +43,17 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
       return tokens
     },
   )
-}
 
-function setTokenCookie(
-  reply: FastifyReply,
-  tokens: { accessToken: string; refreshToken: string },
-) {
-  reply.setCookie('access_token', tokens.accessToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60),
-    path: '/',
-  })
-  reply.setCookie('refresh_token', tokens.refreshToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-    path: '/',
-  })
+  fastify.post<AuthRoute['Logout']>(
+    '/logout',
+    {
+      schema: AuthRouteSchema.Logout,
+    },
+    async (request, reply) => {
+      clearCookie(reply)
+      reply.status(204)
+    },
+  )
 }
 
 export default authRoute

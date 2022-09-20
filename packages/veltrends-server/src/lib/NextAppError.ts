@@ -65,6 +65,9 @@ export default class AppError extends Error {
   ) {
     const errorInfo = errors[name]
     super(payload?.message ?? errorInfo.message)
+    if (payload?.message) {
+      delete payload.message
+    }
     this.statusCode = errorInfo.statusCode
   }
 }
