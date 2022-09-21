@@ -1,4 +1,6 @@
-import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import styled, { css } from 'styled-components'
+import TabLayout from '~/components/layouts/TabLayout'
 import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'
 
@@ -6,12 +8,14 @@ function SettingIndex() {
   const logout = useLogout()
 
   return (
-    <Block>
-      <ListWrapper>
-        <ListItem>내 계정</ListItem>
-        <ListItem onClick={logout}>로그아웃</ListItem>
-      </ListWrapper>
-    </Block>
+    <TabLayout>
+      <Block>
+        <ListWrapper>
+          <ListItemLink to="/setting/account">내 계정</ListItemLink>
+          <ListItem onClick={logout}>로그아웃</ListItem>
+        </ListWrapper>
+      </Block>
+    </TabLayout>
   )
 }
 
@@ -21,17 +25,28 @@ const Block = styled.div`
 `
 
 const ListWrapper = styled.div`
-  div + div {
+  * + div {
     border-top: 1px solid ${colors.gray0};
   }
 `
 
-const ListItem = styled.div`
+const listItemStyle = css`
   padding: 16px;
+  color: ${colors.gray5};
   background: white;
   &:active {
     opacity: 0.7;
   }
+`
+
+const ListItem = styled.div`
+  ${listItemStyle}
+`
+
+const ListItemLink = styled(Link)`
+  ${listItemStyle}
+  display: block;
+  text-decoration: none;
 `
 
 export default SettingIndex

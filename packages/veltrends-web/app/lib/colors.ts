@@ -7,4 +7,5 @@ export const colors = {
   gray5: '#121212',
   primary: '#FFA000',
   secondary: '#FFF4E0',
+  destructive: 'red',
 }

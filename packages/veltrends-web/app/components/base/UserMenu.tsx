@@ -39,7 +39,7 @@ function UserMenu({ visible, onClose }: Props) {
           <MenuItem isDesktopHidden onClick={() => navigate('/write')}>
             새 글 등록
           </MenuItem>
-          <MenuItem onClick={() => navigate('/account')}>내 계정</MenuItem>
+          <MenuItem onClick={() => navigate('/setting/account')}>내 계정</MenuItem>
           <MenuItem onClick={() => navigate('/bookmarks')}>북마크</MenuItem>
           <MenuItem onClick={logout}>로그아웃</MenuItem>
         </Block>
