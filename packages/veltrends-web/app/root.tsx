@@ -1,3 +1,4 @@
+import './styles.css'
 import { LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
 import {
   Links,
@@ -14,12 +15,13 @@ import GlobalBottomSheetModal from './components/system/GlobalBottomSheetModal'
 import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
 import { DialogProvider } from './contexts/DialogContext'
-import { UserContext } from './contexts/UserContext'
 import GlobalStyle from './GlobalStyle'
 import { getMyAccount } from './lib/api/auth'
 import { User } from './lib/api/types'
 import { setClientCookie } from './lib/client'
 import { extractError } from './lib/error'
+import { SangteProvider } from 'sangte'
+import { userState } from './states/user'
 
 function extractPathNameFromUrl(url: string) {
   const { pathname } = new URL(url)
@@ -27,6 +29,7 @@ function extractPathNameFromUrl(url: string) {
 }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
+  console.log('iamrunning')
   const cookie = request.headers.get('Cookie')
 
   /*
@@ -81,18 +84,22 @@ export default function App() {
         {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
-        <GlobalStyle />
-        <QueryClientProvider client={queryClient}>
-          <DialogProvider>
-            <UserContext.Provider value={data}>
+        <SangteProvider
+          initialize={({ set }) => {
+            set(userState, data)
+          }}
+        >
+          <GlobalStyle />
+          <QueryClientProvider client={queryClient}>
+            <DialogProvider>
               <Outlet />
-            </UserContext.Provider>
-          </DialogProvider>
-          <GlobalBottomSheetModal />
-        </QueryClientProvider>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+            </DialogProvider>
+            <GlobalBottomSheetModal />
+          </QueryClientProvider>
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </SangteProvider>
       </body>
     </html>
   )

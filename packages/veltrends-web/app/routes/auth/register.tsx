@@ -1,10 +1,12 @@
 import { type ActionFunction, json } from '@remix-run/node'
-import { type ThrownResponse, useCatch } from '@remix-run/react'
+import { type ThrownResponse, useCatch, useActionData } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
-import { register } from '~/lib/api/auth'
+import { AuthResult, register } from '~/lib/api/auth'
 import { type AppError, extractError } from '~/lib/error'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
+import { useSetUser } from '~/states/user'
+import { useEffect } from 'react'
 
 /** @todo: redirect to home when already logged in */
 
@@ -34,6 +36,17 @@ interface Props {
 
 export default function Register({ error }: Props) {
   useAuthRedirect()
+
+  const actionData = useActionData<AuthResult>()
+  const setUser = useSetUser()
+
+  useAuthRedirect()
+
+  useEffect(() => {
+    if (!actionData) return
+    setUser(actionData.user)
+  }, [actionData, setUser])
+
   return (
     <BasicLayout title="회원가입" hasBackButton desktopHeaderVisible={false}>
       <AuthForm mode="register" error={error} />

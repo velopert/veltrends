@@ -19,6 +19,10 @@ export async function login(params: AuthParams) {
   return { result, headers }
 }
 
+export async function logout() {
+  return client.post('/api/auth/logout')
+}
+
 export async function getMyAccount() {
   const response = await client.get<AuthResult>('http://localhost:4000/api/me')
   return response.data

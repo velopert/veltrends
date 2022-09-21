@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { type ListMode } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
@@ -77,6 +77,8 @@ function ListModeSelector({ mode, onSelectMode }: Props) {
   )
 }
 
+const useIsomorphicEffect = typeof window === 'undefined' ? useLayoutEffect : useLayoutEffect
+
 function ListModeItem({
   currentMode,
   mode,
@@ -94,7 +96,7 @@ function ListModeItem({
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!ref.current) return
     onUpdateSize(index, ref.current.clientWidth)
   }, [onUpdateSize, index])

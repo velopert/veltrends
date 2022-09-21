@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useUser } from '~/contexts/UserContext'
+import { useUser } from '~/states/user'
 import { useCommentLike } from '~/hooks/useCommentLike'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useDeleteComment } from '~/hooks/useDeleteComment'

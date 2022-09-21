@@ -1,6 +1,6 @@
 import { useNavigate } from '@remix-run/react'
 import { useEffect } from 'react'
-import { useUser } from '~/contexts/UserContext'
+import { useUser } from '~/states/user'
 
 export function useProtectedRoute() {
   const user = useUser()

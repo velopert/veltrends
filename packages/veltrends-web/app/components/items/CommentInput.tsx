@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useUser } from '~/contexts/UserContext'
+import { useUser } from '~/states/user'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { colors } from '~/lib/colors'
 import { useCommentInputStore } from '~/stores/useCommentInputStore'

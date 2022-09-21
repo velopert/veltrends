@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { useOnClickOutside } from '~/hooks/useClickOutside'
+import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'
 import { mediaQuery } from '~/lib/media'
 
@@ -16,6 +17,7 @@ function UserMenu({ visible, onClose }: Props) {
   useOnClickOutside(ref, (e) => {
     onClose(e)
   })
+  const logout = useLogout()
 
   const navigate = useNavigate()
 
@@ -39,7 +41,7 @@ function UserMenu({ visible, onClose }: Props) {
           </MenuItem>
           <MenuItem onClick={() => navigate('/account')}>내 계정</MenuItem>
           <MenuItem onClick={() => navigate('/bookmarks')}>북마크</MenuItem>
-          <MenuItem>로그아웃</MenuItem>
+          <MenuItem onClick={logout}>로그아웃</MenuItem>
         </Block>
       ) : null}
     </AnimatePresence>

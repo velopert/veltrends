@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import { useItemOverrideById } from '~/stores/useItemOverrideStore'
-import { useUser } from '~/contexts/UserContext'
+import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
