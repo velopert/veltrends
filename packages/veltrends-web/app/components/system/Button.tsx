@@ -48,7 +48,7 @@ const variantStyles = {
   `,
   secondary: css`
     background: ${colors.secondary};
-    color: ${colors.primary};
+    color: ${colors.secondaryButtonText};
     ${hover(css`
       opacity: 0.875;
     `)}

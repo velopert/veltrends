@@ -35,7 +35,7 @@ export const MeRouteSchema = createRouteSchema({
       204: Type.Null(),
       401: UnauthorizedErrorSchema,
       403: createAppErrorSchema({
-        name: 'ForbiddenError',
+        name: 'Forbidden',
         message: 'Password does not match',
         statusCode: 403,
       }),
