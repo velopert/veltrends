@@ -8,7 +8,7 @@ interface Props {
 }
 
 function SearchResultCard({ item }: Props) {
-  const { publisher, author, highlight } = item
+  const { publisher, author, highlight, likes } = item
   return (
     <Block>
       {' '}
@@ -20,6 +20,7 @@ function SearchResultCard({ item }: Props) {
       {/** @todo: Secure this code **/}
       <h3 dangerouslySetInnerHTML={{ __html: highlight.title }}></h3>
       <p dangerouslySetInnerHTML={{ __html: highlight.body }}></p>
+      {likes > 0 ? <LikesCount>좋아요 {likes.toLocaleString()}개</LikesCount> : null}
     </Block>
   )
 }
@@ -70,4 +71,11 @@ const Publisher = styled.div`
   }
 `
 
+const LikesCount = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+  color: ${colors.gray4};
+  line-height: 1.5;
+  display: flex;
+`
 export default SearchResultCard
