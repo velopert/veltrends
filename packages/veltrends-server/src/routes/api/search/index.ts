@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import algolia from '../../../lib/algolia.js'
 import ItemService from '../../../services/ItemService.js'
 import { SearchRoute, SearchRouteSchema } from './schema.js'
+import sanitize from 'sanitize-html'
 
 export const searchRoute: FastifyPluginAsync = async (fastify) => {
   const itemService = ItemService.getInstance()
@@ -29,8 +30,8 @@ export const searchRoute: FastifyPluginAsync = async (fastify) => {
             title: item.title,
             body: item.body,
             highlight: {
-              title: hit._highlightResult?.title?.value ?? null,
-              body: hit._highlightResult?.body?.value ?? null,
+              title: sanitize(hit._highlightResult?.title?.value) ?? null,
+              body: sanitize(hit._highlightResult?.body?.value) ?? null,
             },
           }
         })

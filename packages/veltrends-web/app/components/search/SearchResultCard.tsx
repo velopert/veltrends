@@ -33,14 +33,12 @@ const Block = styled.div`
     font-size: 16px;
     color: ${colors.gray4};
     line-height: 1.5;
-    font-weight: 600;
-    em {
-      font-weight: 800;
-    }
+    font-weight: 500;
   }
   em {
     color: ${colors.gray5};
     font-style: normal;
+    font-weight: 800;
   }
   p {
     line-height: 1.5;
@@ -48,9 +46,6 @@ const Block = styled.div`
     margin-top: 8px;
     margin-bottom: 8px;
     color: ${colors.gray3};
-    em {
-      font-weight: 600;
-    }
   }
 `
 
