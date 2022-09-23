@@ -1,26 +1,28 @@
 import { FastifyPluginAsync, FastifyReply } from 'fastify'
 import AppError from '../../../lib/AppError.js'
 import { clearCookie, setTokenCookie } from '../../../lib/cookies.js'
+import { FastifyPluginAsyncTypebox } from '../../../lib/types.js'
 import UserService from '../../../services/UserService.js'
-import { AuthRouteSchema, AuthRoute } from './schema.js'
+import {
+  loginSchema,
+  logoutSchema,
+  refreshTokenSchema,
+  registerSchema,
+} from './schema.js'
 
-const authRoute: FastifyPluginAsync = async (fastify) => {
+const authRoute: FastifyPluginAsyncTypebox = async (fastify) => {
   const userService = UserService.getInstance()
 
-  fastify.post<AuthRoute['Login']>(
-    '/login',
-    { schema: AuthRouteSchema.Login },
-    async (request, reply) => {
-      const authResult = await userService.login(request.body)
-      setTokenCookie(reply, authResult.tokens)
-      return authResult
-    },
-  )
+  fastify.post('/login', { schema: loginSchema }, async (request, reply) => {
+    const authResult = await userService.login(request.body)
+    setTokenCookie(reply, authResult.tokens)
+    return authResult
+  })
 
-  fastify.post<AuthRoute['Register']>(
+  fastify.post(
     '/register',
     {
-      schema: AuthRouteSchema.Register,
+      schema: registerSchema,
     },
     async (request, reply) => {
       const authResult = await userService.register(request.body)
@@ -29,9 +31,9 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.post<AuthRoute['RefreshToken']>(
+  fastify.post(
     '/refresh',
-    { schema: AuthRouteSchema.RefreshToken },
+    { schema: refreshTokenSchema },
     async (request, reply) => {
       const refreshToken =
         request.body.refreshToken ?? request.cookies.refresh_token ?? ''
@@ -44,10 +46,10 @@ const authRoute: FastifyPluginAsync = async (fastify) => {
     },
   )
 
-  fastify.post<AuthRoute['Logout']>(
+  fastify.post(
     '/logout',
     {
-      schema: AuthRouteSchema.Logout,
+      schema: logoutSchema,
     },
     async (request, reply) => {
       clearCookie(reply)

@@ -13,7 +13,6 @@ import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
 import { calculateRankingScore } from '../lib/ranking.js'
-import { CreateItemBodyType, ItemType } from '../routes/api/items/schema.js'
 
 class ItemService {
   private static instance: ItemService
@@ -45,7 +44,12 @@ class ItemService {
 
   async createItem(
     userId: number,
-    { title, body, link, tags }: CreateItemBodyType,
+    {
+      title,
+      body,
+      link,
+      tags,
+    }: { title: string; body: string; link: string; tags?: string[] },
   ) {
     const info = await extractPageInfo(link)
     const publisher = await this.getPublisher({

@@ -19,7 +19,7 @@ export const ItemSchema = Type.Object({
   id: Type.Integer(),
   title: Type.String(),
   body: Type.String(),
-  link: Nullable(Type.String()),
+  link: Type.String(),
   thumbnail: Nullable(Type.String()),
   createdAt: Type.String(),
   updatedAt: Type.String(),
@@ -55,7 +55,7 @@ ItemSchema.example = {
   isLiked: true,
 }
 
-export const ItemParamsSchema = Type.Object({
+const ItemParamsSchema = Type.Object({
   id: Type.Integer(),
 })
 

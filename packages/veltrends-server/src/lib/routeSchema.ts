@@ -25,3 +25,7 @@ type RouteType<T extends RouteSchema> = {
 export type RoutesType<T extends Record<string, RouteSchema>> = {
   [K in keyof T]: RouteType<T[K]>
 }
+
+export function routeSchema<T extends FastifySchema>(schema: T) {
+  return schema
+}

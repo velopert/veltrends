@@ -8,10 +8,12 @@ import 'dotenv/config'
 import { authPlugin } from './plugins/authPlugin.js'
 import cors from '@fastify/cors'
 import { isNextAppError } from './lib/NextAppError.js'
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
+import { Type } from '@sinclair/typebox'
 
 const server = Fastify({
   logger: true,
-})
+}).withTypeProvider<TypeBoxTypeProvider>()
 
 if (process.env.NODE_ENV === 'development') {
   server.register(cors, {

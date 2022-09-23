@@ -1,5 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
-import { createAuthorizedRoute } from '../../../plugins/requireAuthPlugin.js'
+import requireAuthPlugin, {
+  createAuthorizedRoute,
+} from '../../../plugins/requireAuthPlugin.js'
 import ItemService from '../../../services/ItemService.js'
 import { commentsRoute } from './comments/index.js'
 import { ItemsRoute, ItemsRouteSchema } from './schema.js'
