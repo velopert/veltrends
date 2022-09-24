@@ -2,6 +2,7 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import {
   FastifyInstance,
   FastifyLoggerInstance,
+  FastifyPluginOptions,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerDefault,
@@ -15,6 +16,6 @@ type FastifyTypebox = FastifyInstance<
   TypeBoxTypeProvider
 >
 
-export type FastifyPluginAsyncTypebox = (
-  fastify: FastifyTypebox,
-) => Promise<void>
+export type FastifyPluginAsyncTypebox<
+  Options extends FastifyPluginOptions = Record<never, never>,
+> = (fastify: FastifyTypebox, opts: Options) => Promise<void>

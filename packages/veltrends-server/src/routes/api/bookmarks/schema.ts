@@ -1,6 +1,10 @@
 import { Type } from '@sinclair/typebox'
 import { PaginationSchema } from '../../../lib/pagination.js'
-import { createRouteSchema, RoutesType } from '../../../lib/routeSchema.js'
+import {
+  createRouteSchema,
+  routeSchema,
+  RoutesType,
+} from '../../../lib/routeSchema.js'
 import { ItemSchema } from '../items/schema.js'
 
 const BookmarkSchema = Type.Object({
@@ -9,31 +13,30 @@ const BookmarkSchema = Type.Object({
   createdAt: Type.String(),
 })
 
-export const BookmarksRouteSchema = createRouteSchema({
-  GetBookmarks: {
-    querystring: Type.Object({
-      cursor: Type.Optional(Type.Number()),
-    }),
-    response: {
-      200: PaginationSchema(BookmarkSchema),
-    },
-  },
-  CreateBookmark: {
-    body: Type.Object({
-      itemId: Type.Number(),
-    }),
-    response: {
-      200: BookmarkSchema,
-    },
-  },
-  DeleteBookmark: {
-    querystring: Type.Object({
-      itemId: Type.Number(),
-    }),
-    response: {
-      204: Type.Null(),
-    },
+export const getBookmarksSchema = routeSchema({
+  tags: ['bookmarks'],
+  querystring: Type.Object({
+    cursor: Type.Optional(Type.Number()),
+  }),
+  response: {
+    200: PaginationSchema(BookmarkSchema),
   },
 })
-
-export type BookmarksRoute = RoutesType<typeof BookmarksRouteSchema>
+export const createBookmarkSchema = routeSchema({
+  tags: ['bookmarks'],
+  body: Type.Object({
+    itemId: Type.Number(),
+  }),
+  response: {
+    200: BookmarkSchema,
+  },
+})
+export const deleteBookmarkSchema = routeSchema({
+  tags: ['bookmarks'],
+  querystring: Type.Object({
+    itemId: Type.Number(),
+  }),
+  response: {
+    204: Type.Null(),
+  },
+})

@@ -3,37 +3,33 @@ import requireAuthPlugin, {
   createAuthorizedRoute,
 } from '../../../plugins/requireAuthPlugin.js'
 import BookmarkService from '../../../services/BookmarkService.js'
-import { BookmarksRoute, BookmarksRouteSchema } from './schema.js'
+import {
+  createBookmarkSchema,
+  deleteBookmarkSchema,
+  getBookmarksSchema,
+} from './schema.js'
 
 export const bookmarksRoute = createAuthorizedRoute(async (fastify) => {
   const bookmarkService = BookmarkService.getInstance()
 
-  fastify.post<BookmarksRoute['CreateBookmark']>(
-    '/',
-    { schema: BookmarksRouteSchema.CreateBookmark },
-    async (request) => {
-      const { itemId } = request.body
-      const userId = request.user?.id!
-      return bookmarkService.createBookmark({ itemId, userId })
-    },
-  )
+  fastify.post('/', { schema: createBookmarkSchema }, async (request) => {
+    const { itemId } = request.body
+    const userId = request.user?.id!
+    return bookmarkService.createBookmark({ itemId, userId }) as any
+  })
 
-  fastify.get<BookmarksRoute['GetBookmarks']>(
-    '/',
-    { schema: BookmarksRouteSchema.GetBookmarks },
-    async (request) => {
-      const userId = request.user?.id!
-      return bookmarkService.getBookmarks({
-        userId,
-        limit: 5,
-        cursor: request.query.cursor,
-      })
-    },
-  )
+  fastify.get('/', { schema: getBookmarksSchema }, async (request) => {
+    const userId = request.user?.id!
+    return bookmarkService.getBookmarks({
+      userId,
+      limit: 5,
+      cursor: request.query.cursor,
+    }) as any
+  })
 
-  fastify.delete<BookmarksRoute['DeleteBookmark']>(
+  fastify.delete(
     '/',
-    { schema: BookmarksRouteSchema.DeleteBookmark },
+    { schema: deleteBookmarkSchema },
     async (request, reply) => {
       const { itemId } = request.query
       const userId = request.user?.id!

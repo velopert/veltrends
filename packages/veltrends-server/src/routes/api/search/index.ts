@@ -29,8 +29,8 @@ export const searchRoute: FastifyPluginAsyncTypebox = async (fastify) => {
           title: item.title,
           body: item.body,
           highlight: {
-            title: sanitize(hit._highlightResult?.title?.value) ?? null,
-            body: sanitize(hit._highlightResult?.body?.value) ?? null,
+            title: sanitize(hit._highlightResult?.title?.value ?? '') ?? null,
+            body: sanitize(hit._highlightResult?.body?.value ?? '') ?? null,
           },
         }
       })

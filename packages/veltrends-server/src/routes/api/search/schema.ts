@@ -33,6 +33,7 @@ const SearchResultItemSchema = Type.Object({
 })
 
 export const searchSchema = routeSchema({
+  tags: ['search'],
   querystring: SearchQuerySchema,
   response: {
     200: PaginationSchema(SearchResultItemSchema),

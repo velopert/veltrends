@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox'
-import { createRouteSchema, RoutesType } from '../../../../lib/routeSchema.js'
+import { routeSchema } from '../../../../lib/routeSchema.js'
 import { Nullable } from '../../../../lib/typebox.js'
 import { UserSchema } from '../../../../schema/userSchema.js'
 import { ItemParamsSchema } from '../schema.js'
@@ -50,57 +50,61 @@ CommentSchema = Type.Object({
   isLiked: Type.Boolean(),
 })
 
-export const CommentsRouteSchema = createRouteSchema({
-  GetComments: {
-    params: ItemParamsSchema,
-    response: {
-      200: Type.Array(CommentSchema),
-    },
-  },
-  GetComment: {
-    params: CommentParamsSchema,
-    response: {
-      200: CommentSchema,
-    },
-  },
-  GetSubcomments: {
-    params: CommentParamsSchema,
-    response: {
-      200: Type.Array(CommentSchema),
-    },
-  },
-  CreateComment: {
-    params: ItemParamsSchema,
-    body: CreateCommentBodySchema,
-    response: {
-      200: CommentSchema,
-    },
-  },
-  LikeComment: {
-    params: CommentParamsSchema,
-    response: {
-      200: CommentLikeSchema,
-    },
-  },
-  UnlikeComment: {
-    params: CommentParamsSchema,
-    response: {
-      200: CommentLikeSchema,
-    },
-  },
-  DeleteComment: {
-    params: CommentParamsSchema,
-    response: {
-      204: {},
-    },
-  },
-  UpdateComment: {
-    params: CommentParamsSchema,
-    body: UpdateCommentBodySchema,
-    response: {
-      200: CommentSchema,
-    },
+export const getCommentsSchema = routeSchema({
+  tags: ['comments'],
+  params: ItemParamsSchema,
+  response: {
+    200: Type.Array(CommentSchema),
   },
 })
-
-export type CommentsRoute = RoutesType<typeof CommentsRouteSchema>
+export const getCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  response: {
+    200: CommentSchema,
+  },
+})
+export const getSubcommentsSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  response: {
+    200: Type.Array(CommentSchema),
+  },
+})
+export const createCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: ItemParamsSchema,
+  body: CreateCommentBodySchema,
+  response: {
+    200: CommentSchema,
+  },
+})
+export const likeCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  response: {
+    200: CommentLikeSchema,
+  },
+})
+export const unlikeCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  response: {
+    200: CommentLikeSchema,
+  },
+})
+export const deleteCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  response: {
+    204: {},
+  },
+})
+export const updateCommentSchema = routeSchema({
+  tags: ['comments'],
+  params: CommentParamsSchema,
+  body: UpdateCommentBodySchema,
+  response: {
+    200: CommentSchema,
+  },
+})

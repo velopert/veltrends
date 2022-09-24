@@ -1,10 +1,6 @@
 import { Type } from '@sinclair/typebox'
 import { createAppErrorSchema } from '../../../lib/AppError.js'
-import {
-  createRouteSchema,
-  routeSchema,
-  RoutesType,
-} from '../../../lib/routeSchema.js'
+import { routeSchema } from '../../../lib/routeSchema.js'
 import { UserSchema } from '../../../schema/userSchema.js'
 
 export const AuthBody = Type.Object({

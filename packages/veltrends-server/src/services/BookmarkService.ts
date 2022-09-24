@@ -5,6 +5,7 @@ import ItemService from './ItemService.js'
 
 class BookmarkService {
   private static instance: BookmarkService
+
   public static getInstance() {
     if (!BookmarkService.instance) {
       BookmarkService.instance = new BookmarkService()
