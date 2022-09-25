@@ -14,8 +14,6 @@ const authPluginAsync: FastifyPluginAsync = async (fastify) => {
       request.headers.authorization?.split('Bearer ')[1] ??
       request.cookies.access_token
 
-    console.log({ token })
-
     if (request.cookies.refresh_token && !token) {
       request.isExpiredToken = true
       return

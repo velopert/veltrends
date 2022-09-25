@@ -1,5 +1,5 @@
 import './styles.css'
-import { LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
+import { json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -16,12 +16,13 @@ import Modal from './components/system/Modal'
 import { PROTECTED_ROUTES } from './constants'
 import { DialogProvider } from './contexts/DialogContext'
 import GlobalStyle from './GlobalStyle'
-import { getMyAccount } from './lib/api/auth'
+import { getMyAccount, refreshToken } from './lib/api/auth'
 import { User } from './lib/api/types'
 import { setClientCookie } from './lib/client'
 import { extractError } from './lib/error'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
+import { getMemoMyAccount } from './lib/protectRoute'
 
 function extractPathNameFromUrl(url: string) {
   const { pathname } = new URL(url)
@@ -29,7 +30,6 @@ function extractPathNameFromUrl(url: string) {
 }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  console.log('iamrunning')
   const cookie = request.headers.get('Cookie')
 
   /*
@@ -47,14 +47,10 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   // if (!cookie) return redirectIfNeeded()
   setClientCookie(cookie)
   try {
-    const me = await getMyAccount()
-    return me
+    const { me, headers } = await getMemoMyAccount()
+    return json(me, headers ? { headers } : undefined)
   } catch (e) {
-    const error = extractError(e)
-    if (error.name === 'UnauthorizedError') {
-      // console.log(error.payload)
-    }
-    return null
+    return json(null)
     // return redirectIfNeeded()
   }
 }

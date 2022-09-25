@@ -15,6 +15,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const isLoggedIn = await checkIsLoggedIn(request)
   if (!isLoggedIn) return redirect('/auth/login?next=/bookmarks')
 
+  console.log('fetching bookmark!')
   const bookmarks = await getBookmarks()
   return json(bookmarks)
 }

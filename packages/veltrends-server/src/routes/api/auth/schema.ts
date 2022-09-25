@@ -47,7 +47,7 @@ export const loginSchema = routeSchema({
 export const refreshTokenSchema = routeSchema({
   tags: ['auth'],
   body: Type.Object({
-    refreshToken: Type.String(),
+    refreshToken: Type.Optional(Type.String()),
   }),
   response: {
     200: TokensSchema,
