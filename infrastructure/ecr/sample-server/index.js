@@ -8,9 +8,9 @@ const cpu = osu.cpu;
 app.get("/", async () => {
   const usage = await cpu.usage();
 
-  return "안녕하세요? 제 비밀번호를 알려드리죠. 제 비밀번호는: "
-    .concat(process.env.PASSWORD)
-    .concat(`CPU: ${usage}`);
+  return "안녕하세요? 제 비밀번호를 알려드리죠. 제 비밀번호는: ".concat(
+    process.env.PASSWORD
+  );
 });
 
 app.get("/overwork", async () => {
