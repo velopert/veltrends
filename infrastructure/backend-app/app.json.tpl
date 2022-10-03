@@ -28,11 +28,15 @@
       %{ endfor ~}
       {
         "name": "NODE_ENV",
-        "value": "staging"
+        "value": "production"
       },
       {
         "name": "PORT",
         "value": "${port}"
+      },
+      {
+        "name": "ALGOLIA_APP_ID",
+        "value": "${algolia_app_id}"
       }
     ],
     "ulimits": [
@@ -46,8 +50,16 @@
     "memory": 512,
     "secrets": [
       {
-        "name": "PASSWORD",
-        "valueFrom": "${database_password}"
+        "name": "DATABASE_URL",
+        "valueFrom": "${database_url}"
+      },
+      {
+        "name": "JWT_SECRET",
+        "valueFrom": "${jwt_secret}"
+      },
+      {
+        "name": "ALGOLIA_ADMIN_KEY",
+        "valueFrom": "${algolia_admin_key}"
       }
     ],
     "volumesFrom": []

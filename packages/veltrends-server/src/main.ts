@@ -23,7 +23,9 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-await server.register(fastifySwagger, swaggerConfig)
+if (process.env.NODE_ENV !== 'production') {
+  await server.register(fastifySwagger, swaggerConfig)
+}
 server.register(fastifyCookie)
 server.setErrorHandler(async (error, request, reply) => {
   reply.statusCode = error.statusCode ?? 500
@@ -58,4 +60,4 @@ server.setErrorHandler(async (error, request, reply) => {
 server.register(authPlugin)
 server.register(routes)
 
-server.listen({ port: 4000 })
+server.listen({ port: 8080, host: '0.0.0.0' })
