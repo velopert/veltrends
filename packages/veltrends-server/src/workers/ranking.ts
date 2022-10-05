@@ -51,4 +51,7 @@ async function recalculate() {
 }
 
 recalculate()
-cron.schedule('*/5 * * * *', recalculate)
+
+if (process.env.NODE_ENV === 'development') {
+  cron.schedule('*/5 * * * *', recalculate)
+}
