@@ -244,9 +244,49 @@ resource "aws_ecr_repository" "repo" {
   name = "${var.prefix}/runner"
 }
 
+resource "aws_ecr_repository" "repo-ranking-worker" {
+  name = "${var.prefix}/repo-ranking-worker"
+}
+
 
 resource "aws_ecr_lifecycle_policy" "repo-policy" {
   repository = aws_ecr_repository.repo.name
+
+  policy = <<EOF
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Keep image deployed with tag latest",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPrefixList": ["latest"],
+        "countType": "imageCountMoreThan",
+        "countNumber": 1
+      },
+      "action": {
+        "type": "expire"
+      }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Keep last 2 any images",
+      "selection": {
+        "tagStatus": "any",
+        "countType": "imageCountMoreThan",
+        "countNumber": 2
+      },
+      "action": {
+        "type": "expire"
+      }
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_ecr_lifecycle_policy" "repo-ranking-worker-policy" {
+  repository = aws_ecr_repository.repo-ranking-worker.name
 
   policy = <<EOF
 {
@@ -441,11 +481,54 @@ resource "aws_appautoscaling_policy" "ecs_target_memory" {
 
 
 
-// example -> ./push.sh . 123456789012.dkr.ecr.us-west-1.amazonaws.com/hello-world latest
+# For Scheduled ECS
+resource "aws_ecs_cluster" "ranking-worker-cluster" {
+  name = "${var.prefix}-ranking-worker-cluster"
+}
+
+resource "aws_cloudwatch_log_group" "ranking-worker-cluster" {
+  name              = "${var.prefix}-ranking-worker-cluster-log-group"
+  retention_in_days = 1
+}
+
+
+module "ecs_scheduled_task" {
+  source              = "git::https://github.com/tmknom/terraform-aws-ecs-scheduled-task.git?ref=tags/2.0.0"
+  name                = "${var.prefix}-ranking-worker"
+  schedule_expression = "rate(5 minutes)"
+  cluster_arn         = aws_ecs_cluster.ranking-worker-cluster.arn
+  subnets             = data.aws_subnet_ids.default.ids
+
+  container_definitions = templatefile("./ranking-worker.json.tpl", {
+    aws_ecr_repository = aws_ecr_repository.repo-ranking-worker.repository_url
+    database_url       = aws_secretsmanager_secret.database_url.arn
+    tag                = "latest"
+    region             = "${var.region}"
+    prefix             = "${var.prefix}"
+  })
+
+  security_groups                = [data.aws_security_group.selected.id]
+  cpu                            = 256
+  memory                         = 512
+  requires_compatibilities       = ["FARGATE"]
+  create_ecs_task_execution_role = false
+  ecs_task_execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
+  assign_public_ip               = true
+}
+
+
 
 resource "null_resource" "push" {
   provisioner "local-exec" {
-    command     = "${path.module}/push.sh ${var.source_path} ${aws_ecr_repository.repo.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
+    command     = "${path.module}/push.sh ${var.source_path} ${aws_ecr_repository.repo.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id} Dockerfile"
+    interpreter = ["bash", "-c"]
+  }
+}
+
+
+resource "null_resource" "push-ranking-worker" {
+  provisioner "local-exec" {
+    command     = "${path.module}/push.sh ${var.source_path} ${aws_ecr_repository.repo-ranking-worker.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id} Dockerfile.ranking"
     interpreter = ["bash", "-c"]
   }
 }

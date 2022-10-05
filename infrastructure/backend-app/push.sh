@@ -10,6 +10,7 @@ source_path="$1" # 1st argument from command line
 repository_url="$2" # 2nd argument from command line
 tag="${3:-latest}" # Checks if 3rd argument exists, if not, use "latest"
 userid="$4"
+dockerfile="$5"
 
 # splits string using '.' and picks 4th item
 region="$(echo "$repository_url" | cut -d. -f4)"
@@ -18,7 +19,7 @@ region="$(echo "$repository_url" | cut -d. -f4)"
 image_name="$(echo "$repository_url" | cut -d/ -f2)"
 
 # builds docker image
-(cd "$source_path" && DOCKER_BUILDKIT=1 docker buildx build --platform=linux/amd64 -t "$image_name" .)
+(cd "$source_path" && DOCKER_BUILDKIT=1 docker buildx build -f "$dockerfile" --platform=linux/amd64 -t "$image_name" .)
 
 # login to ecr
 aws --region "$region" ecr get-login-password | docker login --username AWS --password-stdin ${userid}.dkr.ecr.${region}.amazonaws.com
