@@ -41,8 +41,9 @@
   },
   "scripts": {
     "start": "NODE_ENV=production ts-node-esm --transpileOnly ./src/main.ts | pino-pretty",
-    "worker:ranking": "ts-node-esm --transpileOnly ./src/workers/ranking.ts",
-    "dev": "NODE_ENV=development nodemon --watch ./src --exec \"yarn start\" -e ts",
+    "worker:ranking": "NODE_ENV=production ts-node-esm --transpileOnly ./src/workers/ranking.ts",
+    "worker:ranking:dev": "NODE_ENV=development ts-node-esm --transpileOnly ./src/workers/ranking.ts",
+    "dev": "NODE_ENV=development nodemon --watch ./src --exec \"ts-node-esm --transpileOnly ./src/main.ts | pino-pretty\" -e ts",
     "build": "tsc",
     "start:pm2": "yarn pm2-runtime deploy.config.json"
   }
