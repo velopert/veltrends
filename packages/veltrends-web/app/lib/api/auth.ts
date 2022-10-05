@@ -4,7 +4,8 @@ import { client } from '../client'
 import { type User } from './types'
 
 export async function register(params: AuthParams) {
-  const response = await axios.post<AuthResult>('http://localhost:4000/api/auth/register', params)
+  const response = await axios.post<AuthResult>('http://localhost:8080/api/auth/register', params)
+
   const result = response.data
   const cookieHeader = response.headers['set-cookie']
   const headers = createCookieHeaders(cookieHeader)
@@ -12,7 +13,7 @@ export async function register(params: AuthParams) {
 }
 
 export async function login(params: AuthParams) {
-  const response = await axios.post<AuthResult>('http://localhost:4000/api/auth/login', params)
+  const response = await axios.post<AuthResult>('http://localhost:8080/api/auth/login', params)
   const result = response.data
   const cookieHeader = response.headers['set-cookie']
   const headers = createCookieHeaders(cookieHeader)
