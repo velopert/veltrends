@@ -11,7 +11,7 @@ import {
 import qs from 'qs'
 
 export async function createItem(params: CreateItemParams) {
-  const response = await client.post<Item>('/api/items', params)
+  const response = await fetchClient.post<Item>('/api/items', params)
   return response.data
 }
 
@@ -45,7 +45,7 @@ export async function getItem(itemId: number) {
 }
 
 export async function likeItem(itemId: number, controller?: AbortController) {
-  const response = await client.post<LikeItemResult>(
+  const response = await fetchClient.post<LikeItemResult>(
     `/api/items/${itemId}/likes`,
     {},
     {
@@ -103,7 +103,7 @@ export async function createComment({
   parentCommentId?: number
   text: string
 }) {
-  const response = await client.post<Comment>(`/api/items/${itemId}/comments`, {
+  const response = await fetchClient.post<Comment>(`/api/items/${itemId}/comments`, {
     itemId,
     parentCommentId,
     text,
@@ -120,7 +120,7 @@ export async function likeComment({
   commentId: number
   controller?: AbortController
 }) {
-  const response = await client.post<LikeCommentResult>(
+  const response = await fetchClient.post<LikeCommentResult>(
     `/api/items/${itemId}/comments/${commentId}/likes`,
     {},
     {

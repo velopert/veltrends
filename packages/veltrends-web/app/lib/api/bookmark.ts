@@ -2,7 +2,7 @@ import { client, fetchClient } from '../client'
 import { type GetBookmarksResult, type Bookmark } from './types'
 
 export async function createBookmark(itemId: number, controller?: AbortController) {
-  const response = await client.post<Bookmark>(
+  const response = await fetchClient.post<Bookmark>(
     '/api/bookmarks',
     { itemId },
     {

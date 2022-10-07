@@ -13,7 +13,7 @@ export async function changePassword({
   oldPassword: string
   newPassword: string
 }) {
-  const response = await client.post('/api/me/change-password', {
+  const response = await fetchClient.post('/api/me/change-password', {
     oldPassword,
     newPassword,
   })
