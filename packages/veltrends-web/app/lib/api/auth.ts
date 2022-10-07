@@ -1,6 +1,5 @@
-import { DataFunctionArgs, LoaderFunction, redirect } from '@remix-run/node'
 import axios from 'axios'
-import { client } from '../client'
+import { client, fetchClient } from '../client'
 import { type User } from './types'
 
 export async function register(params: AuthParams) {
@@ -25,7 +24,7 @@ export async function logout() {
 }
 
 export async function getMyAccount(accessToken?: string) {
-  const response = await client.get<AuthResult>('/api/me', {
+  const response = await fetchClient.get<AuthResult>('/api/me', {
     headers: accessToken
       ? {
           Authorization: `Bearer ${accessToken}`,

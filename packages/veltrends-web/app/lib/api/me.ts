@@ -1,8 +1,8 @@
-import { client } from '../client'
+import { client, fetchClient } from '../client'
 import { type AuthResult } from './auth'
 
 export async function getMyAccount() {
-  const response = await client.get<AuthResult>('/api/me')
+  const response = await fetchClient.get<AuthResult>('/api/me')
   return response.data
 }
 

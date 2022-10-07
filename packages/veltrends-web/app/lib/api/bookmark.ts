@@ -1,4 +1,4 @@
-import { client } from '../client'
+import { client, fetchClient } from '../client'
 import { type GetBookmarksResult, type Bookmark } from './types'
 
 export async function createBookmark(itemId: number, controller?: AbortController) {
@@ -21,7 +21,7 @@ export async function deleteBookmark(itemId: number, controller?: AbortControlle
 }
 
 export async function getBookmarks(cursor?: number) {
-  const response = await client.get<GetBookmarksResult>('/api/bookmarks', {
+  const response = await fetchClient.get<GetBookmarksResult>('/api/bookmarks', {
     params: { cursor },
   })
   return response.data

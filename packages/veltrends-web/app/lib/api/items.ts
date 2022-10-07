@@ -1,4 +1,4 @@
-import { client } from '../client'
+import { client, fetchClient } from '../client'
 import {
   type Item,
   type GetItemsResult,
@@ -26,7 +26,7 @@ export async function getItems({
   startDate?: string
   endDate?: string
 }) {
-  const response = await client.get<GetItemsResult>(
+  const response = await fetchClient.get<GetItemsResult>(
     '/api/items'.concat(
       qs.stringify(
         { mode, cursor, startDate, endDate },
@@ -40,7 +40,7 @@ export async function getItems({
 }
 
 export async function getItem(itemId: number) {
-  const response = await client.get<Item>(`/api/items/${itemId}`)
+  const response = await fetchClient.get<Item>(`/api/items/${itemId}`)
   return response.data
 }
 
@@ -90,7 +90,7 @@ export async function deleteItem(itemId: number) {
 }
 
 export async function getComments(itemId: number) {
-  const response = await client.get<Comment[]>(`/api/items/${itemId}/comments`)
+  const response = await fetchClient.get<Comment[]>(`/api/items/${itemId}/comments`)
   return response.data
 }
 
