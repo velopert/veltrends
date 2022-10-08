@@ -67,6 +67,9 @@ const queryClient = new QueryClient({
 
 export default function App() {
   const data = useLoaderData<User | null>()
+  console.log({
+    isBrowser: typeof window !== 'undefined',
+  })
 
   return (
     <html lang="en">

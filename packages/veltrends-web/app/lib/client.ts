@@ -34,7 +34,7 @@ export const fetchClient = {
       : ''
     const response = await fetch(this.baseUrl.concat(url, query), {
       method: 'GET',
-      credentials: 'include',
+      ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
         'Content-Type': 'application/json',
         Cookie: _cookie,
