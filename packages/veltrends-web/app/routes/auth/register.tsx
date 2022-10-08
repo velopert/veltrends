@@ -1,4 +1,4 @@
-import { type ActionFunction, json } from '@remix-run/node'
+import { type ActionFunction, json } from '@remix-run/cloudflare'
 import { type ThrownResponse, useCatch, useActionData } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
 import { type AuthResult, register } from '~/lib/api/auth'

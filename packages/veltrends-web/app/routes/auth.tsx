@@ -1,4 +1,4 @@
-import { type LoaderFunction, redirect } from '@remix-run/node'
+import { type LoaderFunction, redirect } from '@remix-run/cloudflare'
 import { Outlet } from '@remix-run/react'
 import { checkIsLoggedIn } from '~/lib/protectRoute'
 

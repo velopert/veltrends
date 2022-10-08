@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from '@remix-run/node'
+import { json, LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import { FormEvent, useState } from 'react'
 import styled from 'styled-components'

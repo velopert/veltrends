@@ -1,5 +1,5 @@
 import './styles.css'
-import { json, type LoaderFunction, type MetaFunction } from '@remix-run/node'
+import { json, type LoaderFunction, type MetaFunction } from '@remix-run/cloudflare'
 import {
   Links,
   LiveReload,

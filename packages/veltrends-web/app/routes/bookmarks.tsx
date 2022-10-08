@@ -1,4 +1,4 @@
-import { json, type LoaderFunction, redirect } from '@remix-run/node'
+import { json, type LoaderFunction, redirect } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useRef } from 'react'
