@@ -21,6 +21,6 @@ export async function changePassword({
 }
 
 export async function unregister() {
-  const response = await client.delete('/api/me')
+  const response = await fetchClient.delete('/api/me')
   return response.data
 }

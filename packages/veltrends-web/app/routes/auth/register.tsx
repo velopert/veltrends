@@ -1,12 +1,12 @@
 import { type ActionFunction, json } from '@remix-run/node'
 import { type ThrownResponse, useCatch, useActionData } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
-import { AuthResult, register } from '~/lib/api/auth'
-import { type AppError, extractError } from '~/lib/error'
+import { type AuthResult, register } from '~/lib/api/auth'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
 import { useEffect } from 'react'
+import { extractNextError, type NextAppError } from '~/lib/nextError'
 
 /** @todo: redirect to home when already logged in */
 
@@ -23,7 +23,7 @@ export const action: ActionFunction = async ({ request }) => {
       headers,
     })
   } catch (e) {
-    const error = extractError(e)
+    const error = extractNextError(e)
     throw json(error, {
       status: error.statusCode,
     })
@@ -31,7 +31,7 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 interface Props {
-  error?: AppError
+  error?: NextAppError
 }
 
 export default function Register({ error }: Props) {
@@ -55,7 +55,7 @@ export default function Register({ error }: Props) {
 }
 
 export function CatchBoundary() {
-  const caught = useCatch<ThrownResponse<number, AppError>>()
+  const caught = useCatch<ThrownResponse<number, NextAppError>>()
 
   return <Register error={caught.data} />
 }

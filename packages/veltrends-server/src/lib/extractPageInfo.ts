@@ -63,7 +63,7 @@ async function validateUrl(url: string): Promise<ValidateResult> {
         html: response.data,
       }
     } catch (e) {
-      throw new AppError('InvalidURLError')
+      throw new AppError('InvalidURL')
     }
   }
 
@@ -88,5 +88,5 @@ async function validateUrl(url: string): Promise<ValidateResult> {
     }
   }
 
-  throw new AppError('InvalidURLError')
+  throw new AppError('InvalidURL')
 }

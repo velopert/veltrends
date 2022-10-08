@@ -9,7 +9,7 @@ import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { useWriteContext } from '~/contexts/WriteContext'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
-import { type AppError, extractError, useAppErrorCatch } from '~/lib/error'
+import { extractNextError, useNextAppErrorCatch } from '~/lib/nextError'
 
 export const action: ActionFunction = async ({ request }) => {
   const applied = await applyAuth(request)
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request }) => {
     const item = await createItem({ link, title, body })
     return redirect(`/items/${item.id}`)
   } catch (e) {
-    const error = extractError(e)
+    const error = extractNextError(e)
     throw json(error, {
       status: error.statusCode,
     })
@@ -74,7 +74,7 @@ function Intro() {
 }
 
 export function CatchBoundary() {
-  const caught = useAppErrorCatch()
+  const caught = useNextAppErrorCatch()
   const { actions } = useWriteContext()
   const navigate = useNavigate()
   useEffect(() => {

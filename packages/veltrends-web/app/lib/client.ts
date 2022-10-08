@@ -1,14 +1,8 @@
-import axios from 'axios'
 import QueryString from 'qs'
 
 let _cookie = ''
 
-export const client = axios.create()
-client.defaults.baseURL = 'http://localhost:8080'
-client.defaults.withCredentials = true
-
 export function setClientCookie(cookie: string) {
-  client.defaults.headers.common['Cookie'] = cookie
   _cookie = cookie
 }
 
@@ -16,6 +10,20 @@ interface RequestConfig {
   params?: any
   headers?: HeadersInit
   signal?: AbortSignal
+}
+
+export class FetchError extends Error {
+  constructor(public response: Response, public data: any) {
+    super(`Fetch failed with status ${response.status}`)
+  }
+}
+
+async function rejectIfNeeded(response: Response) {
+  if (!response.ok) {
+    const data = await response.json()
+    throw new FetchError(response, data)
+  }
+  return response
 }
 
 export const fetchClient = {
@@ -33,6 +41,7 @@ export const fetchClient = {
         ...(config?.headers ?? {}),
       },
     })
+    await rejectIfNeeded(response)
     const data: T = await response.json()
     const { headers } = response
     return {
@@ -40,7 +49,7 @@ export const fetchClient = {
       headers,
     }
   },
-  async post<T>(url: string, body: any, config: RequestConfig = {}) {
+  async post<T>(url: string, body?: any, config: RequestConfig = {}) {
     const response = await fetch(this.baseUrl.concat(url), {
       method: 'POST',
       credentials: 'include',
@@ -50,13 +59,55 @@ export const fetchClient = {
         ...(config.headers ?? {}),
       },
       signal: config.signal,
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     })
-
-    const responseData: T = await response.json()
+    await rejectIfNeeded(response)
+    const data: T = await response.json()
     const { headers } = response
     return {
-      data: responseData,
+      data,
+      headers,
+    }
+  },
+  async patch<T>(url: string, body: any, config: RequestConfig = {}) {
+    const response = await fetch(this.baseUrl.concat(url), {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: _cookie,
+        ...(config.headers ?? {}),
+      },
+      signal: config.signal,
+      body: JSON.stringify(body),
+    })
+    await rejectIfNeeded(response)
+
+    const data: T = await response.json()
+    const { headers } = response
+    return {
+      data,
+      headers,
+    }
+  },
+  async delete<T>(url: string, config: RequestConfig = {}) {
+    const response = await fetch(this.baseUrl.concat(url), {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: _cookie,
+        ...(config.headers ?? {}),
+      },
+      signal: config.signal,
+    })
+
+    await rejectIfNeeded(response)
+
+    const data: T = await response.json()
+    const { headers } = response
+    return {
+      data,
       headers,
     }
   },

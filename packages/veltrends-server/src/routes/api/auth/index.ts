@@ -38,7 +38,7 @@ const authRoute: FastifyPluginAsyncTypebox = async (fastify) => {
       const refreshToken =
         request.body.refreshToken ?? request.cookies.refresh_token ?? ''
       if (!refreshToken) {
-        throw new AppError('BadRequestError')
+        throw new AppError('BadRequest')
       }
       const tokens = await userService.refreshToken(refreshToken)
       setTokenCookie(reply, tokens)

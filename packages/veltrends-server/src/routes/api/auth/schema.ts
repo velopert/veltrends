@@ -23,11 +23,7 @@ export const registerSchema = routeSchema({
   body: AuthBody,
   response: {
     200: AuthResult,
-    409: createAppErrorSchema({
-      name: 'UserExistsError',
-      message: 'User already exists',
-      statusCode: 409,
-    }),
+    409: createAppErrorSchema('AlreadyExists'),
   },
 })
 
@@ -36,11 +32,7 @@ export const loginSchema = routeSchema({
   body: AuthBody,
   response: {
     200: AuthResult,
-    401: createAppErrorSchema({
-      name: 'AuthenticationError',
-      message: 'Invalid username or password',
-      statusCode: 401,
-    }),
+    401: createAppErrorSchema('WrongCredentials'),
   },
 })
 
@@ -51,11 +43,7 @@ export const refreshTokenSchema = routeSchema({
   }),
   response: {
     200: TokensSchema,
-    401: createAppErrorSchema({
-      name: 'RefreshTokenError',
-      message: 'Failed to refresh token',
-      statusCode: 401,
-    }),
+    401: createAppErrorSchema('RefreshFailure'),
   },
 })
 

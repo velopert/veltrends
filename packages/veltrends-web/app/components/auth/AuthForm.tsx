@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useForm } from '~/hooks/useForm'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { colors } from '~/lib/colors'
-import { type AppError } from '~/lib/error'
+import { type NextAppError } from '~/lib/nextError'
 import { media } from '~/lib/media'
 import { validate } from '~/lib/validate'
 import Button from '../system/Button'
@@ -18,7 +18,7 @@ interface ActionData {
 
 interface Props {
   mode: 'login' | 'register'
-  error?: AppError
+  error?: NextAppError
 }
 
 const authDescriptions = {
@@ -68,7 +68,7 @@ function AuthForm({ mode, error }: Props) {
   const onSubmit = handleSubmit(() => {})
 
   useEffect(() => {
-    if (error?.name === 'UserExistsError') {
+    if (error?.name === 'AlreadyExists') {
       setError('username', '이미 존재하는 계정입니다.')
     }
   }, [error, setError])
@@ -97,7 +97,7 @@ function AuthForm({ mode, error }: Props) {
         />
       </InputGroup>
       <ActionsBox>
-        {error?.name === 'AuthenticationError' ? (
+        {error?.name === 'WrongCredentials' ? (
           <ActionErrorMessage>잘못된 계정 정보입니다.</ActionErrorMessage>
         ) : null}
         <Button type="submit" layoutMode="fullWidth" disabled={isLoading}>

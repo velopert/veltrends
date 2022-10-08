@@ -1,6 +1,6 @@
 import { Bookmark } from '@prisma/client'
 import db from '../lib/db.js'
-import AppError from '../lib/NextAppError.js'
+import AppError from '../lib/AppError.js'
 import ItemService from './ItemService.js'
 
 class BookmarkService {

@@ -1,5 +1,5 @@
 import './styles.css'
-import { json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
+import { json, type LoaderFunction, type MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -10,24 +10,19 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Dialog from './components/system/Dialog'
 import GlobalBottomSheetModal from './components/system/GlobalBottomSheetModal'
-import Modal from './components/system/Modal'
-import { PROTECTED_ROUTES } from './constants'
 import { DialogProvider } from './contexts/DialogContext'
 import GlobalStyle from './GlobalStyle'
-import { getMyAccount, refreshToken } from './lib/api/auth'
-import { User } from './lib/api/types'
+import { type User } from './lib/api/types'
 import { setClientCookie } from './lib/client'
-import { extractError } from './lib/error'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
 
-function extractPathNameFromUrl(url: string) {
-  const { pathname } = new URL(url)
-  return pathname
-}
+// function extractPathNameFromUrl(url: string) {
+//   const { pathname } = new URL(url)
+//   return pathname
+// }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   const cookie = request.headers.get('Cookie')

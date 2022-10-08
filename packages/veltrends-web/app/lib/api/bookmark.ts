@@ -13,7 +13,7 @@ export async function createBookmark(itemId: number, controller?: AbortControlle
 }
 
 export async function deleteBookmark(itemId: number, controller?: AbortController) {
-  const response = await client.delete('/api/bookmarks', {
+  const response = await fetchClient.delete('/api/bookmarks', {
     signal: controller?.signal,
     params: { itemId },
   })

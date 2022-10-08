@@ -4,13 +4,9 @@ import { routeSchema } from '../../../lib/routeSchema.js'
 import { UserSchema } from '../../../schema/userSchema.js'
 
 const UnauthorizedErrorSchema = createAppErrorSchema(
+  'Unauthorized',
   {
-    name: 'UnauthorizedError',
-    message: 'Unauthorized',
-    statusCode: 401,
-    payload: {
-      isExpiredToken: true,
-    },
+    isExpiredToken: true,
   },
   Type.Object({
     isExpiredToken: Type.Boolean(),
@@ -34,11 +30,7 @@ export const updatePasswordSchema = routeSchema({
   response: {
     204: Type.Null(),
     401: UnauthorizedErrorSchema,
-    403: createAppErrorSchema({
-      name: 'Forbidden',
-      message: 'Password does not match',
-      statusCode: 403,
-    }),
+    403: createAppErrorSchema('Forbidden'),
   },
 })
 

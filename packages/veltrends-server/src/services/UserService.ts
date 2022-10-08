@@ -7,7 +7,7 @@ import {
   validateToken,
 } from '../lib/tokens.js'
 import { Token, User } from '@prisma/client'
-import NextAppError from '../lib/NextAppError.js'
+import NextAppError from '../lib/AppError.js'
 import { validate } from '../lib/validate.js'
 
 const SALT_ROUNDS = 10
@@ -69,7 +69,7 @@ class UserService {
     })
 
     if (exists) {
-      throw new AppError('UserExistsError')
+      throw new AppError('AlreadyExists')
     }
 
     const hash = await bcrypt.hash(password, SALT_ROUNDS)
@@ -95,19 +95,19 @@ class UserService {
     })
 
     if (!user) {
-      throw new AppError('AuthenticationError')
+      throw new AppError('WrongCredentials')
     }
 
     try {
       const result = await bcrypt.compare(password, user.passwordHash)
       if (!result) {
-        throw new AppError('AuthenticationError')
+        throw new AppError('WrongCredentials')
       }
     } catch (e) {
       if (isAppError(e)) {
         throw e
       }
-      throw new AppError('UnknownError')
+      throw new AppError('Unknown')
     }
 
     const tokens = await this.generateTokens(user)
@@ -157,7 +157,7 @@ class UserService {
       })
       return this.generateTokens(tokenItem.user, tokenItem)
     } catch (e) {
-      throw new AppError('RefreshTokenError')
+      throw new AppError('RefreshFailure')
     }
   }
 

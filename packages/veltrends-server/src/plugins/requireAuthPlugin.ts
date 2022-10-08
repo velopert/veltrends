@@ -6,12 +6,12 @@ import { FastifyPluginAsyncTypebox } from '../lib/types.js'
 const requireAuthPluginAsync: FastifyPluginAsync = async (fastify) => {
   fastify.addHook('preHandler', async (request, reply) => {
     if (request.isExpiredToken) {
-      throw new AppError('UnauthorizedError', {
+      throw new AppError('Unauthorized', {
         isExpiredToken: true,
       })
     }
     if (!request.user) {
-      throw new AppError('UnauthorizedError', {
+      throw new AppError('Unauthorized', {
         isExpiredToken: false,
       })
     }

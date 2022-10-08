@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { type AppError } from '~/lib/error'
+import { type NextAppError } from '~/lib/nextError'
 
 interface WriteContextState {
   form: {
@@ -7,13 +7,13 @@ interface WriteContextState {
     title: string
     body: string
   }
-  error?: AppError
+  error?: NextAppError
 }
 
 interface WriteContextActions {
   change(key: keyof WriteContextState['form'], value: string): void
   reset(): void
-  setError(error?: AppError): void
+  setError(error?: NextAppError): void
 }
 
 interface WriteContextType {

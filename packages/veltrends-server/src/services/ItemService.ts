@@ -8,7 +8,7 @@ import {
 } from '@prisma/client'
 import algolia from '../lib/algolia.js'
 import AppError from '../lib/AppError.js'
-import NextAppError from '../lib/NextAppError.js'
+import NextAppError from '../lib/AppError.js'
 import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
@@ -110,7 +110,7 @@ class ItemService {
       },
     })
     if (!item) {
-      throw new AppError('NotFoundError')
+      throw new AppError('NotFound')
     }
 
     return this.serialize(item)
@@ -471,7 +471,7 @@ class ItemService {
   async updateItem({ itemId, userId, title, body }: UpdateItemParams) {
     const item = await this.getItem(itemId)
     if (item.userId !== userId) {
-      throw new AppError('ForbiddenError')
+      throw new AppError('Forbidden')
     }
     const updatedItem = await db.item.update({
       where: {
@@ -510,7 +510,7 @@ class ItemService {
   async deleteItem({ userId, itemId }: ItemActionParams) {
     const item = await this.getItem(itemId)
     if (item.userId !== userId) {
-      throw new AppError('ForbiddenError')
+      throw new AppError('Forbidden')
     }
     await db.item.delete({
       where: {
