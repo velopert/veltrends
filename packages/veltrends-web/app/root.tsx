@@ -14,7 +14,7 @@ import GlobalBottomSheetModal from './components/system/GlobalBottomSheetModal'
 import { DialogProvider } from './contexts/DialogContext'
 import GlobalStyle from './GlobalStyle'
 import { type User } from './lib/api/types'
-import { setClientCookie } from './lib/client'
+import { fetchClient, setClientCookie } from './lib/client'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
@@ -25,6 +25,7 @@ import { getMemoMyAccount } from './lib/protectRoute'
 // }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
+  fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
   const cookie = request.headers.get('Cookie')
 
   /*
