@@ -26,7 +26,7 @@
 on:
   push:
     branches:
-      - feature/docker-deploy
+      - main
 
 name: Deploy to Amazon ECS
 
@@ -52,10 +52,10 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        working-directory: ./infrastructure/ecr/sample-server
+        working-directory: ./packages/veltrends-sever
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: terraform-test-server/runner
+          ECR_REPOSITORY: veltrends-backend-app/runner
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
@@ -68,8 +68,8 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: infrastructure/ecr/sample-server/task-definition.json
-          container-name: terraform-test-server-app
+          task-definition: infrastructure/backend-app/server-task-definition.json
+          container-name: veltrends-backend-app-app
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
@@ -77,6 +77,6 @@ jobs:
         with:
           # task-definition: task-definition.json
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: terraform-test-server-service
-          cluster: terraform-test-server-cluster
+          service: veltrends-backend-app-service
+          cluster: veltrends-backend-app-cluster
           wait-for-service-stability: true

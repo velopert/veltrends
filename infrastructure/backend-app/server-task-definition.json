@@ -1,0 +1,69 @@
+{
+  "family": "veltrends-backend-app-task-family",
+  "executionRoleArn": "arn:aws:iam::812681381769:role/veltrends-backend-app-execution-role",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "veltrends-backend-app-app",
+      "image": "812681381769.dkr.ecr.ap-northeast-2.amazonaws.com/veltrends-backend-app/runner:latest",
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "veltrends-backend-app-service",
+          "awslogs-group": "veltrends-backend-app-log-group"
+        }
+      },
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "cpu": 1,
+      "environment": [
+        {
+          "name": "ALGOLIA_APP_ID",
+          "value": "0JUVDJXNOY"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "PORT",
+          "value": "8080"
+        }
+      ],
+      "ulimits": [
+        {
+          "name": "nofile",
+          "softLimit": 65536,
+          "hardLimit": 65536
+        }
+      ],
+      "mountPoints": [],
+      "memory": 512,
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:812681381769:secret:/veltrends-backend-app/database_url-6DMqCb",
+          "name": "DATABASE_URL"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:812681381769:secret:/veltrends-backend-app/jwt_secret-mFZvpc",
+          "name": "JWT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:812681381769:secret:/veltrends-backend-app/algolia_admin_key-NHcNMd",
+          "name": "ALGOLIA_ADMIN_KEY"
+        }
+      ],
+      "volumesFrom": []
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}
