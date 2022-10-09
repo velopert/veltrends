@@ -9,9 +9,11 @@ import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { useWriteContext } from '~/contexts/WriteContext'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
+import { fetchClient } from '~/lib/client'
 import { extractNextError, useNextAppErrorCatch } from '~/lib/nextError'
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, context }) => {
+  fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
   const applied = await applyAuth(request)
   if (!applied) {
     throw new Error('Not logged in')

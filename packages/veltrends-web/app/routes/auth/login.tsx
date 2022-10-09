@@ -7,10 +7,12 @@ import { useEffect } from 'react'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
 import { extractNextError, type NextAppError } from '~/lib/nextError'
+import { fetchClient } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request, context }) => {
+  fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')
