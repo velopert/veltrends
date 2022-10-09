@@ -10,9 +10,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { type Comment } from '~/lib/api/types'
 import produce from 'immer'
-import { useDialog } from '~/contexts/DialogContext'
 import { editComment } from '~/lib/api/items'
 import { useCommentInputActions, useCommentInputValue } from '~/states/commentInput'
+import { useOpenDialog } from '~/states/dialog'
 
 interface Props {}
 
@@ -57,7 +57,7 @@ function CommentInputOverlay() {
       close()
     },
     onError() {
-      open({
+      openDialog({
         title: '오류',
         description: '댓글 작성 실패',
       })
@@ -71,7 +71,7 @@ function CommentInputOverlay() {
       close()
     },
     onError() {
-      open({
+      openDialog({
         title: '오류',
         description: '댓글 수정 실패',
       })
@@ -86,12 +86,12 @@ function CommentInputOverlay() {
     }
   }, [visible])
 
-  const { open } = useDialog()
+  const openDialog = useOpenDialog()
 
   const onClick = () => {
     if (!itemId) return
     if (text.length === 0) {
-      open({
+      openDialog({
         title: '오류',
         description: '댓글을 입력하지 않으셨습니다.',
       })

@@ -6,9 +6,9 @@ import { useUser } from '~/states/user'
 import Button from '../system/Button'
 import Input from '../system/Input'
 import { changePassword, unregister } from '~/lib/api/me'
-import { useDialog } from '~/contexts/DialogContext'
 import { extractNextError } from '~/lib/nextError'
 import { media } from '~/lib/media'
+import { useOpenDialog } from '~/states/dialog'
 
 function AccountSetting() {
   const user = useUser()
@@ -16,7 +16,7 @@ function AccountSetting() {
     oldPassword: '',
     newPassword: '',
   })
-  const { open } = useDialog()
+  const openDialog = useOpenDialog()
 
   const reset = () => {
     setForm({
@@ -27,7 +27,7 @@ function AccountSetting() {
 
   const { mutate: mutateChangePassword } = useMutation(changePassword, {
     onSuccess: () => {
-      open({
+      openDialog({
         title: '비밀번호 변경',
         description: '비밀번호가 변경되었습니다.',
       })
@@ -37,12 +37,12 @@ function AccountSetting() {
       const error = extractNextError(e)
       reset()
       if (error.name === 'BadRequest') {
-        open({
+        openDialog({
           title: '실패',
           description: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
         })
       } else if (error.name === 'Forbidden') {
-        open({
+        openDialog({
           title: '실패',
           description: '잘못된 비밀번호입니다.',
         })
@@ -62,7 +62,7 @@ function AccountSetting() {
   }
 
   const askUnregister = () => {
-    open({
+    openDialog({
       title: '회원 탈퇴',
       description: '정말로 탈퇴하시겠습니까?',
       mode: 'YESNO',

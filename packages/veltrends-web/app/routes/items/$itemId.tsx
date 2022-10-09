@@ -6,13 +6,13 @@ import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 import CommentList from '~/components/items/CommentList'
 import ItemViewer from '~/components/items/ItemViewer'
 import BasicLayout from '~/components/layouts/BasicLayout'
-import { useDialog } from '~/contexts/DialogContext'
 import { useUser } from '~/states/user'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { deleteItem, getComments, getItem } from '~/lib/api/items'
 import { type Comment, type Item as ItemType } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
+import { useOpenDialog } from '~/states/dialog'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // @todo: validate itemId
@@ -35,7 +35,7 @@ function Item() {
   const navigate = useNavigate()
 
   const { open: openBottomSheetModal } = useBottomSheetModalActions()
-  const { open: openDialog } = useDialog()
+  const openDialog = useOpenDialog()
 
   const user = useUser()
   const isMyItem = user?.id === loaderData.item.user.id
