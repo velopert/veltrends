@@ -26,7 +26,11 @@
 on:
   push:
     branches:
-      - deploy/worker
+      - main
+    paths:
+      - "infrastructure/backend-app/**"
+      - "packages/veltrends-server/workers/**"
+      - ".github/workflows/deploy-worker.yml"
 
 name: Deploy to Amazon ECS
 
