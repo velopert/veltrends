@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
-import { useItemOverrideById } from '~/stores/useItemOverrideStore'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -11,6 +10,7 @@ import LikeButton from '../system/LikeButton'
 import { Globe } from '../vectors'
 import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import BookmarkButton from '../system/BookmarkButton'
+import { useItemOverrideById } from '~/states/itemOverride'
 
 interface Props {
   item: Item

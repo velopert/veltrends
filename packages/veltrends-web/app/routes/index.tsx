@@ -27,6 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   // @todo: throw error if invalid error
   const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
+
   return json(list)
 }
 

@@ -2,12 +2,12 @@ import styled from 'styled-components'
 import { useUser } from '~/states/user'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { colors } from '~/lib/colors'
-import { useCommentInputStore } from '~/stores/useCommentInputStore'
+import { useCommentInputActions } from '~/states/commentInput'
 
 function CommentInput() {
   const user = useUser()
   const openLoginDialog = useOpenLoginDialog()
-  const write = useCommentInputStore((store) => store.write)
+  const { write } = useCommentInputActions()
 
   const onClick = () => {
     if (!user) {

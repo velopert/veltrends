@@ -1,7 +1,6 @@
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
-import { useItemOverrideById } from '~/stores/useItemOverrideStore'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -13,6 +12,7 @@ import { Globe } from '../vectors'
 import BookmarkButton from '../system/BookmarkButton'
 import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import { media } from '~/lib/media'
+import { useItemOverrideById } from '~/states/itemOverride'
 
 interface Props {
   item: Item
@@ -32,6 +32,8 @@ function LinkCard({ item }: Props) {
   const isBookmarked = itemOverride?.isBookmarked ?? item.isBookmarked
 
   const openLoginDialog = useOpenLoginDialog()
+
+  console.log({ title: item.title, likes: item.itemStats.likes, isLiked: item.isLiked })
 
   const toggleLike = () => {
     if (!currentUser) {

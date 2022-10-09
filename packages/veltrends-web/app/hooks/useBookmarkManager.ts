@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { createBookmark, deleteBookmark } from '~/lib/api/bookmark'
-import { useItemOverrideSetter } from '~/stores/useItemOverrideStore'
+import { useItemOverrideSetter } from '~/states/itemOverride'
 
 export function useBookmarkManager() {
   const set = useItemOverrideSetter()

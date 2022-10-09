@@ -6,6 +6,10 @@ export function setClientCookie(cookie: string) {
   _cookie = cookie
 }
 
+export function clearCookie() {
+  _cookie = ''
+}
+
 interface RequestConfig {
   params?: any
   headers?: HeadersInit
@@ -92,8 +96,12 @@ export const fetchClient = {
       headers,
     }
   },
-  async delete<T>(url: string, config: RequestConfig = {}) {
-    const response = await fetch(this.baseUrl.concat(url), {
+  async delete<T = any>(url: string, config: RequestConfig = {}) {
+    const query = config?.params
+      ? QueryString.stringify(config?.params, { addQueryPrefix: true })
+      : ''
+
+    const response = await fetch(this.baseUrl.concat(url, query), {
       method: 'DELETE',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
@@ -105,7 +113,10 @@ export const fetchClient = {
 
     await rejectIfNeeded(response)
 
-    const data: T = await response.json()
+    const data: T = response.headers.get('Content-Type')?.includes('json')
+      ? await response.json()
+      : ((await response.text()) as any)
+
     const { headers } = response
     return {
       data,

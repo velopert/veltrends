@@ -1,4 +1,4 @@
-import { client, fetchClient } from '../client'
+import { fetchClient } from '../client'
 import { type GetBookmarksResult, type Bookmark } from './types'
 
 export async function createBookmark(itemId: number, controller?: AbortController) {

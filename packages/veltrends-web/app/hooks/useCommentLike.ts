@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { likeComment, unlikeComment } from '~/lib/api/items'
-import { useCommentLikeSetter } from '~/stores/useCommentLikesStore'
+import { useCommentLikeSetter } from '~/states/commentLikes'
 
 export function useCommentLike() {
   const set = useCommentLikeSetter()

@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import { colors } from '~/lib/colors'
-import { useCommentInputStore } from '~/stores/useCommentInputStore'
 import Overlay from '../system/Overlay'
 import { useCallback, useEffect, useState } from 'react'
 import { useItemId } from '~/hooks/useItemId'
@@ -13,11 +12,13 @@ import { type Comment } from '~/lib/api/types'
 import produce from 'immer'
 import { useDialog } from '~/contexts/DialogContext'
 import { editComment } from '~/lib/api/items'
+import { useCommentInputActions, useCommentInputValue } from '~/states/commentInput'
 
 interface Props {}
 
 function CommentInputOverlay() {
-  const { visible, close, parentCommentId, commentId, defaultText } = useCommentInputStore()
+  const { visible, parentCommentId, commentId, defaultText } = useCommentInputValue()
+  const { close } = useCommentInputActions()
   const [text, setText] = useState('')
   const itemId = useItemId()
   const queryClient = useQueryClient()

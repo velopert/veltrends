@@ -7,12 +7,12 @@ import { useItemId } from '~/hooks/useItemId'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { type Comment } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
-import { useBottomSheetModalStore } from '~/stores/useBottomSheetModalStore'
-import { useCommentInputStore } from '~/stores/useCommentInputStore'
-import { useCommentLikeById } from '~/stores/useCommentLikesStore'
 import LikeButton from '../system/LikeButton'
 import { SpeechBubble, MoreVert } from '../vectors'
 import SubcommentList from './SubcommentList'
+import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
+import { useCommentInputActions } from '~/states/commentInput'
+import { useCommentLikeById } from '~/states/commentLikes'
 
 interface Props {
   comment: Comment
@@ -24,11 +24,11 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const itemId = useItemId()
   const commentLike = useCommentLikeById(comment.id)
   const { like, unlike } = useCommentLike()
-  const { write, edit } = useCommentInputStore()
+  const { write, edit } = useCommentInputActions()
   const openLoginDialog = useOpenLoginDialog()
   const currentUser = useUser()
   const isMyComment = comment.user.id === currentUser?.id
-  const openBottomSheetModal = useBottomSheetModalStore((store) => store.open)
+  const { open: openBottomSheetModal } = useBottomSheetModalActions()
   const deleteComment = useDeleteComment()
 
   const onClickMore = () => {

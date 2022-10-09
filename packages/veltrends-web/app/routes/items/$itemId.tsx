@@ -12,7 +12,7 @@ import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { deleteItem, getComments, getItem } from '~/lib/api/items'
 import { type Comment, type Item as ItemType } from '~/lib/api/types'
 import { media } from '~/lib/media'
-import { useBottomSheetModalStore } from '~/stores/useBottomSheetModalStore'
+import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // @todo: validate itemId
@@ -34,7 +34,7 @@ function Item() {
   const loaderData = useLoaderData<ItemLoaderData>()
   const navigate = useNavigate()
 
-  const { open: openBottomSheetModal } = useBottomSheetModalStore()
+  const { open: openBottomSheetModal } = useBottomSheetModalActions()
   const { open: openDialog } = useDialog()
 
   const user = useUser()

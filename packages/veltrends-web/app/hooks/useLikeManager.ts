@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react'
 import { likeItem, unlikeItem } from '~/lib/api/items'
 import { type ItemStats } from '~/lib/api/types'
-import { useItemOverrideSetter } from '~/stores/useItemOverrideStore'
+import { useItemOverrideSetter } from '~/states/itemOverride'
 
 export function useLikeManager() {
   const set = useItemOverrideSetter()
