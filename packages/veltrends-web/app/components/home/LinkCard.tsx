@@ -33,8 +33,6 @@ function LinkCard({ item }: Props) {
 
   const openLoginDialog = useOpenLoginDialog()
 
-  console.log({ title: item.title, likes: item.itemStats.likes, isLiked: item.isLiked })
-
   const toggleLike = () => {
     if (!currentUser) {
       openLoginDialog('like')
