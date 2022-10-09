@@ -18,11 +18,19 @@ import { fetchClient, setClientCookie } from './lib/client'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
+import { useEffect } from 'react'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
 //   return pathname
 // }
+
+interface LoaderResult {
+  user: User | null
+  env: {
+    API_BASE_URL: string
+  }
+}
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
@@ -42,11 +50,20 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   if (!cookie) return null
   // if (!cookie) return redirectIfNeeded()
   setClientCookie(cookie)
+  const env = {
+    API_BASE_URL: context.API_BASE_URL,
+  }
   try {
     const { me, headers } = await getMemoMyAccount()
-    return json(me, headers ? { headers } : undefined)
+    return json(
+      {
+        user: me,
+        env,
+      },
+      headers ? { headers } : undefined,
+    )
   } catch (e) {
-    return json(null)
+    return json({ user: null, env })
     // return redirectIfNeeded()
   }
 }
@@ -66,10 +83,7 @@ const queryClient = new QueryClient({
 })
 
 export default function App() {
-  const data = useLoaderData<User | null>()
-  console.log({
-    isBrowser: typeof window !== 'undefined',
-  })
+  const { user, env } = useLoaderData<LoaderResult>()
 
   return (
     <html lang="en">
@@ -79,9 +93,16 @@ export default function App() {
         {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.ENV = ${JSON.stringify(env)}
+          `,
+          }}
+        />
         <SangteProvider
           initialize={({ set }) => {
-            set(userState, data)
+            set(userState, user)
           }}
         >
           <GlobalStyle />
