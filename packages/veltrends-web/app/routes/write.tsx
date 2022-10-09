@@ -1,6 +1,6 @@
 import { type LoaderFunction, redirect } from '@remix-run/cloudflare'
 import { Outlet } from '@remix-run/react'
-import { WriteProvider } from '~/contexts/WriteContext'
+import { SangteProvider } from 'sangte'
 import { checkIsLoggedIn } from '~/lib/protectRoute'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -11,9 +11,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 function Write() {
   return (
-    <WriteProvider>
+    <SangteProvider>
       <Outlet />
-    </WriteProvider>
+    </SangteProvider>
   )
 }
 

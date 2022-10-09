@@ -1,13 +1,13 @@
 import { useNavigate } from '@remix-run/react'
-import { useState } from 'react'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelInput from '~/components/system/LabelInput'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
-import { useWriteContext } from '~/contexts/WriteContext'
+import { useWriteActions, useWriteValue } from '~/states/write'
 
 function WriteLink() {
   const navigate = useNavigate()
-  const { state, actions } = useWriteContext()
+  const state = useWriteValue()
+  const actions = useWriteActions()
 
   return (
     <BasicLayout title="링크 입력" hasBackButton>

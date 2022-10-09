@@ -6,11 +6,10 @@ import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelInput from '~/components/system/LabelInput'
 import LabelTextArea from '~/components/system/LabelTextArea'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
-import { useWriteContext } from '~/contexts/WriteContext'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
-import { fetchClient } from '~/lib/client'
 import { extractNextError, useNextAppErrorCatch } from '~/lib/nextError'
+import { useWriteActions, useWriteValue } from '~/states/write'
 
 export const action: ActionFunction = async ({ request, context }) => {
   const applied = await applyAuth(request)
@@ -34,10 +33,8 @@ export const action: ActionFunction = async ({ request, context }) => {
 }
 
 function Intro() {
-  const {
-    state: { form },
-    actions,
-  } = useWriteContext()
+  const { form } = useWriteValue()
+  const actions = useWriteActions()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const fetcher = useFetcher()
@@ -76,7 +73,7 @@ function Intro() {
 
 export function CatchBoundary() {
   const caught = useNextAppErrorCatch()
-  const { actions } = useWriteContext()
+  const actions = useWriteActions()
   const navigate = useNavigate()
   useEffect(() => {
     if (caught.status === 422) {

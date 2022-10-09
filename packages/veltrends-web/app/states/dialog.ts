@@ -20,17 +20,21 @@ const initialState: DialogState = {
   config: null,
 }
 
-const dialogState = sangte(initialState, (prev) => ({
-  open(config: DialogConfig) {
-    return {
-      visible: true,
-      config,
-    }
-  },
-  close() {
-    prev.visible = false
-  },
-}))
+const dialogState = sangte(
+  initialState,
+  (prev) => ({
+    open(config: DialogConfig) {
+      return {
+        visible: true,
+        config,
+      }
+    },
+    close() {
+      prev.visible = false
+    },
+  }),
+  { global: true },
+)
 
 export function useDialogActions() {
   return useSangteActions(dialogState)

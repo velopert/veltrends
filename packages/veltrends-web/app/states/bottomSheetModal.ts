@@ -15,17 +15,23 @@ const initialState: BottomSheetModalState = {
   items: [],
 }
 
-export const bottomSheetModalState = sangte(initialState, (prev) => ({
-  open(items: BottomSheetModalItem[]) {
-    return {
-      visible: true,
-      items,
-    }
+export const bottomSheetModalState = sangte(
+  initialState,
+  (prev) => ({
+    open(items: BottomSheetModalItem[]) {
+      return {
+        visible: true,
+        items,
+      }
+    },
+    close() {
+      prev.visible = false
+    },
+  }),
+  {
+    global: true,
   },
-  close() {
-    prev.visible = false
-  },
-}))
+)
 
 export function useBottomSheetModalValue() {
   return useSangteValue(bottomSheetModalState)

@@ -1,7 +1,8 @@
 import { sangte, useSangteValue, useSetSangte } from 'sangte'
 import { type User } from '~/lib/api/types'
 
-export const userState = sangte<User | null>(null)
+const initialState: User | null = null
+export const userState = sangte(initialState, { global: true })
 
 export function useUser() {
   const user = useSangteValue(userState)
