@@ -1,5 +1,5 @@
 import { useBottomSheetModalActions, useBottomSheetModalValue } from '~/states/bottomSheetModal'
-import BottomSheetModal from './BottomSheetModal'
+import BottomSheetModal from '../system/BottomSheetModal'
 
 function GlobalBottomSheetModal() {
   const { visible, items } = useBottomSheetModalValue()

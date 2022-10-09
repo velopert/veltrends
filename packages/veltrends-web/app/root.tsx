@@ -10,7 +10,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import GlobalBottomSheetModal from './components/system/GlobalBottomSheetModal'
+import GlobalBottomSheetModal from './components/base/GlobalBottomSheetModal'
 import GlobalStyle from './GlobalStyle'
 import { type User } from './lib/api/types'
 import { fetchClient, setClientCookie } from './lib/client'
@@ -18,7 +18,7 @@ import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
 import { useRef } from 'react'
-import GlobalDialog from './contexts/GlobalDialog'
+import GlobalDialog from './components/base/GlobalDialog'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
