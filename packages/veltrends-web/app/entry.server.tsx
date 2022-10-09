@@ -4,8 +4,6 @@ import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet } from 'styled-components'
 import { clearCookie } from './lib/client'
 
-let counter = 1
-
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -22,8 +20,6 @@ export default function handleRequest(
   markup = markup.replace('__STYLES__', styles)
 
   responseHeaders.set('Content-Type', 'text/html')
-  responseHeaders.set('x-counter', counter.toString())
-  counter += 1
 
   clearCookie()
 

@@ -18,7 +18,7 @@ import { fetchClient, setClientCookie } from './lib/client'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
-import { useEffect } from 'react'
+import { useRef } from 'react'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
@@ -75,16 +75,17 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
 })
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 5,
-    },
-  },
-})
-
 export default function App() {
   const { user, env } = useLoaderData<LoaderResult>()
+  const queryClient = useRef(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 5,
+        },
+      },
+    }),
+  ).current
 
   return (
     <html lang="en">
