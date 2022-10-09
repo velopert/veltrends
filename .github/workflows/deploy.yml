@@ -52,7 +52,7 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        working-directory: ./packages/veltrends-sever
+        working-directory: packages/veltrends-sever
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: veltrends-backend-app/runner
