@@ -39,7 +39,6 @@ export const fetchClient = {
       method: 'GET',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
-        'Content-Type': 'application/json',
         Cookie: _cookie,
         ...(config?.headers ?? {}),
       },
@@ -57,7 +56,7 @@ export const fetchClient = {
       method: 'POST',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
-        'Content-Type': 'application/json',
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
         Cookie: _cookie,
         ...(config.headers ?? {}),
       },
@@ -77,7 +76,7 @@ export const fetchClient = {
       method: 'PATCH',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
-        'Content-Type': 'application/json',
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
         Cookie: _cookie,
         ...(config.headers ?? {}),
       },
@@ -98,7 +97,7 @@ export const fetchClient = {
       method: 'DELETE',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
-        'Content-Type': 'application/json',
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
         Cookie: _cookie,
         ...(config.headers ?? {}),
       },

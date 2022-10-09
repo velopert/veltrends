@@ -44,6 +44,7 @@ server.setErrorHandler(async (error, request, reply) => {
   }
 
   if (error.statusCode === 400) {
+    console.log(error)
     return {
       name: 'BadRequest',
       message: error.message,
