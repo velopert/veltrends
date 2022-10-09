@@ -20,6 +20,7 @@ export interface NextAppError {
   statusCode: number
   message: string
   payload?: any
+  e?: any
 }
 
 export function extractNextError(e: any): NextAppError {
@@ -33,6 +34,7 @@ export function extractNextError(e: any): NextAppError {
     statusCode: 500,
     message: 'Unknown error',
     name: 'Unknown',
+    e,
   }
 }
 
