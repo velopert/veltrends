@@ -55,7 +55,7 @@ export const fetchClient = {
   async post<T>(url: string, body?: any, config: RequestConfig = {}) {
     const response = await fetch(this.baseUrl.concat(url), {
       method: 'POST',
-      credentials: 'include',
+      ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
         'Content-Type': 'application/json',
         Cookie: _cookie,
@@ -75,7 +75,7 @@ export const fetchClient = {
   async patch<T>(url: string, body: any, config: RequestConfig = {}) {
     const response = await fetch(this.baseUrl.concat(url), {
       method: 'PATCH',
-      credentials: 'include',
+      ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
         'Content-Type': 'application/json',
         Cookie: _cookie,
@@ -96,7 +96,7 @@ export const fetchClient = {
   async delete<T>(url: string, config: RequestConfig = {}) {
     const response = await fetch(this.baseUrl.concat(url), {
       method: 'DELETE',
-      credentials: 'include',
+      ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
         'Content-Type': 'application/json',
         Cookie: _cookie,
