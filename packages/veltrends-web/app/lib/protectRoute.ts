@@ -34,11 +34,21 @@ async function getMyAccountWithRefresh() {
   }
 }
 
-export async function getMemoMyAccount() {
-  if (!getMyAccountPromise) {
-    getMyAccountPromise = getMyAccountWithRefresh()
+const promiseMap = new Map<
+  Request,
+  Promise<{
+    me: AuthResult
+    headers: Headers | null
+  }>
+>()
+
+export async function getMemoMyAccount(request: Request) {
+  let promise = promiseMap.get(request)
+  if (!promise) {
+    promise = getMyAccountWithRefresh()
+    promiseMap.set(request, promise)
   }
-  return getMyAccountPromise
+  return promise
 }
 
 export const checkIsLoggedIn = async (request: Request) => {
@@ -46,7 +56,8 @@ export const checkIsLoggedIn = async (request: Request) => {
   if (!applied) return false
 
   try {
-    await getMemoMyAccount()
+    await getMemoMyAccount(request)
+    promiseMap.delete(request)
   } catch (e) {
     console.log({ e })
     return false

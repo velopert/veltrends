@@ -55,7 +55,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   setClientCookie(cookie)
 
   try {
-    const { me, headers } = await getMemoMyAccount()
+    const { me, headers } = await getMemoMyAccount(request)
     return json(
       {
         user: me,
