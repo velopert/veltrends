@@ -1,5 +1,5 @@
 import { ThrownResponse, useCatch } from '@remix-run/react'
-import { FetchError } from './client'
+import { fetchClient, FetchError } from './client'
 
 export function isNextError(e: any): e is NextAppError {
   return e?.statusCode !== undefined && e?.message !== undefined && e?.name !== undefined
@@ -34,6 +34,9 @@ export function extractNextError(e: any): NextAppError {
     statusCode: 500,
     message: e?.message ?? 'Unknown error',
     name: e?.name ?? 'Unknown',
+    payload: {
+      baseUrl: fetchClient.baseUrl,
+    },
   }
 }
 
