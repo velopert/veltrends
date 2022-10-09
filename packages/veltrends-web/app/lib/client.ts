@@ -97,7 +97,6 @@ export const fetchClient = {
       method: 'DELETE',
       ...(typeof window === 'undefined' ? {} : { credentials: 'include' }),
       headers: {
-        ...(body ? { 'Content-Type': 'application/json' } : {}),
         Cookie: _cookie,
         ...(config.headers ?? {}),
       },
