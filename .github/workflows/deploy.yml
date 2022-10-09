@@ -27,6 +27,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "infrastructure/backend-app/**"
+      - "packages/veltrends-server/**"
 
 name: Deploy to Amazon ECS
 
@@ -52,7 +55,7 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        working-directory: packages/veltrends-sever
+        working-directory: packages/veltrends-server
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: veltrends-backend-app/runner
