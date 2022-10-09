@@ -32,9 +32,8 @@ export function extractNextError(e: any): NextAppError {
   }
   return {
     statusCode: 500,
-    message: 'Unknown error',
-    name: 'Unknown',
-    e,
+    message: e?.message ?? 'Unknown error',
+    name: e?.name ?? 'Unknown',
   }
 }
 
