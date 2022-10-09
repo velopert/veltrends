@@ -1,5 +1,5 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
-import { ItemStats } from '~/lib/api/types'
+import { type ItemStats } from '~/lib/api/types'
 
 interface OverridableItem {
   isLiked?: boolean
@@ -13,7 +13,14 @@ const initialState: ItemOverrideState = {}
 
 export const itemOverrideState = sangte(initialState, (prev) => ({
   set(itemId: number, overridableItem: OverridableItem) {
-    prev[itemId] = overridableItem
+    if (prev[itemId] === undefined) {
+      prev[itemId] = overridableItem
+    } else {
+      prev[itemId] = {
+        ...prev[itemId],
+        ...overridableItem,
+      }
+    }
   },
 }))
 
