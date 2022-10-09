@@ -8,7 +8,7 @@ import { authPlugin } from './plugins/authPlugin.js'
 import cors from '@fastify/cors'
 import { isAppError } from './lib/AppError.js'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
-import { Type } from '@sinclair/typebox'
+import packageJson from './lib/packageJSON.js'
 
 const server = Fastify({
   logger: true,
@@ -46,6 +46,10 @@ server.setErrorHandler(async (error, request, reply) => {
   }
 
   return error
+})
+
+server.get('/', async () => {
+  return { version: packageJson.version }
 })
 
 server.register(authPlugin)
