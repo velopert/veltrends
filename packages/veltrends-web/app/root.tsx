@@ -46,13 +46,14 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     return null
   }
   */
-
-  if (!cookie) return null
-  // if (!cookie) return redirectIfNeeded()
-  setClientCookie(cookie)
   const env = {
     API_BASE_URL: context.API_BASE_URL,
   }
+
+  if (!cookie) return json({ user: null, env })
+  // if (!cookie) return redirectIfNeeded()
+  setClientCookie(cookie)
+
   try {
     const { me, headers } = await getMemoMyAccount()
     return json(
