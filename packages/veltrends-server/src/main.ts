@@ -20,6 +20,12 @@ if (process.env.NODE_ENV === 'development') {
     allowedHeaders: ['Cookie', 'Content-Type'],
     credentials: true,
   })
+} else {
+  server.register(cors, {
+    origin: /veltrends.com/,
+    allowedHeaders: ['Cookie', 'Content-Type'],
+    credentials: true,
+  })
 }
 
 if (process.env.NODE_ENV !== 'production') {
