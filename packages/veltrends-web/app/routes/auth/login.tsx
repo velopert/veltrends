@@ -6,7 +6,7 @@ import BasicLayout from '~/components/layouts/BasicLayout'
 import { useEffect } from 'react'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
-import { extractNextError, type NextAppError } from '~/lib/nextError'
+import { extractError, type AppError } from '~/lib/error'
 import { fetchClient } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
@@ -23,7 +23,7 @@ export const action: ActionFunction = async ({ request, context }) => {
       headers,
     })
   } catch (e) {
-    const error = extractNextError(e)
+    const error = extractError(e)
     throw json(error, {
       status: error.statusCode,
     })
@@ -31,7 +31,7 @@ export const action: ActionFunction = async ({ request, context }) => {
 }
 
 interface Props {
-  error?: NextAppError
+  error?: AppError
 }
 
 export default function Login({ error }: Props) {
@@ -52,7 +52,7 @@ export default function Login({ error }: Props) {
 }
 
 export function CatchBoundary() {
-  const caught = useCatch<ThrownResponse<number, NextAppError>>()
+  const caught = useCatch<ThrownResponse<number, AppError>>()
   console.log(caught)
 
   return <Login error={caught.data} />

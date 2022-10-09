@@ -6,7 +6,7 @@ import { useUser } from '~/states/user'
 import Button from '../system/Button'
 import Input from '../system/Input'
 import { changePassword, unregister } from '~/lib/api/me'
-import { extractNextError } from '~/lib/nextError'
+import { extractError } from '~/lib/error'
 import { media } from '~/lib/media'
 import { useOpenDialog } from '~/states/dialog'
 
@@ -34,7 +34,7 @@ function AccountSetting() {
       reset()
     },
     onError: (e) => {
-      const error = extractNextError(e)
+      const error = extractError(e)
       reset()
       if (error.name === 'BadRequest') {
         openDialog({

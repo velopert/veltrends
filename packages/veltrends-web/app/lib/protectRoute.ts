@@ -1,7 +1,7 @@
 import { type AuthResult, getMyAccount, refreshToken } from './api/auth'
 import { applyAuth } from './applyAuth'
 import { setClientCookie } from './client'
-import { extractNextError } from './nextError'
+import { extractError } from './error'
 
 let getMyAccountPromise: Promise<{
   me: AuthResult
@@ -16,7 +16,7 @@ async function getMyAccountWithRefresh() {
       headers: null,
     }
   } catch (e) {
-    const error = extractNextError(e)
+    const error = extractError(e)
     if (error.name === 'Unauthorized' && error.payload?.isExpiredToken) {
       try {
         const { tokens, headers } = await refreshToken()

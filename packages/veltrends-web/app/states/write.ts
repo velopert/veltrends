@@ -1,5 +1,5 @@
 import { sangte, useSangteActions, useSangteValue } from 'sangte'
-import { NextAppError } from '~/lib/nextError'
+import { AppError } from '~/lib/error'
 
 interface WriteState {
   form: {
@@ -7,7 +7,7 @@ interface WriteState {
     title: string
     body: string
   }
-  error?: NextAppError
+  error?: AppError
 }
 
 const initialState: WriteState = {
@@ -23,7 +23,7 @@ export const writeState = sangte(initialState, (prev) => ({
   change(key: keyof WriteState['form'], value: string) {
     prev.form[key] = value
   },
-  setError(error: NextAppError) {
+  setError(error: AppError) {
     prev.error = error
   },
 }))

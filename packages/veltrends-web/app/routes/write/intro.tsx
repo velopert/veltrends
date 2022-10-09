@@ -8,7 +8,7 @@ import LabelTextArea from '~/components/system/LabelTextArea'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
-import { extractNextError, useNextAppErrorCatch } from '~/lib/nextError'
+import { extractError, useNextAppErrorCatch } from '~/lib/error'
 import { useWriteActions, useWriteValue } from '~/states/write'
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request, context }) => {
     const item = await createItem({ link, title, body })
     return redirect(`/items/${item.id}`)
   } catch (e) {
-    const error = extractNextError(e)
+    const error = extractError(e)
     throw json(error, {
       status: error.statusCode,
     })

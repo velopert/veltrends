@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useForm } from '~/hooks/useForm'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { colors } from '~/lib/colors'
-import { type NextAppError } from '~/lib/nextError'
+import { type AppError } from '~/lib/error'
 import { media } from '~/lib/media'
 import { validate } from '~/lib/validate'
 import Button from '../system/Button'
@@ -18,7 +18,7 @@ interface ActionData {
 
 interface Props {
   mode: 'login' | 'register'
-  error?: NextAppError
+  error?: AppError
 }
 
 const authDescriptions = {

@@ -1,11 +1,11 @@
-import { ThrownResponse, useCatch } from '@remix-run/react'
+import { type ThrownResponse, useCatch } from '@remix-run/react'
 import { fetchClient, FetchError } from './client'
 
-export function isNextError(e: any): e is NextAppError {
+export function isNextError(e: any): e is AppError {
   return e?.statusCode !== undefined && e?.message !== undefined && e?.name !== undefined
 }
 
-export interface NextAppError {
+export interface AppError {
   name:
     | 'Unauthorized'
     | 'Forbidden'
@@ -23,7 +23,7 @@ export interface NextAppError {
   e?: any
 }
 
-export function extractNextError(e: any): NextAppError {
+export function extractError(e: any): AppError {
   if (e instanceof FetchError) {
     const data = e.data
     if (isNextError(data)) {
@@ -41,6 +41,6 @@ export function extractNextError(e: any): NextAppError {
 }
 
 export function useNextAppErrorCatch() {
-  const caught = useCatch<ThrownResponse<number, NextAppError>>()
+  const caught = useCatch<ThrownResponse<number, AppError>>()
   return caught
 }
