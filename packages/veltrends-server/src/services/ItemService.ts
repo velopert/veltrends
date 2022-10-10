@@ -218,6 +218,15 @@ class ItemService {
     const d1 = new Date(`${startDate} 00:00:00`)
     const d2 = new Date(`${endDate} 23:59:59`)
 
+    const cursorItem = cursor
+      ? await db.item.findUnique({
+          where: { id: cursor },
+          include: {
+            itemStats: true,
+          },
+        })
+      : null
+
     const [totalCount, list] = await Promise.all([
       db.item.count({
         where: {
@@ -248,6 +257,13 @@ class ItemService {
             gte: d1,
             lte: d2,
           },
+          itemStats: cursorItem
+            ? {
+                likes: {
+                  lte: cursorItem.itemStats?.likes ?? 0,
+                },
+              }
+            : undefined,
         },
         include: {
           user: true,
