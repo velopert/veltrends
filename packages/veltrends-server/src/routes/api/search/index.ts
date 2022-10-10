@@ -17,7 +17,7 @@ export const searchRoute: FastifyPluginAsyncTypebox = async (fastify) => {
       request.user?.id,
     )
     const serializedList = hits.list
-      .filter((item) => item !== null)
+      .filter((item) => items[item.id])
       .map((hit) => {
         const item = items[hit.id]
         return {
