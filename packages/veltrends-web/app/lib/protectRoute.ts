@@ -3,11 +3,6 @@ import { applyAuth } from './applyAuth'
 import { setClientCookie } from './client'
 import { extractError } from './error'
 
-let getMyAccountPromise: Promise<{
-  me: AuthResult
-  headers: Headers | null
-}> | null = null
-
 async function getMyAccountWithRefresh() {
   try {
     const me = await getMyAccount()
