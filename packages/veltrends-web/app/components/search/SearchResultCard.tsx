@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import styled from 'styled-components'
 import { type SearchResultItem } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
@@ -9,9 +10,9 @@ interface Props {
 
 function SearchResultCard({ item }: Props) {
   const { publisher, author, highlight, likes } = item
+  const link = `/items/${item.id}`
   return (
-    <Block>
-      {' '}
+    <Block to={link}>
       <Publisher>
         {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
         {author ? `${author} · ` : ''}
@@ -25,7 +26,8 @@ function SearchResultCard({ item }: Props) {
   )
 }
 
-const Block = styled.div`
+const Block = styled(Link)`
+  text-decoration: none;
   h3 {
     margin-top: 0;
     margin-bottom: 0;
