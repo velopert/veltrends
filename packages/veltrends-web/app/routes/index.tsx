@@ -1,6 +1,8 @@
-import { json, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import QueryString from 'qs'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -29,6 +31,37 @@ export const loader: LoaderFunction = async ({ request }) => {
   const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
 
   return json(list)
+}
+
+export const meta: MetaFunction = ({ params, location }) => {
+  const query = QueryString.parse(location.search, { ignoreQueryPrefix: true })
+
+  if (query.mode === 'recent') {
+    return {
+      title: 'Veltrends - 최신 뉴스',
+      description: '방금 벨트렌즈에 올라온 따끈따끈한 뉴스들을 확인해보세요.',
+    }
+  }
+  if (query.mode === 'past') {
+    const { start, end } = query
+    const range = getWeekRangeFromDate(new Date())
+    const startDate = (start as string) ?? range?.[0]
+    const endDate = (end as string) ?? range?.[1]
+
+    const formattedStart = format(new Date(startDate), 'yyyy년 MM월 dd일')
+    const formattedEnd = format(new Date(endDate), 'yyyy년 MM월 dd일')
+
+    return {
+      title: `Veltrends - 과거 뉴스 (${formattedStart} ~ ${formattedEnd})`,
+      description: `${formattedStart} ~ ${formattedEnd}에 벨트렌즈에 올라온 뉴스들을 인기순으로 확인해보세요.`,
+    }
+  }
+
+  return {
+    title: 'Veltrends',
+    description:
+      '개발, IT, 디자인, 스타트업 관련 유익하고 재미있는 소식들을 벨트렌즈에서 확인하세요.',
+  }
 }
 
 export default function Index() {
