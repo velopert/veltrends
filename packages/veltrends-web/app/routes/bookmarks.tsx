@@ -1,4 +1,4 @@
-import { json, type LoaderFunction, redirect } from '@remix-run/cloudflare'
+import { json, type LoaderFunction, redirect, MetaFunction } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useRef } from 'react'
@@ -15,9 +15,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   const isLoggedIn = await checkIsLoggedIn(request)
   if (!isLoggedIn) return redirect('/auth/login?next=/bookmarks')
 
-  console.log('fetching bookmark!')
   const bookmarks = await getBookmarks()
   return json(bookmarks)
+}
+
+export const meta: MetaFunction = () => {
+  return { title: '북마크', robots: 'noindex' }
 }
 
 export default function Bookmarks() {

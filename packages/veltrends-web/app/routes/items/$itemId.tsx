@@ -1,4 +1,4 @@
-import { json, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
 import MoreVertButton from '~/components/base/MoreVertButton'
@@ -23,6 +23,22 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     item,
     comments,
   })
+}
+
+export const meta: MetaFunction = ({ data }: { data: ItemLoaderData }) => {
+  const { item } = data
+
+  const shortDescription = item.body.slice(0, 300).concat(item.body.length > 300 ? '...' : '')
+
+  return {
+    title: item.title,
+    description: shortDescription,
+    'og:title': item.title,
+    'og:description': shortDescription,
+    'og:image': item.thumbnail ?? undefined,
+    'twitter:card': item.thumbnail ?? undefined,
+    'article:author': item.author ?? item.user.username,
+  }
 }
 
 interface ItemLoaderData {

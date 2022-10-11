@@ -4,9 +4,9 @@ import MobileHeader from '~/components/base/MobileHeader'
 import TabLayout from '~/components/layouts/TabLayout'
 import SearchInput from '~/components/search/SearchInput'
 import { useDebounce } from 'use-debounce'
-import { json, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
 import { parseUrlParams } from '~/lib/parseUrlParams'
-import { stringify } from 'qs'
+import QueryString, { stringify } from 'qs'
 import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
 import { searchItems } from '~/lib/api/search'
 import SearchResultCardList from '~/components/search/SearchResultCardList'
@@ -30,6 +30,22 @@ export const loader: LoaderFunction = async ({ request }) => {
   // @todo: handler errors
   const searchResult = await searchItems({ q })
   return json(searchResult)
+}
+
+export const meta: MetaFunction = ({ params, data, location }) => {
+  const { q } = QueryString.parse(location.search, { ignoreQueryPrefix: true })
+  if (!q) {
+    return {
+      title: '검색',
+      robots: 'noindex',
+    }
+  }
+  const { totalCount } = data as SearchItemsResult
+
+  return {
+    title: `"${q}" 검색 결과 - veltrends`,
+    description: `"${q}" 검색 결과입니다. 총 ${totalCount}개의 검색 결과가 있습니다.`,
+  }
 }
 
 export default function Search() {

@@ -19,6 +19,7 @@ import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
 import { useRef } from 'react'
 import GlobalDialog from './components/base/GlobalDialog'
+import { getCanonical } from './lib/getCanonical'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
@@ -30,11 +31,13 @@ interface LoaderResult {
   env: {
     API_BASE_URL: string
   }
+  canonical: string | null
 }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
   const cookie = request.headers.get('Cookie')
+  const canonical = getCanonical(request)
 
   /*
   const redirectIfNeeded = () => {
@@ -60,11 +63,12 @@ export const loader: LoaderFunction = async ({ request, context }) => {
       {
         user: me,
         env,
+        canonical,
       },
       headers ? { headers } : undefined,
     )
   } catch (e) {
-    return json({ user: null, env })
+    return json({ user: null, env, canonical })
     // return redirectIfNeeded()
   }
 }
@@ -76,7 +80,7 @@ export const meta: MetaFunction = () => ({
 })
 
 export default function App() {
-  const { user, env } = useLoaderData<LoaderResult>()
+  const { user, env, canonical } = useLoaderData<LoaderResult>()
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {
@@ -91,6 +95,9 @@ export default function App() {
     <html lang="en">
       <head>
         <Meta />
+        {canonical ? (
+          <link rel="canonical" href={'https://veltrends.com'.concat(canonical)} />
+        ) : null}
         <Links />
         {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>

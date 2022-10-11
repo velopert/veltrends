@@ -1,4 +1,4 @@
-import { type ActionFunction, json } from '@remix-run/cloudflare'
+import { type ActionFunction, json, MetaFunction } from '@remix-run/cloudflare'
 import { type ThrownResponse, useCatch, useActionData, useNavigate } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
 import { type AuthResult, login } from '~/lib/api/auth'
@@ -10,6 +10,10 @@ import { extractError, type AppError } from '~/lib/error'
 import { fetchClient } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
+
+export const meta: MetaFunction = () => {
+  return { title: '로그인', robots: 'noindex' }
+}
 
 export const action: ActionFunction = async ({ request, context }) => {
   const form = await request.formData()
