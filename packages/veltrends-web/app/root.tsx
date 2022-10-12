@@ -17,9 +17,12 @@ import { fetchClient, setClientCookie } from './lib/client'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import GlobalDialog from './components/base/GlobalDialog'
 import { getCanonical } from './lib/getCanonical'
+import { decode } from 'js-base64'
+import { TokenRefreshProvider, useTokenRefreshScheduler } from './contexts/TokenRefreshContext'
+import Core from './components/base/Core'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
@@ -32,6 +35,19 @@ interface LoaderResult {
     API_BASE_URL: string
   }
   canonical: string | null
+  tokenRemainingTime?: number
+}
+
+function extractAccessToken(cookie: string) {
+  const match = cookie.match(/access_token=([^;]+)/)
+  return match ? match[1] : null
+}
+
+function getTokenRemainingTime(token: string) {
+  const decoded = decode(token.split('.')[1])
+  const { exp } = JSON.parse(decoded)
+
+  return exp * 1000 - Date.now()
 }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
@@ -58,12 +74,15 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   setClientCookie(cookie)
 
   try {
+    const accessToken = extractAccessToken(cookie)!
+
     const { me, headers } = await getMemoMyAccount(request)
     return json(
       {
         user: me,
         env,
         canonical,
+        tokenRemainingTime: getTokenRemainingTime(accessToken),
       },
       headers ? { headers } : undefined,
     )
@@ -80,7 +99,8 @@ export const meta: MetaFunction = () => ({
 })
 
 export default function App() {
-  const { user, env, canonical } = useLoaderData<LoaderResult>()
+  const { user, env, canonical, tokenRemainingTime } = useLoaderData<LoaderResult>()
+
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {
@@ -109,21 +129,24 @@ export default function App() {
           `,
           }}
         />
-        <SangteProvider
-          initialize={({ set }) => {
-            set(userState, user)
-          }}
-        >
-          <GlobalStyle />
-          <QueryClientProvider client={queryClient}>
-            <Outlet />
-            <GlobalDialog />
-            <GlobalBottomSheetModal />
-          </QueryClientProvider>
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </SangteProvider>
+        <TokenRefreshProvider>
+          <SangteProvider
+            initialize={({ set }) => {
+              set(userState, user)
+            }}
+          >
+            <GlobalStyle />
+            <QueryClientProvider client={queryClient}>
+              <Outlet />
+              <GlobalDialog />
+              <GlobalBottomSheetModal />
+            </QueryClientProvider>
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
+          </SangteProvider>
+          <Core remainingTime={tokenRemainingTime} />
+        </TokenRefreshProvider>
       </body>
     </html>
   )

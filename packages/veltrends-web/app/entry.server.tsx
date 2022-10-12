@@ -14,7 +14,6 @@ export default function handleRequest(
 
   const cookie = request.headers.get('Cookie')
   if (cookie) {
-    console.log('cookie!', cookie)
     setClientCookie(cookie)
   }
 
