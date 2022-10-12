@@ -54,7 +54,6 @@ export const checkIsLoggedIn = async (request: Request) => {
     await getMemoMyAccount(request)
     promiseMap.delete(request)
   } catch (e) {
-    console.log({ e })
     return false
   }
 
