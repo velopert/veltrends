@@ -1,6 +1,6 @@
 import { type AuthResult, getMyAccount, refreshToken } from './api/auth'
 import { applyAuth } from './applyAuth'
-import { setClientCookie } from './client'
+import { consumeCookie, setClientCookie } from './client'
 import { extractError } from './error'
 
 async function getMyAccountWithRefresh() {
@@ -47,6 +47,7 @@ export async function getMemoMyAccount(request: Request) {
 }
 
 export const checkIsLoggedIn = async (request: Request) => {
+  consumeCookie(request)
   const applied = applyAuth(request)
   if (!applied) return false
 

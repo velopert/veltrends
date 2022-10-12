@@ -10,6 +10,13 @@ export function clearCookie() {
   _cookie = ''
 }
 
+export function consumeCookie(request: Request) {
+  const cookie = request.headers.get('Cookie')
+  if (cookie) {
+    setClientCookie(cookie)
+  }
+}
+
 interface RequestConfig {
   params?: any
   headers?: HeadersInit

@@ -13,8 +13,10 @@ import { type Comment, type Item as ItemType } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 import { useOpenDialog } from '~/states/dialog'
+import { consumeCookie } from '~/lib/client'
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+  consumeCookie(request)
   // @todo: validate itemId
   const itemId = parseInt(params.itemId!, 10)
   const [item, comments] = await Promise.all([getItem(itemId), getComments(itemId)])
