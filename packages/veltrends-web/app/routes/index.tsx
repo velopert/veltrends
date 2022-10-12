@@ -10,6 +10,7 @@ import LinkCardList from '~/components/home/LinkCardList'
 import ListModeSelector from '~/components/home/ListModeSelector'
 import WeekSelector from '~/components/home/WeekSelector'
 import TabLayout from '~/components/layouts/TabLayout'
+import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
 import { type ListMode, type GetItemsResult } from '~/lib/api/types'
@@ -130,10 +131,12 @@ export default function Index() {
     <StyledTabLayout>
       <Content>
         <ListModeSelector mode={mode} onSelectMode={onSelectMode} />
+
         {mode === 'past' && <WeekSelector dateRange={dateRange} />}
         {items ? <LinkCardList items={items} /> : null}
         <div ref={ref} />
       </Content>
+      {items?.length === 0 ? <EmptyList /> : null}
     </StyledTabLayout>
   )
 }

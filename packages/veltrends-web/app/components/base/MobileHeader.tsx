@@ -10,7 +10,7 @@ interface Props {
   className?: string
 }
 
-function MobileHeader({ title = <Logo />, headerLeft, headerRight, className }: Props) {
+function MobileHeader({ title = <StyledLogo />, headerLeft, headerRight, className }: Props) {
   return (
     <Block className={className}>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}
@@ -34,15 +34,16 @@ const Block = styled.header`
   }
 `
 
+const StyledLogo = styled(Logo)`
+  display: block;
+  width: 84px;
+  height: 17px;
+`
+
 const Title = styled.div`
   color: ${colors.gray5};
   font-size: 18px;
   font-weight: 600;
-  svg {
-    display: block;
-    width: 84px;
-    height: 17px;
-  }
 `
 
 const HeaderSide = styled.div<{ position: 'left' | 'right' }>`

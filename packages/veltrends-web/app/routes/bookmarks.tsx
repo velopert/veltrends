@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import styled from 'styled-components'
 import LinkCardList from '~/components/home/LinkCardList'
 import TabLayout from '~/components/layouts/TabLayout'
+import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getBookmarks } from '~/lib/api/bookmark'
 import { type GetBookmarksResult } from '~/lib/api/types'
@@ -48,6 +49,11 @@ export default function Bookmarks() {
 
   return (
     <StyledTabLayout>
+      {items?.length === 0 ? (
+        <EmptyList
+          message={'북마크가 없습니다.\n나중에 다시 보고 싶은 링크를 북마크에 추가해보세요.'}
+        />
+      ) : null}
       <Content>
         {items ? <LinkCardList items={items} /> : null}
         <div ref={ref} />
@@ -64,6 +70,7 @@ const StyledTabLayout = styled(TabLayout)`
 `
 
 const Content = styled.div`
+  position: relative;
   ${media.wide} {
     width: 1200px;
     margin-left: auto;
