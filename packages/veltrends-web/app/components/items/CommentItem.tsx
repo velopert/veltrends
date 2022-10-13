@@ -13,6 +13,10 @@ import SubcommentList from './SubcommentList'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 import { useCommentInputActions } from '~/states/commentInput'
 import { useCommentLikeById } from '~/states/commentLikes'
+import { useState } from 'react'
+import { isMobile } from '~/lib/isMobile'
+import CommentInput from './CommentInput'
+import CommentDesktopInput from './CommentDesktopInput'
 
 interface Props {
   comment: Comment
@@ -30,6 +34,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const isMyComment = comment.user.id === currentUser?.id
   const { open: openBottomSheetModal } = useBottomSheetModalActions()
   const deleteComment = useDeleteComment()
+  const [isReplying, setIsReplying] = useState(false)
 
   const onClickMore = () => {
     openBottomSheetModal([
@@ -74,7 +79,12 @@ function CommentItem({ comment, isSubcomment }: Props) {
   }
 
   const onReply = () => {
-    write(comment.id)
+    if (isMobile()) {
+      write(comment.id)
+      return
+    }
+
+    setIsReplying(true)
   }
 
   const dateDistance = useDateDistance(createdAt)
@@ -114,6 +124,17 @@ function CommentItem({ comment, isSubcomment }: Props) {
           답글 달기
         </ReplyButton>
       </CommentFooter>
+
+      {isReplying ? (
+        <ReplyWrapper>
+          <CommentDesktopInput
+            mode="reply"
+            replyTo={comment.id}
+            onCancelReply={() => setIsReplying(false)}
+          />
+        </ReplyWrapper>
+      ) : null}
+
       {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
     </Block>
   )
@@ -210,6 +231,11 @@ const Mention = styled.span`
 const DeletedText = styled(Text)`
   color: ${colors.gray2};
   margin: 0;
+`
+
+const ReplyWrapper = styled.div`
+  padding-left: 16px;
+  padding-top: 16px;
 `
 
 export default CommentItem

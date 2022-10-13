@@ -9,6 +9,7 @@ import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
 import { extractError, useNextAppErrorCatch } from '~/lib/error'
+import { media } from '~/lib/media'
 import { useWriteActions, useWriteValue } from '~/states/write'
 
 export const action: ActionFunction = async ({ request, context }) => {
@@ -63,7 +64,13 @@ function Intro() {
       >
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
-          <StyledLabelTextArea label="내용" name="body" onChange={onChange} value={form.body} />
+          <StyledLabelTextArea
+            label="내용"
+            name="body"
+            onChange={onChange}
+            value={form.body}
+            rows={8}
+          />
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
