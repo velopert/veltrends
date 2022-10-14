@@ -102,8 +102,8 @@ function ItemViewer({ item, isMyItem }: Props) {
                 e.preventDefault()
               }}
             >
-              <TextButton onClick={onClickDelete}>삭제</TextButton>
               <TextButton onClick={onClickModify}>수정</TextButton>
+              <TextButton onClick={onClickDelete}>삭제</TextButton>
             </MyItemActions>
           ) : null}
           <Body>{body}</Body>
