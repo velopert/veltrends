@@ -97,7 +97,7 @@ function Item() {
       headerRight={isMyItem && <MoreVertButton onClick={onClickMore} />}
     >
       <Content>
-        <ItemViewer item={loaderData.item} />
+        <ItemViewer item={loaderData.item} isMyItem={isMyItem} />
         {/* `comments` is always valid due to SSR */}
         <CommentList comments={comments!} />
         <CommentInputOverlay />

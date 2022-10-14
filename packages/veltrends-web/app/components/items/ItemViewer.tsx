@@ -11,12 +11,17 @@ import { Globe } from '../vectors'
 import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import BookmarkButton from '../system/BookmarkButton'
 import { useItemOverrideById } from '~/states/itemOverride'
+import { media } from '~/lib/media'
+import { useNavigate } from '@remix-run/react'
+import { useOpenDialog } from '~/states/dialog'
+import { deleteItem } from '~/lib/api/items'
 
 interface Props {
   item: Item
+  isMyItem: boolean
 }
 
-function ItemViewer({ item }: Props) {
+function ItemViewer({ item, isMyItem }: Props) {
   const { id, thumbnail, publisher, author, title, body, user, createdAt } = item
   const itemOverride = useItemOverrideById(id)
   const dateDistance = useDateDistance(createdAt)
@@ -55,6 +60,26 @@ function ItemViewer({ item }: Props) {
     }
   }
 
+  const openDialog = useOpenDialog()
+  const navigate = useNavigate()
+  const onClickDelete = () => {
+    openDialog({
+      title: '삭제',
+      description: '정말로 삭제하시겠습니까?',
+      mode: 'YESNO',
+      cancelText: '취소',
+      confirmText: '삭제',
+      async onConfirm() {
+        /** @todo: show fullscreen spinner on loading */
+        await deleteItem(item.id)
+        navigate('/')
+      },
+    })
+  }
+  const onClickModify = () => {
+    navigate(`/write/edit?itemId=${item.id}`)
+  }
+
   return (
     <Block>
       {thumbnail ? (
@@ -70,6 +95,17 @@ function ItemViewer({ item }: Props) {
             {publisher.name}
           </Publisher>
           <Title>{title}</Title>
+          {isMyItem ? (
+            <MyItemActions
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
+            >
+              <TextButton onClick={onClickDelete}>삭제</TextButton>
+              <TextButton onClick={onClickModify}>수정</TextButton>
+            </MyItemActions>
+          ) : null}
           <Body>{body}</Body>
         </a>
         <AnimatePresence initial={false}>
@@ -122,6 +158,27 @@ const Content = styled.div`
   }
 `
 
+const MyItemActions = styled.div`
+  color: ${colors.gray2};
+  font-size: 14px;
+  margin-top: 8px;
+  gap: 8px;
+  display: none;
+  ${media.mobile} {
+    display: flex;
+  }
+`
+
+const TextButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: ${colors.gray3};
+  }
+`
+
 const Publisher = styled.div`
   display: flex;
   color: ${colors.gray3};
@@ -143,13 +200,13 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: 600;
   margin-top: 0;
+  margin-bottom: 0;
   color: ${colors.gray5};
   line-height: 1.5;
-  margin-bottom: 16px;
 `
 
 const Body = styled.p`
-  margin-top: 0;
+  margin-top: 16px;
   margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.5;
