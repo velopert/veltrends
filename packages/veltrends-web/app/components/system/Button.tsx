@@ -11,10 +11,27 @@ interface ButtonProps {
 }
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {
   to?: string
+  href?: string
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ layoutMode = 'inline', variant = 'primary', size = 'medium', to, ...rest }, ref) => {
+  ({ layoutMode = 'inline', variant = 'primary', size = 'medium', to, href, ...rest }, ref) => {
+    if (href) {
+      return (
+        <StyledAnchor
+          layoutMode={layoutMode}
+          variant={variant}
+          size={size}
+          href={href}
+          className={rest.className}
+          style={rest.style}
+          ref={ref as any}
+        >
+          {rest.children}
+        </StyledAnchor>
+      )
+    }
+
     if (to) {
       return (
         <StyledLink
@@ -101,6 +118,11 @@ const sharedStyles = css<ButtonProps>`
 
 const StyledButton = styled.button<ButtonProps>`
   ${sharedStyles}
+`
+
+const StyledAnchor = styled.a<ButtonProps>`
+  ${sharedStyles}
+  text-decoration: none;
 `
 
 const StyledLink = styled(Link)<ButtonProps>`
