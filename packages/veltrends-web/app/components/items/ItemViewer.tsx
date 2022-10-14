@@ -161,9 +161,12 @@ const Content = styled.div`
 const MyItemActions = styled.div`
   color: ${colors.gray2};
   font-size: 14px;
-  margin-top: 8px;
+
   gap: 8px;
   display: none;
+  margin-left: -4px;
+  gap: 4px;
+  margin-top: 0px;
   ${media.mobile} {
     display: flex;
   }
@@ -173,6 +176,7 @@ const TextButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  padding: 4px;
   &:hover {
     text-decoration: underline;
     color: ${colors.gray3};
@@ -186,6 +190,7 @@ const Publisher = styled.div`
   margin-bottom: 8px;
   line-height: 1.5;
   align-items: center;
+
   img,
   svg {
     display: block;
