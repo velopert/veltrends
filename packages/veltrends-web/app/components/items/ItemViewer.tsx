@@ -98,7 +98,7 @@ function ItemViewer({ item, isMyItem }: Props) {
             </Publisher>
             <Title>{title}</Title>
           </ItemInfo>
-          <Button variant="secondary" to={item.link}>
+          <Button variant="secondary" href={item.link}>
             방문
           </Button>
         </ItemHead>
@@ -158,6 +158,10 @@ const Thumbnail = styled.img`
 const Content = styled.div`
   padding: 16px;
   border-bottom: 1px solid ${colors.gray0};
+  ${media.tablet} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `
 
 const MyItemActions = styled.div`

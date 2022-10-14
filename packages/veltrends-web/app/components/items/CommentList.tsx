@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Comment } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import CommentInput from './CommentInput'
 import CommentItem from './CommentItem'
 
@@ -22,6 +23,10 @@ function CommentList({ comments }: Props) {
 
 const Block = styled.div`
   padding: 16px;
+  ${media.tablet} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `
 
 const CommentTitle = styled.h3`
