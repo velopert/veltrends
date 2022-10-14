@@ -7,6 +7,6 @@ export const colors = {
   gray5: '#121212',
   primary: '#FFA000',
   secondary: '#FFF4E0',
-  secondaryButtonText: '#e15500',
+  secondaryButtonText: '#ff7a2a',
   destructive: 'red',
 }

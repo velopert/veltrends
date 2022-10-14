@@ -15,6 +15,7 @@ import { media } from '~/lib/media'
 import { useNavigate } from '@remix-run/react'
 import { useOpenDialog } from '~/states/dialog'
 import { deleteItem } from '~/lib/api/items'
+import Button from '../system/Button'
 
 interface Props {
   item: Item
@@ -88,26 +89,32 @@ function ItemViewer({ item, isMyItem }: Props) {
         </a>
       ) : null}
       <Content>
-        <a href={item.link}>
-          <Publisher>
-            {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
-            {author ? `${author} · ` : ''}
-            {publisher.name}
-          </Publisher>
-          <Title>{title}</Title>
-          {isMyItem ? (
-            <MyItemActions
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-              }}
-            >
-              <TextButton onClick={onClickModify}>수정</TextButton>
-              <TextButton onClick={onClickDelete}>삭제</TextButton>
-            </MyItemActions>
-          ) : null}
-          <Body>{body}</Body>
-        </a>
+        <ItemHead>
+          <ItemInfo>
+            <Publisher>
+              {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+              {author ? `${author} · ` : ''}
+              {publisher.name}
+            </Publisher>
+            <Title>{title}</Title>
+          </ItemInfo>
+          <Button variant="secondary" to={item.link}>
+            방문
+          </Button>
+        </ItemHead>
+        {isMyItem ? (
+          <MyItemActions
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+            }}
+          >
+            <TextButton onClick={onClickModify}>수정</TextButton>
+            <TextButton onClick={onClickDelete}>삭제</TextButton>
+          </MyItemActions>
+        ) : null}
+        <Body>{body}</Body>
+
         <AnimatePresence initial={false}>
           {likes === 0 ? null : (
             <LikesCount
@@ -151,11 +158,6 @@ const Thumbnail = styled.img`
 const Content = styled.div`
   padding: 16px;
   border-bottom: 1px solid ${colors.gray0};
-  a {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
 `
 
 const MyItemActions = styled.div`
@@ -238,6 +240,19 @@ const Footer = styled.div`
 const UserInfo = styled.div`
   color: ${colors.gray2};
   font-size: 14px;
+`
+
+const ItemHead = styled.div`
+  display: flex;
+  word-break: break-word;
+  gap: 16px;
+  & > button {
+    flex-shrink: 0;
+  }
+`
+
+const ItemInfo = styled.div`
+  flex: 1;
 `
 
 const IconButtons = styled.div`

@@ -50,7 +50,7 @@ const variantStyles = {
     background: ${colors.secondary};
     color: ${colors.secondaryButtonText};
     ${hover(css`
-      opacity: 0.875;
+      opacity: 0.5;
     `)}
   `,
   text: css`
