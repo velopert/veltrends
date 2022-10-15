@@ -20,6 +20,7 @@ async function getMyAccountWithRefresh() {
         return {
           me,
           headers,
+          accessToken: tokens.accessToken,
         }
       } catch (innerError) {
         throw e
@@ -34,6 +35,7 @@ const promiseMap = new Map<
   Promise<{
     me: AuthResult
     headers: Headers | null
+    accessToken?: string
   }>
 >()
 

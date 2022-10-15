@@ -76,17 +76,19 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   try {
     const accessToken = extractAccessToken(cookie)!
 
-    const { me, headers } = await getMemoMyAccount(request)
+    const { me, headers, accessToken: refreshedAccessToken } = await getMemoMyAccount(request)
+
     return json(
       {
         user: me,
         env,
         canonical,
-        tokenRemainingTime: getTokenRemainingTime(accessToken),
+        tokenRemainingTime: getTokenRemainingTime(accessToken ?? refreshedAccessToken),
       },
       headers ? { headers } : undefined,
     )
   } catch (e) {
+    console.log({ e })
     return json({ user: null, env, canonical })
     // return redirectIfNeeded()
   }
@@ -100,6 +102,8 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   const { user, env, canonical, tokenRemainingTime } = useLoaderData<LoaderResult>()
+
+  console.log({ user })
 
   const queryClient = useRef(
     new QueryClient({
