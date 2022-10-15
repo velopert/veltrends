@@ -61,6 +61,7 @@ function Intro() {
             method: 'post',
           })
         }}
+        isLoading={fetcher.state === 'submitting'}
       >
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />

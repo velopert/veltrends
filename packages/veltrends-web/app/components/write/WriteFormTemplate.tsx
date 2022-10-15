@@ -2,20 +2,24 @@ import styled from 'styled-components'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import Button from '../system/Button'
+import LoadingIndicator from '../system/LoadingIndicator'
 
 interface Props {
   description?: string
   children: React.ReactNode
   buttonText: string
   onSubmit(e: React.FormEvent<HTMLFormElement>): void
+  isLoading?: boolean
 }
 
-function WriteFormTemplate({ description, children, buttonText, onSubmit }: Props) {
+function WriteFormTemplate({ description, children, buttonText, isLoading, onSubmit }: Props) {
   return (
     <StyledForm onSubmit={onSubmit}>
       {description && <h3>{description}</h3>}
       <Content>{children}</Content>
-      <Button>{buttonText}</Button>
+      <Button disabled={isLoading}>
+        {isLoading ? <LoadingIndicator color="white" /> : buttonText}
+      </Button>
     </StyledForm>
   )
 }
