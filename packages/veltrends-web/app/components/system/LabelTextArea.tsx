@@ -65,6 +65,8 @@ const StyledTextArea = styled.textarea`
     background: ${colors.gray0};
     color: ${colors.gray3};
   }
+
+  word-break: keep-all;
 `
 
 const Block = styled.div`

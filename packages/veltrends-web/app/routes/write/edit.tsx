@@ -54,7 +54,13 @@ function Edit() {
       <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
-          <StyledLabelTextArea label="내용" name="body" onChange={onChange} value={form.body} />
+          <StyledLabelTextArea
+            label="내용"
+            name="body"
+            onChange={onChange}
+            value={form.body}
+            rows={16}
+          />
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>

@@ -3,8 +3,10 @@ import { useFetcher, useNavigate } from '@remix-run/react'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BasicLayout from '~/components/layouts/BasicLayout'
+import LabelGroup from '~/components/system/LabelGroup'
 import LabelInput from '~/components/system/LabelInput'
 import LabelTextArea from '~/components/system/LabelTextArea'
+import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
@@ -65,13 +67,16 @@ function Intro() {
       >
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
-          <StyledLabelTextArea
+          <LabelEditorGroup label="내용">
+            {({ onFocus, onBlur }) => <StyledEditor onFocus={onFocus} onBlur={onBlur} />}
+          </LabelEditorGroup>
+          {/* <StyledLabelTextArea
             label="내용"
             name="body"
             onChange={onChange}
             value={form.body}
-            rows={8}
-          />
+            rows={16}
+          /> */}
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
@@ -100,6 +105,13 @@ const Group = styled.div`
   padding-bottom: 16px;
 `
 
+const LabelEditorGroup = styled(LabelGroup)`
+  flex: 1;
+  ${media.tablet} {
+    flex: initial;
+  }
+`
+
 const StyledLabelTextArea = styled(LabelTextArea)`
   flex: 1;
   textarea {
@@ -114,6 +126,16 @@ const Message = styled.div`
   font-size: 14px;
   color: red;
   text-align: center;
+`
+
+const StyledEditor = styled(Editor)`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  ${media.desktop} {
+    flex: initial;
+  }
 `
 
 export default Intro

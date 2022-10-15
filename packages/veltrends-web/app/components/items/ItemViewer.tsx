@@ -96,7 +96,9 @@ function ItemViewer({ item, isMyItem }: Props) {
               {author ? `${author} · ` : ''}
               {publisher.name}
             </Publisher>
-            <Title>{title}</Title>
+            <Title>
+              <a href={item.link}>{title}</a>
+            </Title>
           </ItemInfo>
           <Button variant="secondary" href={item.link}>
             방문
@@ -214,6 +216,13 @@ const Title = styled.h2`
   margin-bottom: 0;
   color: ${colors.gray5};
   line-height: 1.5;
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: ${colors.gray2};
+    }
+  }
 `
 
 const Body = styled.p`

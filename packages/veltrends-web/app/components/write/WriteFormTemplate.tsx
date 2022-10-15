@@ -40,6 +40,13 @@ const StyledForm = styled.form`
     align-self: center;
   }
 
+  ${media.desktop} {
+    flex: 1;
+    justify-content: center;
+    width: 640px;
+    align-self: center;
+  }
+
   h3 {
     color: ${colors.gray5};
     line-height: 1.5;
