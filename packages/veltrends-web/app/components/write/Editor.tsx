@@ -85,7 +85,8 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
         window.removeEventListener('resize', onResize)
       }
     }
-  }, [defaultValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const focus = () => {
     if (viewRef.current) {
