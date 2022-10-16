@@ -51,7 +51,6 @@ function getTokenRemainingTime(token: string) {
 }
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  console.log({ API_BASE_URL: context.API_BASE_URL })
   fetchClient.baseUrl = (context.API_BASE_URL as string) ?? 'http://localhost:8080'
   const cookie = request.headers.get('Cookie')
   const canonical = getCanonical(request)
