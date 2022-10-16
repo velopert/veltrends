@@ -166,7 +166,7 @@ export default function App() {
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
-            <Core remainingTime={1000 * 60 * 3.25} />
+            <Core remainingTime={tokenRemainingTime} />
           </SangteProvider>
         </TokenRefreshProvider>
       </body>
