@@ -1,5 +1,5 @@
 import { json, LinksFunction, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { ThrownResponse, useCatch, useLoaderData, useSearchParams } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import QueryString from 'qs'
@@ -20,20 +20,24 @@ import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
 
 export const loader: LoaderFunction = async ({ request }) => {
-  consumeCookie(request)
-  const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(
-    request.url,
-  )
-  const fallbackedMode = mode ?? 'trending'
+  try {
+    consumeCookie(request)
+    const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(
+      request.url,
+    )
+    const fallbackedMode = mode ?? 'trending'
 
-  const range = mode === 'past' ? getWeekRangeFromDate(new Date()) : undefined
-  const startDate = start ?? range?.[0]
-  const endDate = end ?? range?.[1]
+    const range = mode === 'past' ? getWeekRangeFromDate(new Date()) : undefined
+    const startDate = start ?? range?.[0]
+    const endDate = end ?? range?.[1]
 
-  // @todo: throw error if invalid error
-  const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
+    // @todo: throw error if invalid error
+    const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
 
-  return json(list)
+    return json(list)
+  } catch (e) {
+    throw json(e, { status: 500 })
+  }
 }
 
 export const meta: MetaFunction = ({ params, location }) => {
@@ -157,3 +161,19 @@ const Content = styled.div`
     margin-right: auto;
   }
 `
+
+export function CatchBoundary() {
+  const caught = useCatch()
+  console.log(caught.data)
+
+  return (
+    <div>
+      <h1>Caught</h1>
+      <p>Status: {caught.status}</p>
+      <p></p>
+      <pre>
+        <code>{JSON.stringify(caught.data, null, 2)}</code>
+      </pre>
+    </div>
+  )
+}
