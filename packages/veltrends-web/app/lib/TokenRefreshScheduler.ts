@@ -35,7 +35,6 @@ class TokenRefreshScheduler {
   }
 
   shouldRefresh() {
-    console.log(this.getCounter(), this.counter)
     return this.getCounter() === this.counter
   }
 
