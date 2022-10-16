@@ -36,15 +36,22 @@ interface Props {
   onFocus(): void
   onBlur(): void
   className?: string
+  onChangeText(text: string): void
+  defaultValue?: string
 }
 
-function Editor({ onFocus, onBlur, className }: Props) {
+function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Props) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const [ready, setReady] = useState(false)
   const [isFocused, setFocused] = useState(false)
   const [height, setHeight] = useState(0)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const onChangeTextRef = useRef(onChangeText)
+
+  useEffect(() => {
+    onChangeTextRef.current = onChangeText
+  }, [onChangeText])
 
   useEffect(() => {
     if (editorRef.current) {
@@ -55,8 +62,12 @@ function Editor({ onFocus, onBlur, className }: Props) {
           customTheme,
           keymap.of([indentWithTab]),
           EditorView.lineWrapping,
+          EditorView.updateListener.of((update) => {
+            onChangeTextRef.current(update.state.doc.toString())
+          }),
         ],
         parent: editorRef.current,
+        doc: defaultValue,
       })
 
       setReady(true)
@@ -74,7 +85,7 @@ function Editor({ onFocus, onBlur, className }: Props) {
         window.removeEventListener('resize', onResize)
       }
     }
-  }, [])
+  }, [defaultValue])
 
   const focus = () => {
     if (viewRef.current) {
@@ -139,6 +150,7 @@ const EditorWrapper = styled.div<{ isVisible: boolean; isFocused: boolean; $heig
 
   .cm-line {
     padding-right: 16px;
+    word-break: keep-all;
   }
 
   ${(props) =>

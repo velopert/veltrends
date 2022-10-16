@@ -1,13 +1,16 @@
 import { json, LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData, useNavigate } from '@remix-run/react'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import BasicLayout from '~/components/layouts/BasicLayout'
+import LabelGroup from '~/components/system/LabelGroup'
 import LabelInput from '~/components/system/LabelInput'
 import LabelTextArea from '~/components/system/LabelTextArea'
+import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { getItem, updateItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
+import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -35,6 +38,10 @@ function Edit() {
     setForm({ ...form, [key]: value })
   }
 
+  const onChangeBody = useCallback((text: string) => {
+    setForm((form) => ({ ...form, body: text }))
+  }, [])
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
     /**
@@ -54,13 +61,16 @@ function Edit() {
       <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
-          <StyledLabelTextArea
-            label="내용"
-            name="body"
-            onChange={onChange}
-            value={form.body}
-            rows={16}
-          />
+          <LabelEditorGroup label="내용">
+            {({ onFocus, onBlur }) => (
+              <StyledEditor
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChangeText={onChangeBody}
+                defaultValue={form.body}
+              />
+            )}
+          </LabelEditorGroup>
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>
@@ -76,20 +86,28 @@ const Group = styled.div`
   padding-bottom: 16px;
 `
 
-const StyledLabelTextArea = styled(LabelTextArea)`
-  flex: 1;
-  textarea {
-    flex: 1;
-    resize: none;
-    font-family: inherit;
-  }
-`
-
 const Message = styled.div`
   margin-top: 8px;
   font-size: 14px;
   color: red;
   text-align: center;
+`
+
+const LabelEditorGroup = styled(LabelGroup)`
+  flex: 1;
+  ${media.tablet} {
+    flex: initial;
+  }
+`
+
+const StyledEditor = styled(Editor)`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  ${media.desktop} {
+    flex: initial;
+  }
 `
 
 export default Edit

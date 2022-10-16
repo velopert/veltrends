@@ -1,6 +1,6 @@
 import { type ActionFunction, redirect, json } from '@remix-run/cloudflare'
 import { useFetcher, useNavigate } from '@remix-run/react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelGroup from '~/components/system/LabelGroup'
@@ -48,6 +48,13 @@ function Intro() {
     actions.change(key, value)
   }
 
+  const onChangeBody = useCallback(
+    (text: string) => {
+      actions.change('body', text)
+    },
+    [actions],
+  )
+
   return (
     <BasicLayout title="뉴스 소개" hasBackButton>
       <WriteFormTemplate
@@ -68,7 +75,9 @@ function Intro() {
         <Group>
           <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
           <LabelEditorGroup label="내용">
-            {({ onFocus, onBlur }) => <StyledEditor onFocus={onFocus} onBlur={onBlur} />}
+            {({ onFocus, onBlur }) => (
+              <StyledEditor onFocus={onFocus} onBlur={onBlur} onChangeText={onChangeBody} />
+            )}
           </LabelEditorGroup>
           {/* <StyledLabelTextArea
             label="내용"

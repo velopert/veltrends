@@ -16,6 +16,8 @@ import { useNavigate } from '@remix-run/react'
 import { useOpenDialog } from '~/states/dialog'
 import { deleteItem } from '~/lib/api/items'
 import Button from '../system/Button'
+import MarkdownIt from 'markdown-it'
+import { useMemo } from 'react'
 
 interface Props {
   item: Item
@@ -81,6 +83,12 @@ function ItemViewer({ item, isMyItem }: Props) {
     navigate(`/write/edit?itemId=${item.id}`)
   }
 
+  const html = useMemo(() => {
+    return MarkdownIt().render(body)
+  }, [body])
+
+  console.log(html)
+
   return (
     <Block>
       {thumbnail ? (
@@ -115,7 +123,7 @@ function ItemViewer({ item, isMyItem }: Props) {
             <TextButton onClick={onClickDelete}>삭제</TextButton>
           </MyItemActions>
         ) : null}
-        <Body>{body}</Body>
+        <Body dangerouslySetInnerHTML={{ __html: html }} />
 
         <AnimatePresence initial={false}>
           {likes === 0 ? null : (
@@ -225,14 +233,45 @@ const Title = styled.h2`
   }
 `
 
-const Body = styled.p`
+const Body = styled.div`
   margin-top: 16px;
   margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.5;
   color: ${colors.gray4};
-  white-space: pre-wrap;
+
   word-break: keep-all;
+  ${media.tablet} {
+    font-size: 16px;
+  }
+
+  p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+    font-size: 14px;
+    ${media.tablet} {
+      font-size: 16px;
+    }
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  a {
+    color: ${colors.primary};
+  }
 `
 
 const LikesCount = styled(motion.div)`

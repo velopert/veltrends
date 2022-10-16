@@ -13,6 +13,7 @@ import BookmarkButton from '../system/BookmarkButton'
 import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import { media } from '~/lib/media'
 import { useItemOverrideById } from '~/states/itemOverride'
+import removeMd from 'remove-markdown'
 
 interface Props {
   item: Item
@@ -69,8 +70,9 @@ function LinkCard({ item }: Props) {
           {publisher.name}
         </Publisher>
         <h3>{title}</h3>
-        <p>{body}</p>
+        <p>{removeMd(body)}</p>
       </StyledLink>
+      <Spacer />
       <LikeCountWrapper>
         <AnimatePresence initial={false}>
           {likes === 0 ? null : (
@@ -85,6 +87,7 @@ function LinkCard({ item }: Props) {
           )}
         </AnimatePresence>
       </LikeCountWrapper>
+
       <Footer>
         <IconButtons>
           <LikeButton isLiked={isLiked} onClick={toggleLike} />
@@ -195,8 +198,8 @@ const IconButtons = styled.div`
   gap: 8px;
 `
 
-const EmptyLikeArea = styled.div`
-  height: 26px;
+const Spacer = styled.div`
+  flex: 1;
 `
 
 export default LinkCard
