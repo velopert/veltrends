@@ -1,6 +1,6 @@
 # veltrends
 
-[ENGLISH](/README.md) | [한국어](/README-ko.md)
+[English](/README.md) | [한국어](/README-ko.md)
 
 Veltrends is a website where users can explore trending tech news.
 
