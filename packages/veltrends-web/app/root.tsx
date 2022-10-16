@@ -98,6 +98,7 @@ export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'Veltrends',
   viewport: 'width=device-width,initial-scale=1',
+  'og:image': 'https://veltrends.com/og-image.png',
 })
 
 export default function App() {
@@ -134,8 +135,6 @@ export default function App() {
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff"></meta>
-
-        <meta property="og:image" content="https://www.veltrends.com/og-image.png" />
 
         {canonical ? (
           <link rel="canonical" href={'https://www.veltrends.com'.concat(canonical)} />
