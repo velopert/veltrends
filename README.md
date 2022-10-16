@@ -1,12 +1,14 @@
 # veltrends
 
-벨트렌즈는 최근 기술 관련 소식을 한 눈에 볼 수 있게 해주는 웹사이트입니다.
+[ENGLISH](/README.md) | [한국어](/README-ko.md)
+
+Veltrends is a website where users can explore trending tech news.
 
 [URL](https://www.veltrends.com)
 
 ![](https://www.veltrends.com/og-image.png)
 
-## 기술 스택
+## Tech Stack
 
 ### Frontend
 
@@ -33,12 +35,12 @@
 - Terraform
 - AWS
 
-## 로컬 환경에서 실행하기
+## Running on local environment
 
 ### Backend
 
-1. packages/veltrends-server 디렉터리에서 .env.sample을 .env 로 이름을 변경하세요.
-2. packages/veltrends-server/prisma/schema.client 에서 `datasource db` 부분에서 다음과 같이 SQLite를 사용하도록 수정하세요.
+1. Rename .env.sample to .env in packages/veltrends-server directory.
+2. Modify `datasource db` part in packages/veltrends-server/prisma/schema.client to use SQLite as below
 
 ```
 datasource db {
@@ -47,7 +49,7 @@ datasource db {
 }
 ```
 
-> SQLite 대신 PostgreSQL을 쓰려면 이 [링크](packages/veltrends-server/dockers/postgresql/README.md)를 참고하여 PostgreSQL 서버를 실행하고 .env파일의 `DATABASE_URL`을 설정하고 schema.prisma에서 다음과 같이 `datasource db` 부분을 수정하세요. (원본 값)
+> If you want to use PostgreSQL instead of SQLite, run PostgreSQL server with [this link](packages/veltrends-server/dockers/postgresql/README.md), set `DATABASE_URL` in .env file, and modify `datasource db` part in schema.prisma as below.
 >
 > ```
 > datasource db {
@@ -56,24 +58,22 @@ datasource db {
 > }
 > ```
 
-```
+3. Delete packages/veltrends-server/prisma/migrations directory.
+4. Use `yarn install` command to install node_modules.
+5. Use `yarn prisma migrate dev` command to initialize database.
+6. Use `yarn prisma generate` command to generate Prisma Client.
+7. Use `yarn dev` command to run server. Server will run on port 8080. Go to http://localhost:8080/ to check if server is running .
 
-3. packages/veltrends-server/prisma/migrations 디렉터리를 지우세요.
-4. `yarn install` 명령어를 사용하여 node_modules 를 설치하세요.
-5. `yarn prisma migrate dev` 명령어를 사용하여 데이터베이스 초기설정을 하세요.
-6. `yarn prisma generate` 명령어를 사용하여 Prisma Client를 생성하세요.
-7. `yarn dev` 명령어를 사용하여 서버를 실행하세요. 서버는 8080 포트로 실행됩니다.  http://localhost:8080/ 에 들어가서 서버가 잘 실행되고 있는지 확인하세요.
-```
-
-API 문서는 http://localhost:8080/documentation 에서 확인할 수 있습니다.
+API Documentation is available at http://localhost:8080/documentation.
 
 ### Frontend
 
-1. packages/veltrends-client 디렉터리에서 .dev.vars.sample 파일을 .dev.vars 로 이름을 변경하세요.
-2. `yarn install` 명령어를 사용하여 node_modules 를 설치하세요.
-3. `yarn dev` 명령어를 사용하여 서버를 실행하세요. 서버는 8788 포트로 실행됩니다. http://localhost:8788/ 에 들어가서 서버가 잘 실행되고 있는지 확인하세요.
+1. Rename .dev.vars.sample to .dev.vars in packages/veltrends-client directory.
+2. Use `yarn install` command to install node_modules.
+3. Use `yarn dev` command to run server. Server will run on port 8788. Go to http://localhost:8788/ to check if server is running.
 
-## 문의
+## Bug Report, Feature Request, Questions
 
-- 버그 신고는 [GitHub Issues](https://github.com/velopert/veltrends/issues)에 남겨주세요.
-- 기능 제안 및 질문은 [GitHub Discussions](https://github.com/velopert/veltrends/discussions)에 남겨주세요.
+- Please report b ugs on [GitHub Issues](https://github.com/velopert/veltrends/issues)
+- Please ask questions and suggest features on [GitHub Discussions](https://github.com/velopert/veltrends/discussions)
+- Contributions are always welcomed.
