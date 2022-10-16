@@ -35,8 +35,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
 
     return json(list)
-  } catch (e) {
-    throw json(e, { status: 500 })
+  } catch (e: any) {
+    throw json(
+      {
+        message: e?.message,
+        name: e?.name,
+        stack: e?.stack,
+        msg: 'Failed??',
+      },
+      { status: 500 },
+    )
   }
 }
 
