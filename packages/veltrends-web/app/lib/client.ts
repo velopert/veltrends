@@ -134,5 +134,5 @@ export const fetchClient = {
 }
 
 export function setupBaseUrl(context: AppLoadContext) {
-  fetchClient.baseUrl = context.baseUrl as string
+  fetchClient.baseUrl = context.API_BASE_URL as string
 }
