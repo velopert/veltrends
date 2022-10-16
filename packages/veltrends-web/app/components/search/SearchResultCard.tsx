@@ -48,6 +48,12 @@ const Block = styled(Link)`
     margin-top: 8px;
     margin-bottom: 8px;
     color: ${colors.gray3};
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-height: 84px;
   }
 `
 
