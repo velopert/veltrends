@@ -136,7 +136,7 @@ export default function App() {
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff"></meta>
-        {/** OG image */}
+
         <meta property="og:image" content="https://www.veltrends.com/og-image.png" />
 
         {canonical ? (
