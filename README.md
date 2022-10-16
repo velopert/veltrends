@@ -4,6 +4,8 @@
 
 [URL](https://www.veltrends.com)
 
+![](https://www.veltrends.com/og-image.png)
+
 ## 기술 스택
 
 ### Frontend
