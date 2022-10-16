@@ -1,12 +1,48 @@
-import { refreshToken } from './api/auth'
+import { getMyAccount, refreshToken } from './api/auth'
+import { extractError } from './error'
 
 const TOKEN_DURATION = 60 * 60 * 1000
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 class TokenRefreshScheduler {
   timeoutId: ReturnType<typeof setTimeout> | null = null
+  counter = 0
 
-  refresh() {
-    refreshToken()
+  constructor() {
+    if (typeof window !== 'undefined') {
+      this.increaseCounter()
+    }
+  }
+
+  increaseCounter() {
+    const value = this.getCounter()
+    const nextValue = value + 1
+    this.setCounter(nextValue)
+    this.counter = nextValue
+  }
+
+  getCounter() {
+    const value = localStorage.getItem('tokenScheduler')
+    if (value === null) {
+      return 0
+    }
+    return parseInt(value, 10)
+  }
+
+  setCounter(value: number) {
+    localStorage.setItem('tokenScheduler', value.toString())
+  }
+
+  shouldRefresh() {
+    console.log(this.getCounter(), this.counter)
+    return this.getCounter() === this.counter
+  }
+
+  async refresh() {
+    if (this.shouldRefresh()) {
+      refreshToken()
+    }
     this.schedule()
   }
 
@@ -19,6 +55,32 @@ class TokenRefreshScheduler {
     this.timeoutId = setTimeout(() => {
       this.refresh()
     }, earlierTime)
+  }
+
+  async refreshTokenIfExpired() {
+    try {
+      await getMyAccount()
+    } catch (e) {
+      const error = extractError(e)
+      if (error.name === 'Unauthorized' && error.payload?.isExpiredToken) {
+        await this.refresh()
+        this.schedule()
+      }
+    }
+  }
+
+  setup() {
+    const handler = () => {
+      this.increaseCounter()
+      this.refreshTokenIfExpired()
+    }
+
+    console.log('installed.')
+
+    window.addEventListener('focus', handler)
+    return () => {
+      window.removeEventListener('focus', handler)
+    }
   }
 }
 

@@ -87,8 +87,6 @@ function ItemViewer({ item, isMyItem }: Props) {
     return MarkdownIt().render(body)
   }, [body])
 
-  console.log(html)
-
   return (
     <Block>
       {thumbnail ? (

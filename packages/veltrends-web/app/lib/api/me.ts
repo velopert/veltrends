@@ -1,4 +1,4 @@
-import { client, fetchClient } from '../client'
+import { fetchClient } from '../client'
 import { type AuthResult } from './auth'
 
 export async function getMyAccount() {

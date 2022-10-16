@@ -11,12 +11,9 @@ export function useAuthRedirect() {
   const next = searchParams.get('next') ?? '/'
   const navigate = useNavigate()
 
-  const scheduler = useTokenRefreshScheduler()
-
   useEffect(() => {
     if (!authResult) return
     if ('status' in authResult) return // login failed
     navigate(next)
-    scheduler.schedule()
-  }, [authResult, navigate, next, scheduler])
+  }, [authResult, navigate, next])
 }

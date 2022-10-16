@@ -62,8 +62,8 @@ function Intro() {
         buttonText="등록하기"
         onSubmit={async (e) => {
           e.preventDefault()
-          if (form.title === '' || form.body === '') {
-            setErrorMessage('제목과 내용을 모두 입력해주세요.')
+          if (form.title === '') {
+            setErrorMessage('제목을 입력해주세요.')
             return
           }
           fetcher.submit(form, {
@@ -79,13 +79,7 @@ function Intro() {
               <StyledEditor onFocus={onFocus} onBlur={onBlur} onChangeText={onChangeBody} />
             )}
           </LabelEditorGroup>
-          {/* <StyledLabelTextArea
-            label="내용"
-            name="body"
-            onChange={onChange}
-            value={form.body}
-            rows={16}
-          /> */}
+
           {errorMessage ? <Message>{errorMessage}</Message> : null}
         </Group>
       </WriteFormTemplate>

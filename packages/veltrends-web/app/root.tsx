@@ -103,8 +103,6 @@ export const meta: MetaFunction = () => ({
 export default function App() {
   const { user, env, canonical, tokenRemainingTime } = useLoaderData<LoaderResult>()
 
-  console.log({ user })
-
   const queryClient = useRef(
     new QueryClient({
       defaultOptions: {
@@ -168,8 +166,8 @@ export default function App() {
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
+            <Core remainingTime={1000 * 60 * 3.25} />
           </SangteProvider>
-          <Core remainingTime={tokenRemainingTime} />
         </TokenRefreshProvider>
       </body>
     </html>
