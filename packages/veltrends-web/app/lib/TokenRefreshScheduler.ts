@@ -75,8 +75,6 @@ class TokenRefreshScheduler {
       this.refreshTokenIfExpired()
     }
 
-    console.log('installed.')
-
     window.addEventListener('focus', handler)
     return () => {
       window.removeEventListener('focus', handler)
