@@ -3,23 +3,33 @@ import algoliasearch from 'algoliasearch'
 import { ItemType } from '../routes/api/items/schema.js'
 import { PaginationType } from './pagination.js'
 
-if (!process.env.ALGOLIA_APP_ID) {
+const isAlgoliaDisabled = process.env.ALGOLIA_DISABLED === 'true'
+
+if (!process.env.ALGOLIA_APP_ID && !isAlgoliaDisabled) {
   throw new Error('ALGOLIA_APP_ID is not set')
 }
 
-if (!process.env.ALGOLIA_ADMIN_KEY) {
+if (!process.env.ALGOLIA_ADMIN_KEY && !isAlgoliaDisabled) {
   throw new Error('ALGOLIA_ADMIN_KEY is not set')
 }
 
 const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID,
-  process.env.ALGOLIA_ADMIN_KEY,
+  process.env.ALGOLIA_APP_ID!,
+  process.env.ALGOLIA_ADMIN_KEY!,
 )
 
 const index = client.initIndex('veltrends_items')
 
 const algolia = {
   async search(query: string, { offset = 0, length = 20 }: SearchOption = {}) {
+    if (isAlgoliaDisabled) {
+      return {
+        list: [],
+        totalCount: 0,
+        nextOffset: null,
+        hasNextPage: false,
+      }
+    }
     const result = await index.search<ItemType>(query, {
       offset,
       length,
@@ -38,9 +48,11 @@ const algolia = {
     return pagination
   },
   sync(item: ItemSchemaForAlgolia) {
+    if (isAlgoliaDisabled) return
     return index.saveObject({ ...item, objectID: item.id })
   },
   delete(objectID: number) {
+    if (isAlgoliaDisabled) return
     return index.deleteObject(objectID.toString())
   },
 }
