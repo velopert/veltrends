@@ -44,7 +44,7 @@ export async function extractPageInfo(
 
   return {
     url: validatedUrl,
-    author: data.author,
+    author: data.author !== data.publisher ? data.author : null,
     favicon: data.logo,
     publisher: data.publisher ?? domain,
     thumbnail: data.image,
