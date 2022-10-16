@@ -138,7 +138,7 @@ const Thumbnail = styled.img`
   width: 100%;
   max-height: 40vh;
   ${media.tablet} {
-    aspect-ratio: 288/192;
+    aspect-ratio: 1200/630;
   }
   object-fit: cover;
   border-radius: 12px;
