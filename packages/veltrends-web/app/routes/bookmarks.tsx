@@ -9,10 +9,12 @@ import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getBookmarks } from '~/lib/api/bookmark'
 import { type GetBookmarksResult } from '~/lib/api/types'
+import { setupBaseUrl } from '~/lib/client'
 import { media } from '~/lib/media'
 import { checkIsLoggedIn } from '~/lib/protectRoute'
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, context }) => {
+  setupBaseUrl(context)
   const isLoggedIn = await checkIsLoggedIn(request)
   if (!isLoggedIn) return redirect('/auth/login?next=/bookmarks')
 

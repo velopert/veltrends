@@ -1,3 +1,4 @@
+import { AppLoadContext } from '@remix-run/cloudflare'
 import QueryString from 'qs'
 
 let _cookie = ''
@@ -130,4 +131,8 @@ export const fetchClient = {
       headers,
     }
   },
+}
+
+export function setupBaseUrl(context: AppLoadContext) {
+  fetchClient.baseUrl = context.baseUrl as string
 }

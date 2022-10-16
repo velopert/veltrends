@@ -14,12 +14,13 @@ import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
 import { type ListMode, type GetItemsResult } from '~/lib/api/types'
-import { consumeCookie } from '~/lib/client'
+import { consumeCookie, setupBaseUrl } from '~/lib/client'
 import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, context }) => {
+  setupBaseUrl(context)
   try {
     consumeCookie(request)
     const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(

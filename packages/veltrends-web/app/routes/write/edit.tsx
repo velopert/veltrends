@@ -10,10 +10,12 @@ import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { getItem, updateItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
+import { setupBaseUrl } from '~/lib/client'
 import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, context }) => {
+  setupBaseUrl(context)
   // @todo: validate itemId
   const query = parseUrlParams<{ itemId: string }>(request.url)
   const itemId = parseInt(query.itemId, 10)
