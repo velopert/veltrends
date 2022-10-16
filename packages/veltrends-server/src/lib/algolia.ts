@@ -26,8 +26,10 @@ const algolia = {
       return {
         list: [],
         totalCount: 0,
-        nextOffset: null,
-        hasNextPage: false,
+        pageInfo: {
+          nextOffset: null,
+          hasNextPage: false,
+        },
       }
     }
     const result = await index.search<ItemType>(query, {
@@ -47,11 +49,11 @@ const algolia = {
     }
     return pagination
   },
-  sync(item: ItemSchemaForAlgolia) {
+  async sync(item: ItemSchemaForAlgolia) {
     if (isAlgoliaDisabled) return
     return index.saveObject({ ...item, objectID: item.id })
   },
-  delete(objectID: number) {
+  async delete(objectID: number) {
     if (isAlgoliaDisabled) return
     return index.deleteObject(objectID.toString())
   },
