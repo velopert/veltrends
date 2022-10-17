@@ -14,7 +14,7 @@ import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
 import { type ListMode, type GetItemsResult } from '~/lib/api/types'
-import { consumeCookie, setupBaseUrl } from '~/lib/client'
+import { consumeCookie, setupBaseUrl, waitIfNeeded } from '~/lib/client'
 import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
@@ -23,6 +23,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   setupBaseUrl(context)
   try {
     consumeCookie(request)
+    await waitIfNeeded(request)
     const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(
       request.url,
     )
@@ -41,8 +42,6 @@ export const loader: LoaderFunction = async ({ request, context }) => {
       {
         message: e?.message,
         name: e?.name,
-        stack: e?.stack,
-        msg: 'Failed??',
       },
       { status: 500 },
     )

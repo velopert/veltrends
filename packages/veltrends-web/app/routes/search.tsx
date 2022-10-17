@@ -14,11 +14,14 @@ import { type SearchItemsResult } from '~/lib/api/types'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import DesktopHeader from '~/components/base/DesktopHeader'
-import { consumeCookie, setupBaseUrl } from '~/lib/client'
+import { consumeCookie, setupBaseUrl, waitIfNeeded } from '~/lib/client'
 
 export const loader: LoaderFunction = async ({ request, context }) => {
   setupBaseUrl(context)
   consumeCookie(request)
+  try {
+    await waitIfNeeded(request)
+  } catch (e) {}
   const { q } = parseUrlParams<{ q?: string }>(request.url)
   if (!q) {
     return json({

@@ -1,5 +1,6 @@
 import { AppLoadContext } from '@remix-run/cloudflare'
 import QueryString from 'qs'
+import { getMemoMyAccount } from './protectRoute'
 
 let _cookie = ''
 
@@ -16,6 +17,14 @@ export function consumeCookie(request: Request) {
   if (cookie) {
     setClientCookie(cookie)
   }
+}
+
+export function waitIfNeeded(request: Request) {
+  const cookie = request.headers.get('Cookie')
+  if (cookie && cookie.includes('token')) {
+    return getMemoMyAccount(request)
+  }
+  return Promise.resolve()
 }
 
 interface RequestConfig {
