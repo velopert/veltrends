@@ -37,6 +37,14 @@
       {
         "name": "ALGOLIA_APP_ID",
         "value": "${algolia_app_id}"
+      },
+      {
+        "name": "CF_ACCOUNT_ID",
+        "value": "${cf_account_id}"
+      },
+      {
+        "name": "CF_KEY_ID",
+        "value": "${cf_key_id}"
       }
     ],
     "ulimits": [
@@ -60,6 +68,10 @@
       {
         "name": "ALGOLIA_ADMIN_KEY",
         "valueFrom": "${algolia_admin_key}"
+      },
+      {
+        "name": "CF_KEY_SECRET",
+        "valueFrom": "${cf_key_secret}"
       }
     ],
     "volumesFrom": []

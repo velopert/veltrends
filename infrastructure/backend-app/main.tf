@@ -69,6 +69,21 @@ variable "algolia_app_id" {
   default     = ""
 }
 
+variable "cf_account_id" {
+  description = "Cloudflare account id"
+  default     = ""
+}
+
+variable "cf_key_id" {
+  description = "Cloudflare key id"
+  default     = ""
+}
+
+variable "cf_key_secret" {
+  description = "Cloudflare key secret"
+  default     = ""
+}
+
 
 
 resource "aws_secretsmanager_secret" "database_url" {
@@ -100,6 +115,17 @@ resource "aws_secretsmanager_secret_version" "algolia_admin_key_version" {
 }
 
 
+resource "aws_secretsmanager_secret" "cf_key_secret" {
+  name = "/${var.prefix}/cf_key_secret"
+}
+
+resource "aws_secretsmanager_secret_version" "cf_key_secret_version" {
+  secret_id     = aws_secretsmanager_secret.cf_key_secret.id
+  secret_string = var.cf_key_secret
+}
+
+
+
 
 resource "aws_iam_role_policy" "password_policy_secretsmanager" {
   name = "password-policy-secretsmanager"
@@ -117,7 +143,8 @@ resource "aws_iam_role_policy" "password_policy_secretsmanager" {
         "Resource": [
           "${aws_secretsmanager_secret.database_url.arn}",
           "${aws_secretsmanager_secret.jwt_secret.arn}",
-          "${aws_secretsmanager_secret.algolia_admin_key.arn}"
+          "${aws_secretsmanager_secret.algolia_admin_key.arn}",
+          "${aws_secretsmanager_secret.cf_key_secret.arn}"
         ]
       }
     ]
@@ -361,13 +388,18 @@ resource "aws_ecs_task_definition" "service" {
     database_url       = aws_secretsmanager_secret.database_url.arn
     jwt_secret         = aws_secretsmanager_secret.jwt_secret.arn
     algolia_admin_key  = aws_secretsmanager_secret.algolia_admin_key.arn
+    cf_key_secret      = aws_secretsmanager_secret.cf_key_secret.arn
     algolia_app_id     = "${var.algolia_app_id}"
-    tag                = "latest"
-    app_port           = 80
-    region             = "${var.region}"
-    prefix             = "${var.prefix}"
-    envvars            = var.envvars
-    port               = var.port
+    cf_account_id      = "${var.cf_account_id}"
+    cf_key_id          = "${var.cf_key_id}"
+
+
+    tag      = "latest"
+    app_port = 80
+    region   = "${var.region}"
+    prefix   = "${var.prefix}"
+    envvars  = var.envvars
+    port     = var.port
   })
   tags = {
     Environment = "production"

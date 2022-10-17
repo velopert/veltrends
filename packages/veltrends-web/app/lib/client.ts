@@ -22,7 +22,7 @@ export function consumeCookie(request: Request) {
 export function waitIfNeeded(request: Request) {
   const cookie = request.headers.get('Cookie')
   if (cookie && cookie.includes('token')) {
-    return getMemoMyAccount(request)
+    return getMemoMyAccount(request).catch(console.error)
   }
   return Promise.resolve()
 }

@@ -13,6 +13,9 @@ import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
 import { calculateRankingScore } from '../lib/ranking.js'
+import { ImageService } from './ImageService.js'
+
+const isR2Disbled = process.env.R2_DISABLED === 'true'
 
 class ItemService {
   private static instance: ItemService
@@ -39,6 +42,30 @@ class ItemService {
         favicon,
       },
     })
+
+    if (favicon && !isR2Disbled) {
+      const imageService = ImageService.getInstance()
+      const { buffer, extension } = await imageService.downloadFile(favicon)
+      const key = imageService.createFileKey({
+        type: 'publisher',
+        id: publisher.id,
+        extension: extension || 'png',
+      })
+
+      await imageService.uploadFile(key, buffer)
+
+      const imageUrl = `https://images.veltrends.com/${key}`
+      publisher.favicon = imageUrl
+      await db.publisher.update({
+        where: {
+          id: publisher.id,
+        },
+        data: {
+          favicon: imageUrl,
+        },
+      })
+    }
+
     return publisher
   }
 
@@ -79,6 +106,31 @@ class ItemService {
       },
     })
     const itemWithItemStats = { ...item, itemStats }
+
+    if (item.thumbnail && !isR2Disbled) {
+      const imageService = ImageService.getInstance()
+      const { buffer, extension } = await imageService.downloadFile(
+        item.thumbnail,
+      )
+      const key = imageService.createFileKey({
+        type: 'item',
+        id: item.id,
+        extension: extension || 'png',
+      })
+
+      await imageService.uploadFile(key, buffer)
+
+      const imageUrl = `https://images.veltrends.com/${key}`
+      itemWithItemStats.thumbnail = imageUrl
+      await db.item.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          thumbnail: imageUrl,
+        },
+      })
+    }
 
     algolia
       .sync({

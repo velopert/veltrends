@@ -35,6 +35,14 @@
         {
           "name": "PORT",
           "value": "8080"
+        },
+        {
+          "name": "CF_ACCOUNT_ID",
+          "value": "12338411ede1b75dd1e738df5b437bca"
+        },
+        {
+          "name": "CF_KEY_ID",
+          "value": "78ece0c5148fe1a49e6c0a648c45c11c"
         }
       ],
       "ulimits": [
@@ -58,6 +66,10 @@
         {
           "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:812681381769:secret:/veltrends-backend-app/algolia_admin_key-NHcNMd",
           "name": "ALGOLIA_ADMIN_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:812681381769:secret:/veltrends-backend-app/cf_key_secret-iCgBWz",
+          "name": "CF_KEY_SECRET"
         }
       ],
       "volumesFrom": []
