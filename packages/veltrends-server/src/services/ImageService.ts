@@ -11,6 +11,7 @@ const r2 = new S3({
   accessKeyId: CF_KEY_ID,
   secretAccessKey: CF_KEY_SECRET,
   signatureVersion: 'v4',
+  region: 'auto',
 })
 
 import mimeTypes from 'mime-types'
