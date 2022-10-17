@@ -1,6 +1,7 @@
 import { FastifyReply } from 'fastify'
 
-const domains = ['www.veltrends.com', '.veltrends.com', undefined]
+const domains =
+  process.env.NODE_ENV === 'production' ? ['.veltrends.com'] : [undefined]
 
 export function setTokenCookie(
   reply: FastifyReply,
