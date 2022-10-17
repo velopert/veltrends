@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify'
 
-const domains = ['.veltrends.com', undefined]
+const domains = ['www.veltrends.com', '.veltrends.com', undefined]
 
 export function setTokenCookie(
   reply: FastifyReply,
