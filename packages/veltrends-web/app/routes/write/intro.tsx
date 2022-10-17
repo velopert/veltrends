@@ -10,11 +10,13 @@ import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
+import { setupBaseUrl } from '~/lib/client'
 import { extractError, useNextAppErrorCatch } from '~/lib/error'
 import { media } from '~/lib/media'
 import { useWriteActions, useWriteValue } from '~/states/write'
 
 export const action: ActionFunction = async ({ request, context }) => {
+  setupBaseUrl(context)
   const applied = await applyAuth(request)
   if (!applied) {
     throw new Error('Not logged in')

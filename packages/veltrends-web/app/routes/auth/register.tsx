@@ -7,7 +7,7 @@ import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
 import { useEffect } from 'react'
 import { extractError, type AppError } from '~/lib/error'
-import { fetchClient } from '~/lib/client'
+import { fetchClient, setupBaseUrl } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
 
@@ -16,6 +16,7 @@ export const meta: MetaFunction = () => {
 }
 
 export const action: ActionFunction = async ({ request, context }) => {
+  setupBaseUrl(context)
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')
