@@ -107,30 +107,32 @@ class ItemService {
     })
     const itemWithItemStats = { ...item, itemStats }
 
-    if (item.thumbnail && !isR2Disbled) {
-      const imageService = ImageService.getInstance()
-      const { buffer, extension } = await imageService.downloadFile(
-        item.thumbnail,
-      )
-      const key = imageService.createFileKey({
-        type: 'item',
-        id: item.id,
-        extension: extension || 'png',
-      })
-
-      await imageService.uploadFile(key, buffer)
-
-      const imageUrl = `https://images.veltrends.com/${key}`
-      itemWithItemStats.thumbnail = imageUrl
-      await db.item.update({
-        where: {
+    try {
+      if (item.thumbnail && !isR2Disbled) {
+        const imageService = ImageService.getInstance()
+        const { buffer, extension } = await imageService.downloadFile(
+          item.thumbnail,
+        )
+        const key = imageService.createFileKey({
+          type: 'item',
           id: item.id,
-        },
-        data: {
-          thumbnail: imageUrl,
-        },
-      })
-    }
+          extension: extension || 'png',
+        })
+
+        await imageService.uploadFile(key, buffer)
+
+        const imageUrl = `https://images.veltrends.com/${key}`
+        itemWithItemStats.thumbnail = imageUrl
+        await db.item.update({
+          where: {
+            id: item.id,
+          },
+          data: {
+            thumbnail: imageUrl,
+          },
+        })
+      }
+    } catch (e) {}
 
     algolia
       .sync({
