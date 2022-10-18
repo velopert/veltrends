@@ -10,7 +10,7 @@ interface Props {
 function CommentList({ comments }: Props) {
   return (
     <Block>
-      <CommentTitle>댓글 0개</CommentTitle>
+      <CommentTitle>댓글 {comments.length.toLocaleString()}개</CommentTitle>
       <CommentInput />
       <List>
         {comments.map((comment) => (
