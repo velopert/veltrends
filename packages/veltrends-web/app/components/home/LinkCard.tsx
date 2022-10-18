@@ -136,10 +136,11 @@ const Block = styled.div`
 
 const Thumbnail = styled.img`
   width: 100%;
-  max-height: 40vh;
+  /* max-height: 40vh;
   ${media.tablet} {
     aspect-ratio: 1200/630;
-  }
+  } */
+  aspect-ratio: 1200/630;
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 0 3px rgb(0 0 0 / 15%);

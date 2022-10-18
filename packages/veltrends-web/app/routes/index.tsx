@@ -1,5 +1,5 @@
-import { json, LinksFunction, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
-import { ThrownResponse, useCatch, useLoaderData, useSearchParams } from '@remix-run/react'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
+import { useCatch, useLoaderData, useSearchParams } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import QueryString from 'qs'
@@ -90,6 +90,7 @@ export default function Index() {
   const [dateRange, setDateRange] = useState(
     startDate && endDate ? [startDate, endDate] : defaultDateRange,
   )
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (mode === 'past') {
@@ -125,8 +126,6 @@ export default function Index() {
       },
     },
   )
-
-  const ref = useRef<HTMLDivElement>(null)
 
   const fetchNext = useCallback(() => {
     if (!hasNextPage) return

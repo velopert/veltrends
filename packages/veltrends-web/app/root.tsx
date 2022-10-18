@@ -17,12 +17,13 @@ import { fetchClient, setClientCookie } from './lib/client'
 import { SangteProvider } from 'sangte'
 import { userState } from './states/user'
 import { getMemoMyAccount } from './lib/protectRoute'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import GlobalDialog from './components/base/GlobalDialog'
 import { getCanonical } from './lib/getCanonical'
 import { decode } from 'js-base64'
 import { TokenRefreshProvider, useTokenRefreshScheduler } from './contexts/TokenRefreshContext'
 import Core from './components/base/Core'
+import { TabScrollTopContextProvider } from './contexts/TabScrollTopContext'
 
 // function extractPathNameFromUrl(url: string) {
 //   const { pathname } = new URL(url)
@@ -158,7 +159,9 @@ export default function App() {
           >
             <GlobalStyle />
             <QueryClientProvider client={queryClient}>
-              <Outlet />
+              <TabScrollTopContextProvider>
+                <Outlet />
+              </TabScrollTopContextProvider>
               <GlobalDialog />
               <GlobalBottomSheetModal />
             </QueryClientProvider>
