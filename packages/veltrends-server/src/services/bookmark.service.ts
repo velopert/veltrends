@@ -1,18 +1,9 @@
 import { Bookmark } from '@prisma/client'
 import db from '../lib/db.js'
 import AppError from '../lib/AppError.js'
-import ItemService from './ItemService.js'
+import itemService from './item.service.js'
 
-class BookmarkService {
-  private static instance: BookmarkService
-
-  public static getInstance() {
-    if (!BookmarkService.instance) {
-      BookmarkService.instance = new BookmarkService()
-    }
-    return BookmarkService.instance
-  }
-
+const bookmarkService = {
   async createBookmark({ userId, itemId }: { userId: number; itemId: number }) {
     try {
       const bookmark = await db.bookmark.create({
@@ -32,8 +23,6 @@ class BookmarkService {
         },
       })
 
-      const itemService = ItemService.getInstance()
-
       return {
         ...bookmark,
         item: { ...itemService.serialize(bookmark.item), isBookmarked: true },
@@ -44,8 +33,7 @@ class BookmarkService {
       }
       throw e
     }
-  }
-
+  },
   async getBookmarks({
     userId,
     limit,
@@ -85,8 +73,6 @@ class BookmarkService {
       take: limit,
     })
 
-    const itemService = ItemService.getInstance()
-
     const list = bookmarks.map((b) => ({
       ...b,
       item: { ...itemService.serialize(b.item), isBookmarked: true },
@@ -105,7 +91,7 @@ class BookmarkService {
       : false
 
     return { totalCount, list, pageInfo: { endCursor, hasNextPage } }
-  }
+  },
 
   async deleteBookmark({ userId, itemId }: { userId: number; itemId: number }) {
     const bookmark = await db.bookmark.findUnique({
@@ -130,7 +116,7 @@ class BookmarkService {
         },
       },
     })
-  }
+  },
 
   async getBookmarkMap({
     itemIds,
@@ -152,7 +138,7 @@ class BookmarkService {
       acc[current.itemId] = current
       return acc
     }, {} as Record<number, Bookmark>)
-  }
+  },
 }
 
-export default BookmarkService
+export default bookmarkService

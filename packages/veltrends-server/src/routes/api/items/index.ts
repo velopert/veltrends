@@ -3,7 +3,7 @@ import { FastifyPluginAsyncTypebox } from '../../../lib/types.js'
 import requireAuthPlugin, {
   createAuthorizedRoute,
 } from '../../../plugins/requireAuthPlugin.js'
-import ItemService from '../../../services/ItemService.js'
+import itemService from '../../../services/item.service.js'
 import { commentsRoute } from './comments/index.js'
 import {
   deleteItemSchema,
@@ -16,8 +16,6 @@ import {
 } from './schema.js'
 
 export const itemsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
-  const itemService = ItemService.getInstance()
-
   fastify.register(authorizedItemRoute)
   fastify.get('/:id', { schema: getItemSchema }, async (request) => {
     const { id } = request.params
@@ -42,7 +40,6 @@ export const itemsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
 }
 
 const authorizedItemRoute = createAuthorizedRoute(async (fastify) => {
-  const itemService = ItemService.getInstance()
   fastify.post('/', { schema: writeItemSchema }, async (request) => {
     const item = await itemService.createItem(request.user!.id, request.body)
     return item as any

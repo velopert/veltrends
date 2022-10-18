@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from 'fastify'
 import requireAuthPlugin, {
   createAuthorizedRoute,
 } from '../../../plugins/requireAuthPlugin.js'
-import BookmarkService from '../../../services/BookmarkService.js'
+import bookmarkService from '../../../services/bookmark.service.js'
 import {
   createBookmarkSchema,
   deleteBookmarkSchema,
@@ -10,8 +10,6 @@ import {
 } from './schema.js'
 
 export const bookmarksRoute = createAuthorizedRoute(async (fastify) => {
-  const bookmarkService = BookmarkService.getInstance()
-
   fastify.post('/', { schema: createBookmarkSchema }, async (request) => {
     const { itemId } = request.body
     const userId = request.user?.id!

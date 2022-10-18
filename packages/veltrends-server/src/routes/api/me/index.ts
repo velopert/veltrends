@@ -1,7 +1,8 @@
 import { clearCookie } from '../../../lib/cookies.js'
 import { FastifyPluginAsyncTypebox } from '../../../lib/types.js'
 import requireAuthPlugin from '../../../plugins/requireAuthPlugin.js'
-import UserService from '../../../services/UserService.js'
+import userService from '../../../services/user.service.js'
+
 import {
   getAccountSchema,
   unregisterSchema,
@@ -9,8 +10,6 @@ import {
 } from './schema.js'
 
 export const meRoute: FastifyPluginAsyncTypebox = async (fastify) => {
-  const userService = UserService.getInstance()
-
   fastify.register(requireAuthPlugin)
 
   fastify.get('/', { schema: getAccountSchema }, async (request) => {

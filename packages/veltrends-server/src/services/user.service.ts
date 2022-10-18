@@ -17,15 +17,7 @@ interface AuthParams {
   password: string
 }
 
-class UserService {
-  private static instance: UserService
-  public static getInstance() {
-    if (!UserService.instance) {
-      UserService.instance = new UserService()
-    }
-    return UserService.instance
-  }
-
+const userService = {
   async createTokenItem(userId: number) {
     const token = await db.token.create({
       data: {
@@ -33,7 +25,7 @@ class UserService {
       },
     })
     return token
-  }
+  },
 
   async generateTokens(user: User, tokenItem?: Token) {
     const { id: userId, username } = user
@@ -59,7 +51,7 @@ class UserService {
       refreshToken,
       accessToken,
     }
-  }
+  },
 
   async register({ username, password }: AuthParams) {
     const exists = await db.user.findUnique({
@@ -85,7 +77,7 @@ class UserService {
       tokens,
       user,
     }
-  }
+  },
 
   async login({ username, password }: AuthParams) {
     const user = await db.user.findUnique({
@@ -115,7 +107,7 @@ class UserService {
       user,
       tokens,
     }
-  }
+  },
 
   async refreshToken(token: string) {
     try {
@@ -159,7 +151,7 @@ class UserService {
     } catch (e) {
       throw new AppError('RefreshFailure')
     }
-  }
+  },
 
   async changePassword({
     oldPassword,
@@ -205,15 +197,14 @@ class UserService {
       },
     })
     return true
-  }
-
+  },
   unregister(userId: number) {
     return db.user.delete({
       where: {
         id: userId,
       },
     })
-  }
+  },
 }
 
-export default UserService
+export default userService

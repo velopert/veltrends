@@ -13,20 +13,12 @@ import db from '../lib/db.js'
 import { extractPageInfo } from '../lib/extractPageInfo.js'
 import { createPagination, PaginationOptionType } from '../lib/pagination.js'
 import { calculateRankingScore } from '../lib/ranking.js'
-import { ImageService } from './ImageService.js'
+import imageService from './image.service.js'
 
 const isR2Disbled = process.env.R2_DISABLED === 'true'
 
-class ItemService {
-  private static instance: ItemService
-  public static getInstance() {
-    if (!ItemService.instance) {
-      ItemService.instance = new ItemService()
-    }
-    return ItemService.instance
-  }
-
-  private async getPublisher({ favicon, domain, name }: GetPublisherParams) {
+const itemService = {
+  async getPublisher({ favicon, domain, name }: GetPublisherParams) {
     const exists = await db.publisher.findUnique({
       where: {
         domain,
@@ -44,7 +36,6 @@ class ItemService {
     })
 
     if (favicon && !isR2Disbled) {
-      const imageService = ImageService.getInstance()
       const { buffer, extension } = await imageService.downloadFile(favicon)
       const key = imageService.createFileKey({
         type: 'publisher',
@@ -67,7 +58,7 @@ class ItemService {
     }
 
     return publisher
-  }
+  },
 
   async createItem(
     userId: number,
@@ -109,7 +100,6 @@ class ItemService {
 
     try {
       if (item.thumbnail && !isR2Disbled) {
-        const imageService = ImageService.getInstance()
         const { buffer, extension } = await imageService.downloadFile(
           item.thumbnail,
         )
@@ -148,7 +138,7 @@ class ItemService {
       .catch(console.error)
 
     return this.serialize(itemWithItemStats)
-  }
+  },
 
   async getItem(id: number, userId: number | null = null) {
     const item = await db.item.findUnique({
@@ -168,7 +158,7 @@ class ItemService {
     }
 
     return this.serialize(item)
-  }
+  },
 
   serialize<
     T extends Item & { itemLikes?: ItemLike[]; bookmarks?: Bookmark[] },
@@ -178,7 +168,7 @@ class ItemService {
       isLiked: !!item.itemLikes?.length,
       isBookmarked: !!item.bookmarks?.length,
     }
-  }
+  },
 
   async getRecentItems({
     limit,
@@ -231,7 +221,7 @@ class ItemService {
       : false
 
     return { totalCount, list, endCursor, hasNextPage }
-  }
+  },
 
   async getPastItems({
     limit,
@@ -361,7 +351,7 @@ class ItemService {
       endCursor,
       hasNextPage,
     }
-  }
+  },
 
   async getTrendingItems({
     limit,
@@ -464,7 +454,7 @@ class ItemService {
       endCursor,
       hasNextPage,
     }
-  }
+  },
 
   async getItems(
     {
@@ -506,7 +496,7 @@ class ItemService {
         hasNextPage,
       },
     })
-  }
+  },
 
   async getItemsByIds(itemIds: number[], userId?: number) {
     const result = await db.item.findMany({
@@ -536,7 +526,7 @@ class ItemService {
     }, {})
 
     return itemMap
-  }
+  },
 
   async updateItem({ itemId, userId, title, body }: UpdateItemParams) {
     const item = await this.getItem(itemId)
@@ -575,7 +565,7 @@ class ItemService {
       .catch(console.error)
 
     return this.serialize(updatedItem)
-  }
+  },
 
   async deleteItem({ userId, itemId }: ItemActionParams) {
     const item = await this.getItem(itemId)
@@ -588,7 +578,7 @@ class ItemService {
       },
     })
     algolia.delete(itemId).catch(console.error)
-  }
+  },
 
   async countLikes(itemId: number) {
     const count = await db.itemLike.count({
@@ -597,7 +587,7 @@ class ItemService {
       },
     })
     return count
-  }
+  },
 
   async updateItemLikes({ itemId, likes }: UpdateItemLikesParams) {
     return db.itemStats.update({
@@ -608,7 +598,7 @@ class ItemService {
         itemId,
       },
     })
-  }
+  },
 
   async likeItem({ userId, itemId }: ItemActionParams) {
     const alreadyLiked = await db.itemLike.findUnique({
@@ -633,7 +623,7 @@ class ItemService {
     const itemStats = await this.updateItemLikes({ itemId, likes })
     this.recalculateRanking(itemId, likes).catch(console.error)
     return itemStats
-  }
+  },
 
   async unlikeItem({ userId, itemId }: ItemActionParams) {
     try {
@@ -651,7 +641,7 @@ class ItemService {
     const itemStats = await this.updateItemLikes({ itemId, likes })
     this.recalculateRanking(itemId, likes).catch(console.error)
     return itemStats
-  }
+  },
 
   async recalculateRanking(itemId: number, likesCount?: number) {
     const item = await db.item.findUnique({ where: { id: itemId } })
@@ -668,6 +658,16 @@ class ItemService {
         score,
       },
     })
+  },
+}
+
+class ItemService {
+  private static instance: ItemService
+  public static getInstance() {
+    if (!ItemService.instance) {
+      ItemService.instance = new ItemService()
+    }
+    return ItemService.instance
   }
 }
 
@@ -705,4 +705,4 @@ interface GetItemLikedParams {
   itemIds: number[]
 }
 
-export default ItemService
+export default itemService

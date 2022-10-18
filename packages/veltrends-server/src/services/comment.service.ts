@@ -2,15 +2,7 @@ import { Comment, CommentLike } from '@prisma/client'
 import db from '../lib/db.js'
 import AppError from '../lib/AppError.js'
 
-class CommentService {
-  private static instance: CommentService
-  public static getInstance() {
-    if (!CommentService.instance) {
-      CommentService.instance = new CommentService()
-    }
-    return CommentService.instance
-  }
-
+const commentService = {
   async getComments({
     itemId,
     userId = null,
@@ -46,7 +38,7 @@ class CommentService {
     }))
 
     return this.groupSubcomments(this.redact(commentsWithIsLiked))
-  }
+  },
 
   /** @todo: rename to serialize */
   redact(comments: Comment[]) {
@@ -74,7 +66,7 @@ class CommentService {
         isDeleted: true,
       }
     })
-  }
+  },
 
   async groupSubcomments<T extends Comment>(comments: T[]) {
     const rootComments = comments.filter((c) => c.parentCommentId === null)
@@ -94,7 +86,7 @@ class CommentService {
       .filter((c) => c.deletedAt === null || c.subcomments.length !== 0)
 
     return merged
-  }
+  },
 
   async getComment({
     commentId,
@@ -138,7 +130,7 @@ class CommentService {
       }
     }
     return { ...comment, isLiked: !!commentLike, isDeleted: false }
-  }
+  },
 
   async getSubcomments({
     commentId,
@@ -173,7 +165,7 @@ class CommentService {
       isLiked: !!commentLikedMap[sc.id],
       isDeleted: false,
     }))
-  }
+  },
   async createComment({
     itemId,
     text,
@@ -229,7 +221,7 @@ class CommentService {
     await this.countAndSyncComments(itemId)
 
     return { ...comment, isDeleted: false, subcomments: [], isLiked: false }
-  }
+  },
   async likeComment({ userId, commentId }: CommentParams) {
     console.log({
       userId,
@@ -247,7 +239,7 @@ class CommentService {
     }
 
     return this.countAndSyncCommentLikes(commentId)
-  }
+  },
   async unlikeComment({ userId, commentId }: CommentParams) {
     try {
       await db.commentLike.delete({
@@ -261,7 +253,7 @@ class CommentService {
     } catch (e) {}
     const count = await this.countAndSyncCommentLikes(commentId)
     return count
-  }
+  },
 
   async countAndSyncCommentLikes(commentId: number) {
     const count = await db.commentLike.count({
@@ -278,7 +270,7 @@ class CommentService {
       },
     })
     return count
-  }
+  },
 
   async countAndSyncComments(itemId: number) {
     const count = await db.comment.count({
@@ -296,7 +288,7 @@ class CommentService {
       },
     })
     return count
-  }
+  },
 
   async deleteComment({ userId, commentId }: CommentParams) {
     const comment = await this.getComment({ commentId })
@@ -311,7 +303,7 @@ class CommentService {
         deletedAt: new Date(),
       },
     })
-  }
+  },
   async updateComment({ userId, commentId, text }: UpdateCommentParams) {
     const comment = await this.getComment({ commentId })
     if (comment.userId !== userId) {
@@ -329,7 +321,7 @@ class CommentService {
       },
     })
     return this.getComment({ commentId, withSubcomments: true })
-  }
+  },
 
   async getCommentLikedMap({
     commentIds,
@@ -351,7 +343,7 @@ class CommentService {
       acc[current.commentId] = current
       return acc
     }, {} as Record<number, CommentLike>)
-  }
+  },
 }
 
 interface CreateCommentParams {
@@ -370,4 +362,4 @@ interface UpdateCommentParams extends CommentParams {
   text: string
 }
 
-export default CommentService
+export default commentService

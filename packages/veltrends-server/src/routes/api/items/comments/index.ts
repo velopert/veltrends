@@ -1,6 +1,6 @@
 import { FastifyPluginAsyncTypebox } from '../../../../lib/types.js'
 import { createAuthorizedRoute } from '../../../../plugins/requireAuthPlugin.js'
-import CommentService from '../../../../services/CommentService.js'
+import commentService from '../../../../services/comment.service.js'
 import {
   createCommentSchema,
   deleteCommentSchema,
@@ -13,8 +13,6 @@ import {
 } from './schema.js'
 
 export const commentsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
-  const commentService = CommentService.getInstance()
-
   fastify.get('/', { schema: getCommentsSchema }, async (request) => {
     return commentService.getComments({
       itemId: request.params.id,
@@ -51,7 +49,6 @@ export const commentsRoute: FastifyPluginAsyncTypebox = async (fastify) => {
 }
 
 const authorizedCommentsRoute = createAuthorizedRoute(async (fastify) => {
-  const commentService = CommentService.getInstance()
   fastify.post('/', { schema: createCommentSchema }, async (request) => {
     const { parentCommentId, text } = request.body
     const { id } = request.params
