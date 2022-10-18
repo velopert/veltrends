@@ -284,6 +284,7 @@ class CommentService {
     const count = await db.comment.count({
       where: {
         itemId,
+        deletedAt: null,
       },
     })
     await db.itemStats.update({
