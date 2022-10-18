@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -30,6 +30,7 @@ function LinkCard({ item }: Props) {
   const itemStats = itemOverride?.itemStats ?? item.itemStats
   const isLiked = itemOverride?.isLiked ?? item.isLiked
   const likes = itemOverride?.itemStats?.likes ?? itemStats.likes
+  const commentsCount = itemStats.commentsCount
   const isBookmarked = itemOverride?.isBookmarked ?? item.isBookmarked
 
   const openLoginDialog = useOpenLoginDialog()
@@ -78,14 +79,17 @@ function LinkCard({ item }: Props) {
           {likes === 0 ? null : (
             <LikesCount
               key="likes"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 26, opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
               좋아요 {likes.toLocaleString()}개
             </LikesCount>
           )}
         </AnimatePresence>
+        {commentsCount === 0 ? null : (
+          <CommentCount>댓글 {commentsCount.toLocaleString()}개</CommentCount>
+        )}
       </LikeCountWrapper>
 
       <Footer>
@@ -165,13 +169,21 @@ const Publisher = styled.div`
   }
 `
 
-const LikesCount = styled(motion.div)`
+const countStyle = css`
   font-size: 12px;
   font-weight: 600;
   color: ${colors.gray4};
   line-height: 1.5;
   height: 26px;
   display: flex;
+`
+
+const LikesCount = styled(motion.div)`
+  ${countStyle};
+`
+
+const CommentCount = styled.div`
+  ${countStyle};
 `
 
 const Footer = styled.div`
@@ -181,9 +193,9 @@ const Footer = styled.div`
 `
 
 const LikeCountWrapper = styled.div`
-  ${media.tablet} {
-    height: 26px;
-  }
+  height: 26px;
+  display: flex;
+  gap: 12px;
 `
 
 const UserInfo = styled.div`
