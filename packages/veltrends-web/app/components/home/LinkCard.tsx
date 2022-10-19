@@ -134,7 +134,7 @@ const Block = styled.div`
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    height: 84px;
+    max-height: 84px;
   }
 `
 
