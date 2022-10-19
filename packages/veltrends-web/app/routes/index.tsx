@@ -36,7 +36,11 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     // @todo: throw error if invalid error
     const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
 
-    return json(list)
+    return json(list, {
+      headers: {
+        'Cache-Control': 'private, max-age=15',
+      },
+    })
   } catch (e: any) {
     throw json(
       {

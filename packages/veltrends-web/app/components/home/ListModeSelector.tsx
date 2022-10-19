@@ -108,6 +108,7 @@ function ListModeItem({
       onClick={() => onSelectMode(mode)}
       ref={ref}
       to={`/?mode=${mode}`}
+      prefetch={mode === 'past' ? undefined : 'render'}
     >
       {icon}
       {name}
