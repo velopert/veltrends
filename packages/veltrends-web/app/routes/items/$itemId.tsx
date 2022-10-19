@@ -26,10 +26,17 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
   const itemId = parseInt(params.itemId!, 10)
   const [item, comments] = await Promise.all([getItem(itemId), getComments(itemId)])
 
-  return json({
-    item,
-    comments,
-  })
+  return json(
+    {
+      item,
+      comments,
+    },
+    {
+      headers: {
+        'Cache-Control': 'max-age=10',
+      },
+    },
+  )
 }
 
 export const meta: MetaFunction = ({ data }: { data: ItemLoaderData }) => {
