@@ -63,7 +63,7 @@ function LinkCard({ item }: Props) {
 
   return (
     <Block>
-      <StyledLink to={link}>
+      <StyledLink to={link} prefetch="intent">
         {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
         <Publisher>
           {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}

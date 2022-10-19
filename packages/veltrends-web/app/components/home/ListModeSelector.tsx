@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import { motion } from 'framer-motion'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
@@ -94,7 +95,7 @@ function ListModeItem({
   index: number
   onUpdateSize(index: number, size: number): void
 }) {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     if (!ref.current) return
@@ -102,7 +103,12 @@ function ListModeItem({
   }, [onUpdateSize, index])
 
   return (
-    <Mode isActive={mode === currentMode} onClick={() => onSelectMode(mode)} ref={ref}>
+    <Mode
+      isActive={mode === currentMode}
+      onClick={() => onSelectMode(mode)}
+      ref={ref}
+      to={`/?mode=${mode}`}
+    >
       {icon}
       {name}
     </Mode>
@@ -116,11 +122,12 @@ const Block = styled.div`
   position: relative;
 `
 
-const Mode = styled.div<{ isActive?: boolean }>`
+const Mode = styled(Link)<{ isActive?: boolean }>`
   cursor: pointer;
   display: flex;
   align-items: center;
   color: ${colors.gray3};
+  text-decoration: none;
   svg {
     width: 24px;
     height: 24px;
