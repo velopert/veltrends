@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
 
     return json(list, {
       headers: {
-        'Cache-Control': 'private, max-age=15',
+        'Cache-Control': 'private, max-age=5',
       },
     })
   } catch (e: any) {
