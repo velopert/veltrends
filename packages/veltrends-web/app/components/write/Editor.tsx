@@ -1,36 +1,9 @@
-import { minimalSetup, EditorView } from 'codemirror'
-import { markdown } from '@codemirror/lang-markdown'
+import { EditorView } from 'codemirror'
 import { useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { indentWithTab } from '@codemirror/commands'
-import { keymap } from '@codemirror/view'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
-
-const customTheme = EditorView.theme({
-  '&': {
-    fontSize: '16px',
-    padding: '16px',
-    paddingRight: 0,
-    borderRadius: '4px',
-    cursor: 'text',
-  },
-  '.cm-content': {
-    fontFamily: `Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;`,
-  },
-  '.ͼ5': {
-    // special characters like - # [] () etc
-    color: colors.primary,
-  },
-  '.ͼ7': {
-    // headings
-    textDecoration: 'none',
-  },
-  '.ͼc': {
-    // link
-    color: '#9a9a9a',
-  },
-})
+import { codeMirrorExtensions } from '~/lib/codemirror'
 
 interface Props {
   onFocus(): void
@@ -57,11 +30,7 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
     if (editorRef.current) {
       const view = new EditorView({
         extensions: [
-          minimalSetup,
-          markdown(),
-          customTheme,
-          keymap.of([indentWithTab]),
-          EditorView.lineWrapping,
+          ...codeMirrorExtensions,
           EditorView.updateListener.of((update) => {
             onChangeTextRef.current(update.state.doc.toString())
           }),
@@ -85,8 +54,7 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
         window.removeEventListener('resize', onResize)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [defaultValue])
 
   const focus = () => {
     if (viewRef.current) {
