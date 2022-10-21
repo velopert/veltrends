@@ -161,7 +161,10 @@ const Thumbnail = styled.img`
   height: auto;
   max-height: 80vh;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 0px;
+  ${media.tablet} {
+    border-radius: 12px;
+  }
 `
 
 const Content = styled.div`
