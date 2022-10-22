@@ -61,7 +61,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   }
   */
   const env = {
-    API_BASE_URL: context.API_BASE_URL,
+    API_BASE_URL: process.env.API_BASE_URL,
   }
 
   if (!cookie) return json({ user: null, env })
