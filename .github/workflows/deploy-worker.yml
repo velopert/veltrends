@@ -26,7 +26,7 @@
 on:
   push:
     branches:
-      - main
+      - deploy-worker
     paths:
       - "infrastructure/backend-app/**"
       - "packages/veltrends-server/workers/**"
