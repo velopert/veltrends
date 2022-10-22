@@ -1,5 +1,5 @@
-import { type ActionFunction, json, MetaFunction } from '@remix-run/cloudflare'
-import { type ThrownResponse, useCatch, useActionData, useNavigate } from '@remix-run/react'
+import { type ActionFunction, json, type MetaFunction } from '@remix-run/node'
+import { type ThrownResponse, useCatch, useActionData } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
 import { type AuthResult, login } from '~/lib/api/auth'
 import BasicLayout from '~/components/layouts/BasicLayout'
@@ -7,7 +7,6 @@ import { useEffect } from 'react'
 import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
 import { extractError, type AppError } from '~/lib/error'
-import { fetchClient, setupBaseUrl } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
 
@@ -16,7 +15,6 @@ export const meta: MetaFunction = () => {
 }
 
 export const action: ActionFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')

@@ -1,4 +1,4 @@
-import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
 import MoreVertButton from '~/components/base/MoreVertButton'
@@ -12,18 +12,16 @@ import { type Comment, type Item as ItemType } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 import { useOpenDialog } from '~/states/dialog'
-import { consumeCookie, setupBaseUrl, waitIfNeeded } from '~/lib/client'
+import { waitIfNeeded, withCookie } from '~/lib/client'
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
-  setupBaseUrl(context)
-  consumeCookie(request)
-  try {
-    await waitIfNeeded(request)
-  } catch (e) {}
+  await waitIfNeeded(request)
 
-  // @todo: validate itemId
   const itemId = parseInt(params.itemId!, 10)
-  const [item, comments] = await Promise.all([getItem(itemId), getComments(itemId)])
+  const [item, comments] = await withCookie(
+    () => Promise.all([getItem(itemId), getComments(itemId)]),
+    request,
+  )
 
   return json(
     {
@@ -41,7 +39,9 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 export const meta: MetaFunction = ({ data }: { data: ItemLoaderData }) => {
   const { item } = data
 
-  const shortDescription = item.body.slice(0, 300).concat(item.body.length > 300 ? '...' : '')
+  const shortDescription = item.body
+    .slice(0, 300)
+    .concat(item.body.length > 300 ? '...' : '')
 
   return {
     title: item.title,

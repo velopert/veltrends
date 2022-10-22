@@ -1,22 +1,18 @@
-import { json, LoaderFunction } from '@remix-run/cloudflare'
+import { json, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
-import { FormEvent, useCallback, useState } from 'react'
+import { type FormEvent, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelGroup from '~/components/system/LabelGroup'
 import LabelInput from '~/components/system/LabelInput'
-import LabelTextArea from '~/components/system/LabelTextArea'
 import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { getItem, updateItem } from '~/lib/api/items'
 import { type Item } from '~/lib/api/types'
-import { setupBaseUrl } from '~/lib/client'
 import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 
 export const loader: LoaderFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
-  // @todo: validate itemId
   const query = parseUrlParams<{ itemId: string }>(request.url)
   const itemId = parseInt(query.itemId, 10)
 
@@ -34,7 +30,9 @@ function Edit() {
     body: item.body,
   })
 
-  const onChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = (e) => {
+  const onChange: React.ChangeEventHandler<
+    HTMLTextAreaElement | HTMLInputElement
+  > = (e) => {
     const key = e.target.name as 'title' | 'body'
     const { value } = e.target
     setForm({ ...form, [key]: value })
@@ -62,7 +60,12 @@ function Edit() {
     <BasicLayout title="수정" hasBackButton>
       <WriteFormTemplate buttonText="수정하기" onSubmit={onSubmit}>
         <Group>
-          <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
+          <LabelInput
+            label="제목"
+            name="title"
+            onChange={onChange}
+            value={form.title}
+          />
           <LabelEditorGroup label="내용">
             {({ onFocus, onBlur }) => (
               <StyledEditor

@@ -1,6 +1,13 @@
 import { Link } from '@remix-run/react'
 import { motion } from 'framer-motion'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 import { type ListMode } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
@@ -43,7 +50,10 @@ function ListModeSelector({ mode, onSelectMode }: Props) {
     [],
   )
 
-  const currentIndex = useMemo(() => modeProps.findIndex((p) => p.mode === mode), [modeProps, mode])
+  const currentIndex = useMemo(
+    () => modeProps.findIndex((p) => p.mode === mode),
+    [modeProps, mode],
+  )
   const indicatorWidth = elementSizes[currentIndex]
   const indicatorLeft = useMemo(() => {
     const gaps = currentIndex * 16
@@ -57,12 +67,12 @@ function ListModeSelector({ mode, onSelectMode }: Props) {
     <Block>
       {modeProps.map((props, index) => (
         <ListModeItem
-          {...props}
           currentMode={mode}
           onSelectMode={onSelectMode}
           key={props.name}
           index={index}
           onUpdateSize={setElementSizeOfIndex}
+          {...props}
         />
       ))}
       {indicatorWidth === 0 ? null : (
@@ -78,7 +88,8 @@ function ListModeSelector({ mode, onSelectMode }: Props) {
   )
 }
 
-const useIsomorphicEffect = typeof window === 'undefined' ? useLayoutEffect : useLayoutEffect
+const useIsomorphicEffect =
+  typeof window === 'undefined' ? useLayoutEffect : useLayoutEffect
 
 function ListModeItem({
   currentMode,

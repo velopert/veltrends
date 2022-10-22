@@ -1,4 +1,4 @@
-import { type ActionFunction, json, MetaFunction } from '@remix-run/cloudflare'
+import { type ActionFunction, json, MetaFunction } from '@remix-run/node'
 import { type ThrownResponse, useCatch, useActionData } from '@remix-run/react'
 import AuthForm from '~/components/auth/AuthForm'
 import { type AuthResult, register } from '~/lib/api/auth'
@@ -7,7 +7,6 @@ import { useAuthRedirect } from '~/hooks/useAuthRedirect'
 import { useSetUser } from '~/states/user'
 import { useEffect } from 'react'
 import { extractError, type AppError } from '~/lib/error'
-import { fetchClient, setupBaseUrl } from '~/lib/client'
 
 /** @todo: redirect to home when already logged in */
 
@@ -15,8 +14,7 @@ export const meta: MetaFunction = () => {
   return { title: '회원가입', robots: 'noindex' }
 }
 
-export const action: ActionFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
+export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
   const username = form.get('username')
   const password = form.get('password')

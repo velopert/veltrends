@@ -1,4 +1,4 @@
-import { type ActionFunction, redirect, json } from '@remix-run/cloudflare'
+import { type ActionFunction, redirect, json } from '@remix-run/node'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -10,13 +10,11 @@ import Editor from '~/components/write/Editor'
 import WriteFormTemplate from '~/components/write/WriteFormTemplate'
 import { createItem } from '~/lib/api/items'
 import { applyAuth } from '~/lib/applyAuth'
-import { setupBaseUrl } from '~/lib/client'
 import { extractError, useNextAppErrorCatch } from '~/lib/error'
 import { media } from '~/lib/media'
 import { useWriteActions, useWriteValue } from '~/states/write'
 
-export const action: ActionFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
+export const action: ActionFunction = async ({ request }) => {
   const applied = await applyAuth(request)
   if (!applied) {
     throw new Error('Not logged in')
@@ -44,7 +42,9 @@ function Intro() {
 
   const fetcher = useFetcher()
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const key = e.target.name as 'title' | 'body'
     const { value } = e.target
     actions.change(key, value)
@@ -75,10 +75,19 @@ function Intro() {
         isLoading={fetcher.state === 'submitting'}
       >
         <Group>
-          <LabelInput label="제목" name="title" onChange={onChange} value={form.title} />
+          <LabelInput
+            label="제목"
+            name="title"
+            onChange={onChange}
+            value={form.title}
+          />
           <LabelEditorGroup label="내용">
             {({ onFocus, onBlur }) => (
-              <StyledEditor onFocus={onFocus} onBlur={onBlur} onChangeText={onChangeBody} />
+              <StyledEditor
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChangeText={onChangeBody}
+              />
             )}
           </LabelEditorGroup>
 

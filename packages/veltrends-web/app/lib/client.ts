@@ -1,4 +1,4 @@
-import { AppLoadContext } from '@remix-run/cloudflare'
+import { AppLoadContext } from '@remix-run/node'
 import QueryString from 'qs'
 import { getMemoMyAccount } from './protectRoute'
 
@@ -19,6 +19,9 @@ export function consumeCookie(request: Request) {
   }
 }
 
+/**
+ * wait until access token gets refreshed, if needed.
+ */
 export function waitIfNeeded(request: Request) {
   const cookie = request.headers.get('Cookie')
   if (cookie && cookie.includes('token')) {
@@ -45,6 +48,29 @@ async function rejectIfNeeded(response: Response) {
     throw new FetchError(response, data)
   }
   return response
+}
+
+type AsyncFn<T> = () => Promise<T>
+
+/**
+ * ensures cookie is set on request, and clears after making request.
+ * @param fn
+ * @param request
+ * @param isAsync if true, cookie will clear after promise resolves
+ * @returns
+ */
+export async function withCookie<T>(
+  fn: AsyncFn<T>,
+  request: Request,
+  isAsync = false,
+) {
+  consumeCookie(request)
+  const promise = fn()
+  if (isAsync) {
+    await promise
+  }
+  clearCookie()
+  return promise
 }
 
 export const fetchClient = {
@@ -140,8 +166,4 @@ export const fetchClient = {
       headers,
     }
   },
-}
-
-export function setupBaseUrl(context: AppLoadContext) {
-  fetchClient.baseUrl = context.API_BASE_URL as string
 }

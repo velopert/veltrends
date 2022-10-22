@@ -1,8 +1,7 @@
-import type { EntryContext } from '@remix-run/cloudflare'
+import type { EntryContext } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet } from 'styled-components'
-import { clearCookie } from './lib/client'
 
 export default function handleRequest(
   request: Request,
@@ -13,7 +12,9 @@ export default function handleRequest(
   const sheet = new ServerStyleSheet()
 
   let markup = renderToString(
-    sheet.collectStyles(<RemixServer context={remixContext} url={request.url} />),
+    sheet.collectStyles(
+      <RemixServer context={remixContext} url={request.url} />,
+    ),
   )
 
   const styles = sheet.getStyleTags()
@@ -21,10 +22,8 @@ export default function handleRequest(
 
   responseHeaders.set('Content-Type', 'text/html')
 
-  clearCookie()
-
   return new Response('<!DOCTYPE html>' + markup, {
-    status: responseStatusCode,
     headers: responseHeaders,
+    status: responseStatusCode,
   })
 }

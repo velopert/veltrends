@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from '@remix-run/react'
 import styled, { css } from 'styled-components'
 import TabLayout from '~/components/layouts/TabLayout'
 import { useLogout } from '~/hooks/useLogout'

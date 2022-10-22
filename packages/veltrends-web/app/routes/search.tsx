@@ -4,7 +4,7 @@ import MobileHeader from '~/components/base/MobileHeader'
 import TabLayout from '~/components/layouts/TabLayout'
 import SearchInput from '~/components/search/SearchInput'
 import { useDebounce } from 'use-debounce'
-import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, type MetaFunction, type LoaderFunction } from '@remix-run/node'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 import QueryString, { stringify } from 'qs'
 import { useLoaderData, useNavigate, useSearchParams } from '@remix-run/react'
@@ -14,14 +14,10 @@ import { type SearchItemsResult } from '~/lib/api/types'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import DesktopHeader from '~/components/base/DesktopHeader'
-import { consumeCookie, setupBaseUrl, waitIfNeeded } from '~/lib/client'
+import { waitIfNeeded, withCookie } from '~/lib/client'
 
-export const loader: LoaderFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
-  consumeCookie(request)
-  try {
-    await waitIfNeeded(request)
-  } catch (e) {}
+export const loader: LoaderFunction = async ({ request }) => {
+  await waitIfNeeded(request)
   const { q } = parseUrlParams<{ q?: string }>(request.url)
   if (!q) {
     return json({
@@ -34,7 +30,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
     })
   }
   // @todo: handler errors
-  const searchResult = await searchItems({ q })
+  const searchResult = await withCookie(() => searchItems({ q }), request)
   return json(searchResult)
 }
 
@@ -66,7 +62,8 @@ export default function Search() {
     fetchNextPage,
   } = useInfiniteQuery(
     ['searchResults', debouncedSearchText],
-    ({ pageParam }) => searchItems({ q: debouncedSearchText, offset: pageParam }),
+    ({ pageParam }) =>
+      searchItems({ q: debouncedSearchText, offset: pageParam }),
     {
       enabled: debouncedSearchText !== '',
       getNextPageParam: (lastPage, pages) => {
@@ -108,7 +105,11 @@ export default function Search() {
     <TabLayout
       header={
         <>
-          <StyledHeader title={<SearchInput value={searchText} onChangeText={setSearchText} />} />
+          <StyledHeader
+            title={
+              <SearchInput value={searchText} onChangeText={setSearchText} />
+            }
+          />
           <DesktopHeader />
         </>
       }

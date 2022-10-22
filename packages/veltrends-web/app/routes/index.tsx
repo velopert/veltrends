@@ -1,4 +1,4 @@
-import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
+import { json, MetaFunction, type LoaderFunction } from '@remix-run/node'
 import { useCatch, useLoaderData, useSearchParams } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -14,27 +14,34 @@ import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getItems } from '~/lib/api/items'
 import { type ListMode, type GetItemsResult } from '~/lib/api/types'
-import { consumeCookie, setupBaseUrl, waitIfNeeded } from '~/lib/client'
+import { waitIfNeeded, withCookie } from '~/lib/client'
 import { media } from '~/lib/media'
 import { parseUrlParams } from '~/lib/parseUrlParams'
 import { getWeekRangeFromDate } from '~/lib/week'
 
-export const loader: LoaderFunction = async ({ request, context }) => {
-  setupBaseUrl(context)
+export const loader: LoaderFunction = async ({ request }) => {
   try {
-    consumeCookie(request)
     await waitIfNeeded(request)
-    const { mode, start, end } = parseUrlParams<{ mode?: string; start?: string; end?: string }>(
-      request.url,
-    )
+    const { mode, start, end } = parseUrlParams<{
+      mode?: string
+      start?: string
+      end?: string
+    }>(request.url)
     const fallbackedMode = mode ?? 'trending'
 
     const range = mode === 'past' ? getWeekRangeFromDate(new Date()) : undefined
     const startDate = start ?? range?.[0]
     const endDate = end ?? range?.[1]
 
-    // @todo: throw error if invalid error
-    const list = await getItems({ mode: fallbackedMode as any, startDate, endDate })
+    const list = await withCookie(
+      () =>
+        getItems({
+          mode: fallbackedMode as any,
+          startDate,
+          endDate,
+        }),
+      request,
+    )
 
     return json(list, {
       headers: {
@@ -87,7 +94,9 @@ export default function Index() {
   const initialData = useLoaderData<GetItemsResult>()
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [mode, setMode] = useState<ListMode>((searchParams.get('mode') as any) ?? 'trending')
+  const [mode, setMode] = useState<ListMode>(
+    (searchParams.get('mode') as any) ?? 'trending',
+  )
   const defaultDateRange = useMemo(() => getWeekRangeFromDate(new Date()), [])
   const startDate = searchParams.get('start')
   const endDate = searchParams.get('end')
@@ -98,7 +107,9 @@ export default function Index() {
 
   useEffect(() => {
     if (mode === 'past') {
-      setDateRange(startDate && endDate ? [startDate, endDate] : defaultDateRange)
+      setDateRange(
+        startDate && endDate ? [startDate, endDate] : defaultDateRange,
+      )
     }
   }, [startDate, endDate, mode, defaultDateRange])
 
@@ -110,14 +121,18 @@ export default function Index() {
   }, [mode, searchParams])
 
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ['items', mode, mode === 'past' ? { dateRange: dateRange } : undefined].filter(
-      (item) => !!item,
-    ),
+    [
+      'items',
+      mode,
+      mode === 'past' ? { dateRange: dateRange } : undefined,
+    ].filter((item) => !!item),
     ({ pageParam }) =>
       getItems({
         mode,
         cursor: pageParam,
-        ...(mode === 'past' ? { startDate: dateRange[0], endDate: dateRange[1] } : {}),
+        ...(mode === 'past'
+          ? { startDate: dateRange[0], endDate: dateRange[1] }
+          : {}),
       }),
     {
       initialData: {

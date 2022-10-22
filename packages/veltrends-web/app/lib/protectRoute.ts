@@ -1,6 +1,6 @@
 import { type AuthResult, getMyAccount, refreshToken } from './api/auth'
 import { applyAuth } from './applyAuth'
-import { consumeCookie, setClientCookie } from './client'
+import { setClientCookie, withCookie } from './client'
 import { extractError } from './error'
 
 async function getMyAccountWithRefresh() {
@@ -45,17 +45,14 @@ export async function getMemoMyAccount(request: Request) {
     promise = getMyAccountWithRefresh()
     promiseMap.set(request, promise)
   }
-  return promise
+  return promise.finally(() => promiseMap.delete(request))
 }
 
 export const checkIsLoggedIn = async (request: Request) => {
-  consumeCookie(request)
   const applied = applyAuth(request)
   if (!applied) return false
-
   try {
-    await getMemoMyAccount(request)
-    promiseMap.delete(request)
+    await withCookie(() => getMemoMyAccount(request), request, true)
   } catch (e) {
     return false
   }

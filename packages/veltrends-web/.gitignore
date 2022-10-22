@@ -1,9 +1,11 @@
 node_modules
 
-/.cache
-/functions/\[\[path\]\].js
-/functions/\[\[path\]\].js.map
-/public/build
+.cache
 .env
-.dev.vars
-/build
+.vercel
+.output
+
+/build/
+/public/build
+/api/index.js
+/api/index.js.map

@@ -27,7 +27,14 @@ const commentEditorTheme = EditorView.theme({
   },
 })
 
-function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose }: Props) {
+function CommentEditor({
+  onChangeText,
+  text,
+  onSubmit,
+  isLoading,
+  mode,
+  onClose,
+}: Props) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const onChangeTextRef = useRef(onChangeText)
@@ -41,6 +48,7 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
 
   useEffect(() => {
     if (!editorRef.current) return
+    if (viewRef.current) return
     const view = new EditorView({
       extensions: [
         placeholder('댓글을 입력하세요.'),
@@ -54,7 +62,7 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
       doc: text,
     })
     viewRef.current = view
-    ;(window as any).view = view
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

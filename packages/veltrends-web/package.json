@@ -3,25 +3,19 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev:remix": "remix watch",
-    "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public",
-    "dev": "cross-env NODE_ENV=development remix build && run-p \"dev:*\"",
-    "start": "cross-env NODE_ENV=production npm run dev:wrangler",
-    "transform:svg": "yarn svgr --typescript --out-dir app/components/vectors app/assets/vectors"
+    "dev": "remix dev"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.1.2",
     "@codemirror/lang-markdown": "^6.0.2",
-    "@remix-run/cloudflare": "^1.7.2",
-    "@remix-run/cloudflare-pages": "^1.7.2",
-    "@remix-run/react": "^1.7.2",
+    "@codemirror/view": "^6.4.0",
+    "@remix-run/node": "^1.7.3",
+    "@remix-run/react": "^1.7.3",
+    "@remix-run/vercel": "^1.7.3",
     "@tanstack/react-query": "^4.10.3",
-    "@types/markdown-it": "^12.2.3",
-    "@types/qs": "^6.9.7",
-    "@types/remove-markdown": "^0.3.1",
-    "@types/styled-components": "^5.1.25",
+    "@vercel/node": "^2.4.4",
     "cm6-theme-basic-light": "^0.2.0",
     "codemirror": "^6.0.1",
-    "cross-env": "^7.0.3",
     "date-fns": "^2.29.1",
     "framer-motion": "^7.1.0",
     "immer": "^9.0.15",
@@ -36,18 +30,20 @@
     "use-debounce": "^8.0.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.14.1",
-    "@remix-run/dev": "^1.7.2",
-    "@remix-run/eslint-config": "^1.7.2",
+    "@remix-run/dev": "^1.7.3",
+    "@remix-run/eslint-config": "^1.7.3",
+    "@remix-run/serve": "^1.7.3",
     "@svgr/cli": "^6.2.1",
-    "@types/react": "^17.0.45",
-    "@types/react-dom": "^17.0.17",
-    "eslint": "^8.15.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^4.7.4",
-    "wrangler": "^2.0.27"
+    "@types/markdown-it": "^12.2.3",
+    "@types/qs": "^6.9.7",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/remove-markdown": "^0.3.1",
+    "@types/styled-components": "^5.1.26",
+    "eslint": "^8.23.1",
+    "typescript": "^4.7.4"
   },
   "engines": {
-    "node": ">=16.13"
+    "node": ">=14"
   }
 }
