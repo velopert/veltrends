@@ -18,6 +18,7 @@ import { deleteItem } from '~/lib/api/items'
 import Button from '../system/Button'
 import MarkdownIt from 'markdown-it'
 import { useMemo } from 'react'
+import { markdownStyles } from '~/lib/styles'
 
 interface Props {
   item: Item
@@ -247,33 +248,7 @@ const Body = styled.div`
     font-size: 16px;
   }
 
-  p {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    line-height: 1.5;
-    font-size: 14px;
-    ${media.tablet} {
-      font-size: 16px;
-    }
-    margin: 0;
-  }
-
-  ul,
-  ol {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-  a {
-    color: ${colors.primary};
-  }
+  ${markdownStyles}
 `
 
 const LikesCount = styled(motion.div)`
