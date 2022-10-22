@@ -29,6 +29,9 @@ interface LoaderResult {
   user: User | null
   canonical: string | null
   tokenRemainingTime?: number
+  env: {
+    API_BASE_URL: string
+  }
 }
 
 function extractAccessToken(cookie: string) {
@@ -99,7 +102,8 @@ export const meta: MetaFunction = () => ({
 })
 
 export default function App() {
-  const { user, canonical, tokenRemainingTime } = useLoaderData<LoaderResult>()
+  const { user, canonical, tokenRemainingTime, env } =
+    useLoaderData<LoaderResult>()
 
   const queryClient = useRef(
     new QueryClient({
@@ -199,6 +203,13 @@ export default function App() {
         {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.ENV = ${JSON.stringify(env)}
+          `,
+          }}
+        />
         <TokenRefreshProvider>
           <SangteProvider
             initialize={({ set }) => {
