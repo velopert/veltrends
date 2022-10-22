@@ -79,7 +79,7 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
     onReset()
   }
 
-  const buttonText = mode === 'write' ? '등록' : '수정'
+  const buttonText = mode === 'edit' ? '수정' : '등록'
 
   return (
     <Block>
