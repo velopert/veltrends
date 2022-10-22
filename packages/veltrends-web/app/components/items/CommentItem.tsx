@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { isMobile } from '~/lib/isMobile'
 import CommentInput from './CommentInput'
 import ModifyComment from './ModifyComment'
+import ReplyComment from './ReplyComment'
 
 interface Props {
   comment: Comment
@@ -95,6 +96,10 @@ function CommentItem({ comment, isSubcomment }: Props) {
     setIsEditing(false)
   }
 
+  const onCloseReply = () => {
+    setIsReplying(false)
+  }
+
   if (isDeleted) {
     return (
       <Block>
@@ -147,11 +152,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
 
       {isReplying ? (
         <ReplyWrapper>
-          {/* <CommentDesktopInput
-            mode="reply"
-            replyTo={comment.id}
-            onCancelReply={() => setIsReplying(false)}
-          /> */}
+          <ReplyComment parentCommentId={comment.id} onClose={onCloseReply} />
         </ReplyWrapper>
       ) : null}
 
