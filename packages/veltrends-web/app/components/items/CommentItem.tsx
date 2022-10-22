@@ -11,11 +11,8 @@ import LikeButton from '../system/LikeButton'
 import { SpeechBubble, MoreVert } from '../vectors'
 import SubcommentList from './SubcommentList'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
-import { useCommentInputActions } from '~/states/commentInput'
 import { useCommentLikeById } from '~/states/commentLikes'
 import { useState } from 'react'
-import { isMobile } from '~/lib/isMobile'
-import CommentInput from './CommentInput'
 import ModifyComment from './ModifyComment'
 import ReplyComment from './ReplyComment'
 
@@ -29,7 +26,6 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const itemId = useItemId()
   const commentLike = useCommentLikeById(comment.id)
   const { like, unlike } = useCommentLike()
-  const { write, edit } = useCommentInputActions()
   const openLoginDialog = useOpenLoginDialog()
   const currentUser = useUser()
   const isMyComment = comment.user.id === currentUser?.id
@@ -44,7 +40,6 @@ function CommentItem({ comment, isSubcomment }: Props) {
         name: '수정',
         onClick: () => {
           setIsEditing(true)
-          // edit(comment.id, text)
         },
       },
       {
@@ -82,11 +77,6 @@ function CommentItem({ comment, isSubcomment }: Props) {
   }
 
   const onReply = () => {
-    if (isMobile()) {
-      write(comment.id)
-      return
-    }
-
     setIsReplying(true)
   }
 

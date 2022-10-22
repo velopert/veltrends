@@ -2,7 +2,6 @@ import { json, MetaFunction, type LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import styled from 'styled-components'
 import MoreVertButton from '~/components/base/MoreVertButton'
-import CommentInputOverlay from '~/components/items/CommentInputOverlay'
 import CommentList from '~/components/items/CommentList'
 import ItemViewer from '~/components/items/ItemViewer'
 import BasicLayout from '~/components/layouts/BasicLayout'
@@ -112,7 +111,6 @@ function Item() {
         <ItemViewer item={loaderData.item} isMyItem={isMyItem} />
         {/* `comments` is always valid due to SSR */}
         <CommentList comments={comments!} />
-        <CommentInputOverlay />
       </Content>
     </BasicLayout>
   )

@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { Comment } from '~/lib/api/types'
+import { type Comment } from '~/lib/api/types'
 import { media } from '~/lib/media'
-import CommentInput from './CommentInput'
 import CommentItem from './CommentItem'
 import WriteComment from './WriteComment'
 
