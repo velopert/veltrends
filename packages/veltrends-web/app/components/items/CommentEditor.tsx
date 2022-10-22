@@ -13,6 +13,7 @@ interface Props {
   onSubmit(): Promise<any>
   isLoading: boolean
   mode: 'write' | 'edit' | 'reply'
+  onClose?(): void
 }
 
 const commentEditorTheme = EditorView.theme({
@@ -24,7 +25,7 @@ const commentEditorTheme = EditorView.theme({
   },
 })
 
-function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode }: Props) {
+function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose }: Props) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const onChangeTextRef = useRef(onChangeText)
@@ -62,6 +63,7 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode }: Props)
       viewRef.current.contentDOM.blur()
     }
     setIsButtonsShown(false)
+    onClose?.()
   }
 
   // useEffect(() => {
@@ -77,6 +79,8 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode }: Props)
     onReset()
   }
 
+  const buttonText = mode === 'write' ? '등록' : '수정'
+
   return (
     <Block>
       <Box
@@ -87,10 +91,10 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode }: Props)
         <div ref={editorRef}></div>
       </Box>
       <AnimatePresence>
-        {isButtonsShown ? (
+        {isButtonsShown || mode !== 'write' ? (
           <Actions
             key="actions"
-            initial={{ height: 0 }}
+            initial={mode === 'write' ? { height: 0 } : false}
             animate={{ height: 36 }}
             exit={{ height: 0 }}
           >
@@ -98,7 +102,7 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode }: Props)
               취소
             </Button>
             <Button size="small" onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? <LoadingIndicator color="white" /> : '등록'}
+              {isLoading ? <LoadingIndicator color="white" /> : buttonText}
             </Button>
           </Actions>
         ) : null}

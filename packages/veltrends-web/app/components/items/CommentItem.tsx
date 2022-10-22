@@ -16,7 +16,7 @@ import { useCommentLikeById } from '~/states/commentLikes'
 import { useState } from 'react'
 import { isMobile } from '~/lib/isMobile'
 import CommentInput from './CommentInput'
-import CommentDesktopInput from './CommentDesktopInput'
+import ModifyComment from './ModifyComment'
 
 interface Props {
   comment: Comment
@@ -35,13 +35,15 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const { open: openBottomSheetModal } = useBottomSheetModalActions()
   const deleteComment = useDeleteComment()
   const [isReplying, setIsReplying] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   const onClickMore = () => {
     openBottomSheetModal([
       {
         name: '수정',
         onClick: () => {
-          edit(comment.id, text)
+          setIsEditing(true)
+          // edit(comment.id, text)
         },
       },
       {
@@ -89,11 +91,29 @@ function CommentItem({ comment, isSubcomment }: Props) {
 
   const dateDistance = useDateDistance(createdAt)
 
+  const onCloseEdit = () => {
+    setIsEditing(false)
+  }
+
   if (isDeleted) {
     return (
       <Block>
         <DeletedText>삭제된 댓글입니다.</DeletedText>
         {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
+      </Block>
+    )
+  }
+
+  if (isEditing) {
+    return (
+      <Block>
+        <CommentHead>
+          <LeftGroup>
+            <Username>{user.username}</Username>
+            <Time>{dateDistance}</Time>
+          </LeftGroup>
+        </CommentHead>
+        <ModifyComment id={comment.id} initialText={text} onClose={onCloseEdit} />
       </Block>
     )
   }
@@ -127,11 +147,11 @@ function CommentItem({ comment, isSubcomment }: Props) {
 
       {isReplying ? (
         <ReplyWrapper>
-          <CommentDesktopInput
+          {/* <CommentDesktopInput
             mode="reply"
             replyTo={comment.id}
             onCancelReply={() => setIsReplying(false)}
-          />
+          /> */}
         </ReplyWrapper>
       ) : null}
 
