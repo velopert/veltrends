@@ -50,12 +50,6 @@ const Positioner = styled.div`
   left: 0;
   width: 100%;
   display: flex;
-  ${media.mobile} {
-    justify-content: center;
-    bottom: unset;
-    top: 50%;
-    transform: translateY(-50%);
-  }
 `
 
 const Sheet = styled(motion.div)`
