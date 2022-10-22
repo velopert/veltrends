@@ -4,7 +4,6 @@ import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { colors } from '~/lib/colors'
 import { useCommentInputActions } from '~/states/commentInput'
 import { media } from '~/lib/media'
-import CommentDesktopInput from './CommentDesktopInput'
 
 function CommentInput() {
   const user = useUser()
@@ -21,7 +20,6 @@ function CommentInput() {
 
   return (
     <>
-      <CommentDesktopInput mode="write" />
       <DummyMobileInput onClick={onClickDummyInput}>댓글을 입력하세요.</DummyMobileInput>
     </>
   )

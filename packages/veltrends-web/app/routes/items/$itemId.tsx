@@ -126,6 +126,7 @@ const Content = styled.div`
     margin: 0 auto;
     margin-top: 64px;
   }
+  padding-bottom: 64px;
 `
 
 // @todo: handle 404

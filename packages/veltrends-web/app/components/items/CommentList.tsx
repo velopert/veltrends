@@ -3,6 +3,7 @@ import { Comment } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import CommentInput from './CommentInput'
 import CommentItem from './CommentItem'
+import WriteComment from './WriteComment'
 
 interface Props {
   comments: Comment[]
@@ -11,7 +12,7 @@ function CommentList({ comments }: Props) {
   return (
     <Block>
       <CommentTitle>댓글 {comments.length.toLocaleString()}개</CommentTitle>
-      <CommentInput />
+      <WriteComment />
       <List>
         {comments.map((comment) => (
           <CommentItem comment={comment} key={comment.id} />
