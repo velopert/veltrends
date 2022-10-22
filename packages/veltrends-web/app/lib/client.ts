@@ -75,9 +75,9 @@ export async function withCookie<T>(
 
 export const fetchClient = {
   baseUrl:
-    typeof window === 'undefined'
-      ? 'http://localhost:8080'
-      : window.ENV?.API_BASE_URL ?? 'http://localhost:8080',
+    (typeof window === 'undefined'
+      ? process.env.API_BASE_URL
+      : window.ENV?.API_BASE_URL) ?? 'http://localhost:8080',
   async get<T>(url: string, config: RequestConfig = {}) {
     const query = config?.params
       ? QueryString.stringify(config?.params, { addQueryPrefix: true })
