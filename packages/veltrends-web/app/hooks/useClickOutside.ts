@@ -5,6 +5,7 @@ type Event = MouseEvent | TouchEvent
 export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   ref: RefObject<T>,
   handler: (event: Event) => void,
+  deps?: any[],
 ) {
   useEffect(() => {
     const listener = (event: Event) => {
@@ -23,5 +24,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
       document.removeEventListener('mousedown', listener)
       document.removeEventListener('touchstart', listener)
     }
-  }, [ref, handler]) // Reload only if ref or handler changes
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref, handler, ...(deps ?? [])]) // Reload only if ref or handler changes
 }

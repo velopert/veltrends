@@ -12,9 +12,11 @@ import { SpeechBubble, MoreVert } from '../vectors'
 import SubcommentList from './SubcommentList'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 import { useCommentLikeById } from '~/states/commentLikes'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import ModifyComment from './ModifyComment'
 import ReplyComment from './ReplyComment'
+import { isMobile } from '~/lib/isMobile'
+import PopperMenu from '../system/PopperMenu'
 
 interface Props {
   comment: Comment
@@ -33,9 +35,10 @@ function CommentItem({ comment, isSubcomment }: Props) {
   const deleteComment = useDeleteComment()
   const [isReplying, setIsReplying] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isPopperVisible, setIsPopperVisible] = useState(false)
 
-  const onClickMore = () => {
-    openBottomSheetModal([
+  const items = useMemo(
+    () => [
       {
         name: '수정',
         onClick: () => {
@@ -48,8 +51,21 @@ function CommentItem({ comment, isSubcomment }: Props) {
           deleteComment(comment.id)
         },
       },
-    ])
+    ],
+    [comment.id, deleteComment],
+  )
+
+  const onClickMore = () => {
+    if (isMobile()) {
+      openBottomSheetModal(items)
+    } else {
+      setIsPopperVisible(true)
+    }
   }
+
+  const onClosePopper = useCallback(() => {
+    setIsPopperVisible(false)
+  }, [])
 
   const likes = commentLike?.likes ?? comment.likes
   const isLiked = commentLike?.isLiked ?? comment.isLiked
@@ -120,9 +136,17 @@ function CommentItem({ comment, isSubcomment }: Props) {
           <Time>{dateDistance}</Time>
         </LeftGroup>
         {isMyComment && (
-          <MoreButton onClick={onClickMore}>
-            <MoreVert />
-          </MoreButton>
+          <div>
+            <MoreButton onClick={onClickMore}>
+              <MoreVert />
+            </MoreButton>
+            <PopperMenu
+              items={items}
+              onClose={onClosePopper}
+              visible={isPopperVisible}
+              position={{ top: 16, right: 0 }}
+            />
+          </div>
         )}
       </CommentHead>
       <Text>
