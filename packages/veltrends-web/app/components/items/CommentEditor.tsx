@@ -2,8 +2,10 @@ import { EditorView, placeholder } from '@codemirror/view'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { codeMirrorExtensions } from '~/lib/codemirror'
 import { colors } from '~/lib/colors'
+import { useUser } from '~/states/user'
 import Button from '../system/Button'
 import LoadingIndicator from '../system/LoadingIndicator'
 
@@ -30,6 +32,8 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
   const viewRef = useRef<EditorView | null>(null)
   const onChangeTextRef = useRef(onChangeText)
   const [isButtonsShown, setIsButtonsShown] = useState(false)
+  const user = useUser()
+  const open = useOpenLoginDialog()
 
   useEffect(() => {
     onChangeTextRef.current = onChangeText
@@ -66,14 +70,6 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
     onClose?.()
   }
 
-  // useEffect(() => {
-  //   if (!viewRef.current) return
-  //   if (viewRef.current.state.doc.toString() === text) return
-  //   viewRef.current.dispatch({
-  //     changes: { from: 0, to: viewRef.current.state.doc.length, insert: text },
-  //   })
-  // }, [text])
-
   const handleSubmit = async () => {
     await onSubmit()
     onReset()
@@ -85,6 +81,11 @@ function CommentEditor({ onChangeText, text, onSubmit, isLoading, mode, onClose 
     <Block>
       <Box
         onFocus={(e) => {
+          if (!user) {
+            open('comment')
+            viewRef.current?.contentDOM.blur()
+            return
+          }
           setIsButtonsShown(true)
         }}
       >

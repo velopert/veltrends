@@ -17,6 +17,8 @@ import ModifyComment from './ModifyComment'
 import ReplyComment from './ReplyComment'
 import { isMobile } from '~/lib/isMobile'
 import PopperMenu from '../system/PopperMenu'
+import MarkdownIt from 'markdown-it'
+import { markdownStyles } from '~/lib/styles'
 
 interface Props {
   comment: Comment
@@ -54,6 +56,16 @@ function CommentItem({ comment, isSubcomment }: Props) {
     ],
     [comment.id, deleteComment],
   )
+
+  const withMention = useMemo(() => {
+    if (!mentionUser) return text
+    if (text.startsWith('# ')) return `**@${mentionUser.username}** \n${text}`
+    return `**@${mentionUser.username}** ${text}`
+  }, [text, mentionUser])
+
+  const html = useMemo(() => {
+    return MarkdownIt().render(withMention)
+  }, [withMention])
 
   const onClickMore = () => {
     if (isMobile()) {
@@ -128,6 +140,9 @@ function CommentItem({ comment, isSubcomment }: Props) {
       </Block>
     )
   }
+
+  // {mentionUser ? <Mention>@{mentionUser.username}</Mention> : null}
+
   return (
     <Block data-comment-id={comment.id}>
       <CommentHead>
@@ -149,10 +164,7 @@ function CommentItem({ comment, isSubcomment }: Props) {
           </div>
         )}
       </CommentHead>
-      <Text>
-        {mentionUser ? <Mention>@{mentionUser.username}</Mention> : null}
-        {text}
-      </Text>
+      <Text dangerouslySetInnerHTML={{ __html: html }}></Text>
       <CommentFooter>
         <LikeBlock>
           <LikeButton size="small" isLiked={isLiked} onClick={toggleLike} />
@@ -217,14 +229,34 @@ const Time = styled.div`
   margin-left: 8px;
 `
 
-const Text = styled.p`
+const Text = styled.div`
   margin-top: 4px;
   margin-bottom: 12px;
   color: ${colors.gray5};
   line-height: 1.5;
-  white-space: pre-wrap;
   word-break: keep-all;
+  ${markdownStyles}
   font-size: 14px;
+  h5 {
+    font-size: 14px !important;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 500;
+  }
+  p,
+  ul,
+  ol {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  strong {
+    font-weight: 500;
+  }
 `
 
 const CommentFooter = styled.div`
