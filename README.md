@@ -76,6 +76,6 @@ Frontend project uses [pnpm](https://pnpm.io/) to install node_modules.
 
 ## Bug Report, Feature Request, Questions
 
-- Please report b ugs on [GitHub Issues](https://github.com/velopert/veltrends/issues)
+- Please report bugs on [GitHub Issues](https://github.com/velopert/veltrends/issues)
 - Please ask questions and suggest features on [GitHub Discussions](https://github.com/velopert/veltrends/discussions)
 - Contributions are always welcomed.

@@ -69,9 +69,11 @@ API 문서는 http://localhost:8080/documentation 에서 확인할 수 있습니
 
 ### Frontend
 
-1. packages/veltrends-client 디렉터리에서 .dev.vars.sample 파일을 .dev.vars 로 이름을 변경하세요.
-2. `yarn install` 명령어를 사용하여 node_modules 를 설치하세요.
-3. `yarn dev` 명령어를 사용하여 서버를 실행하세요. 서버는 8788 포트로 실행됩니다. http://localhost:8788/ 에 들어가서 서버가 잘 실행되고 있는지 확인하세요.
+프런트엔드 프로젝트는 [pnpm](https://pnpm.io/)을 사용하여 node_modules를 설치합니다.
+
+1. packages/veltrends-client 디렉터리에서 .env.sample 파일을 .env 로 이름을 변경하세요.
+2. `pnpm install` 명령어를 사용하여 node_modules 를 설치하세요.
+3. `pnpm dev` 명령어를 사용하여 서버를 실행하세요. 서버는 8788 포트로 실행됩니다. http://localhost:3000/ 에 들어가서 서버가 잘 실행되고 있는지 확인하세요.
 
 ## 문의
 
