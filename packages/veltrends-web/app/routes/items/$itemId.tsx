@@ -43,14 +43,22 @@ export const meta: MetaFunction = ({ data }: { data: ItemLoaderData }) => {
     .slice(0, 300)
     .concat(item.body.length > 300 ? '...' : '')
 
+  const twitterCardInfo = {
+    'twitter:card': item.thumbnail ? 'summary_large_image' : 'summary',
+    'twitter:site': '@veltrends',
+    'twitter:title': item.title,
+    'twitter:description': shortDescription,
+    'twitter:image': item.thumbnail,
+  }
+
   return {
     title: item.title,
     description: shortDescription,
     'og:title': item.title,
     'og:description': shortDescription,
     'og:image': item.thumbnail ?? undefined,
-    'twitter:card': item.thumbnail ?? undefined,
     'article:author': item.author ?? item.user.username,
+    ...twitterCardInfo,
   }
 }
 
