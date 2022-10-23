@@ -13,6 +13,7 @@ import { media } from '~/lib/media'
 import { useBottomSheetModalActions } from '~/states/bottomSheetModal'
 import { useOpenDialog } from '~/states/dialog'
 import { waitIfNeeded, withCookie } from '~/lib/client'
+import removeMd from 'remove-markdown'
 
 export const loader: LoaderFunction = async ({ request, context, params }) => {
   await waitIfNeeded(request)
@@ -39,9 +40,11 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
 export const meta: MetaFunction = ({ data }: { data: ItemLoaderData }) => {
   const { item } = data
 
-  const shortDescription = item.body
+  const plainText = removeMd(item.body)
+
+  const shortDescription = plainText
     .slice(0, 300)
-    .concat(item.body.length > 300 ? '...' : '')
+    .concat(plainText.length > 300 ? '...' : '')
 
   const twitterCardInfo = {
     'twitter:card': item.thumbnail ? 'summary_large_image' : 'summary',
