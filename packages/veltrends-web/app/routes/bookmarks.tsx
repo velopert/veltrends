@@ -14,6 +14,7 @@ import EmptyList from '~/components/system/EmptyList'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getBookmarks } from '~/lib/api/bookmark'
 import { type GetBookmarksResult } from '~/lib/api/types'
+import { withCookie } from '~/lib/client'
 import { media } from '~/lib/media'
 import { checkIsLoggedIn } from '~/lib/protectRoute'
 
@@ -21,7 +22,7 @@ export const loader: LoaderFunction = async ({ request, context }) => {
   const isLoggedIn = await checkIsLoggedIn(request)
   if (!isLoggedIn) return redirect('/auth/login?next=/bookmarks')
 
-  const bookmarks = await getBookmarks()
+  const bookmarks = await withCookie(() => getBookmarks(), request)
   return json(bookmarks)
 }
 
