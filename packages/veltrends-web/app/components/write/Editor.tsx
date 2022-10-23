@@ -13,7 +13,13 @@ interface Props {
   defaultValue?: string
 }
 
-function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Props) {
+function Editor({
+  onFocus,
+  onBlur,
+  className,
+  onChangeText,
+  defaultValue,
+}: Props) {
   const editorRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const [ready, setReady] = useState(false)
@@ -39,6 +45,7 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
         doc: defaultValue,
       })
 
+      console.log('merun??')
       setReady(true)
 
       setHeight(wrapperRef.current?.clientHeight || 0)
@@ -54,7 +61,8 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
         window.removeEventListener('resize', onResize)
       }
     }
-  }, [defaultValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const focus = () => {
     if (viewRef.current) {
@@ -86,7 +94,11 @@ function Editor({ onFocus, onBlur, className, onChangeText, defaultValue }: Prop
   )
 }
 
-const EditorWrapper = styled.div<{ isVisible: boolean; isFocused: boolean; $height: number }>`
+const EditorWrapper = styled.div<{
+  isVisible: boolean
+  isFocused: boolean
+  $height: number
+}>`
   border: 1px solid ${colors.gray2};
   border-radius: 4px;
   outline: none;
