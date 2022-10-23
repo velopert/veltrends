@@ -24,6 +24,7 @@ import { getCanonical } from './lib/getCanonical'
 import { getMemoMyAccount } from './lib/protectRoute'
 import { userState } from './states/user'
 import './styles.css'
+import { useFirebaseAnalytics } from './hooks/useFirebaseAnalytics'
 
 interface LoaderResult {
   user: User | null
@@ -104,6 +105,8 @@ export const meta: MetaFunction = () => ({
 export default function App() {
   const { user, canonical, tokenRemainingTime, env } =
     useLoaderData<LoaderResult>()
+
+  useFirebaseAnalytics()
 
   const queryClient = useRef(
     new QueryClient({
