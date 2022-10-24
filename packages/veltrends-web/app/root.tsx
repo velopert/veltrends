@@ -24,6 +24,7 @@ import { getMemoMyAccount } from './lib/protectRoute'
 import { userState } from './states/user'
 import styles from './styles.css'
 import { useFirebaseAnalytics } from './hooks/useFirebaseAnalytics'
+import GlobalStyles from './GlobalStyles'
 
 interface LoaderResult {
   user: User | null
@@ -215,6 +216,7 @@ export default function App() {
           `,
           }}
         />
+        <GlobalStyles />
         <TokenRefreshProvider>
           <SangteProvider
             initialize={({ set }) => {
