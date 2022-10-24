@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useUser } from '~/states/user'
 import { useCommentLike } from '~/hooks/useCommentLike'
 import { useDateDistance } from '~/hooks/useDateDistance'
@@ -122,7 +122,9 @@ function CommentItem({ comment, isSubcomment }: Props) {
     return (
       <Block>
         <DeletedText>삭제된 댓글입니다.</DeletedText>
-        {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
+        {!isSubcomment && subcomments && (
+          <SubcommentList comments={subcomments} />
+        )}
       </Block>
     )
   }
@@ -136,7 +138,11 @@ function CommentItem({ comment, isSubcomment }: Props) {
             <Time>{dateDistance}</Time>
           </LeftGroup>
         </CommentHead>
-        <ModifyComment id={comment.id} initialText={text} onClose={onCloseEdit} />
+        <ModifyComment
+          id={comment.id}
+          initialText={text}
+          onClose={onCloseEdit}
+        />
       </Block>
     )
   }
@@ -182,7 +188,9 @@ function CommentItem({ comment, isSubcomment }: Props) {
         </ReplyWrapper>
       ) : null}
 
-      {!isSubcomment && subcomments && <SubcommentList comments={subcomments} />}
+      {!isSubcomment && subcomments && (
+        <SubcommentList comments={subcomments} />
+      )}
     </Block>
   )
 }

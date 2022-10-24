@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -26,7 +26,8 @@ interface Props {
 }
 
 function ItemViewer({ item, isMyItem }: Props) {
-  const { id, thumbnail, publisher, author, title, body, user, createdAt } = item
+  const { id, thumbnail, publisher, author, title, body, user, createdAt } =
+    item
   const itemOverride = useItemOverrideById(id)
   const dateDistance = useDateDistance(createdAt)
 
@@ -99,7 +100,11 @@ function ItemViewer({ item, isMyItem }: Props) {
         <ItemHead>
           <ItemInfo>
             <Publisher>
-              {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+              {publisher.favicon ? (
+                <img src={publisher.favicon} alt="favicon" />
+              ) : (
+                <Globe />
+              )}
               {author ? `${author} · ` : ''}
               {publisher.name}
             </Publisher>

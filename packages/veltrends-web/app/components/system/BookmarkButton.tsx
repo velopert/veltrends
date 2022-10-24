@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { Bookmark, BookmarkOutline } from '../vectors'
 import IconToggleButton from './IconToggleButton'

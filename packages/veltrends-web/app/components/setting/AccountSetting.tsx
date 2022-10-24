@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { useUser } from '~/states/user'
 import Button from '../system/Button'
@@ -39,7 +39,8 @@ function AccountSetting() {
       if (error.name === 'BadRequest') {
         openDialog({
           title: '실패',
-          description: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
+          description:
+            '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
         })
       } else if (error.name === 'Forbidden') {
         openDialog({

@@ -1,7 +1,7 @@
 import { EditorView, placeholder } from '@codemirror/view'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useOpenLoginDialog } from '~/hooks/useOpenLoginDialog'
 import { codeMirrorExtensions } from '~/lib/codemirror'
 import { colors } from '~/lib/colors'

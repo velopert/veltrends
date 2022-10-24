@@ -1,8 +1,8 @@
-import { css, type FlattenSimpleInterpolation } from 'styled-components'
+import { css, SerializedStyles } from '@emotion/react'
 import { colors } from './colors'
 import { media } from './media'
 
-export const hover = (styles: string | FlattenSimpleInterpolation) => css`
+export const hover = (styles: string | SerializedStyles) => css`
   @media (hover: hover) {
     &:hover:not([disabled]) {
       ${styles}
@@ -15,6 +15,7 @@ export const markdownStyles = css`
     margin-top: 8px;
     margin-bottom: 8px;
   }
+
   h1,
   h2,
   h3,
@@ -36,6 +37,9 @@ export const markdownStyles = css`
     margin-bottom: 8px;
     ul,
     ol {
+      margin: 0;
+    }
+    p {
       margin: 0;
     }
   }

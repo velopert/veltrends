@@ -1,8 +1,9 @@
 import { Link } from '@remix-run/react'
-import styled, { css } from 'styled-components'
+import styled from '@emotion/styled'
 import TabLayout from '~/components/layouts/TabLayout'
 import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'
+import { css } from '@emotion/react'
 
 function SettingIndex() {
   const logout = useLogout()

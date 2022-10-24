@@ -1,10 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components'
-
-const GlobalFullHeight = createGlobalStyle`
-  html, body {
-    height: 100%;
-  }
-`
+import { css, Global } from '@emotion/react'
+import styled from '@emotion/styled'
 
 interface Props {
   children: React.ReactNode
@@ -13,7 +8,14 @@ function FullHeightPage({ children }: Props) {
   return (
     <>
       <Page>{children}</Page>
-      <GlobalFullHeight />
+      <Global
+        styles={css`
+          html,
+          body {
+            height: 100%;
+          }
+        `}
+      />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useGoBack } from '~/hooks/useGoBack'
 import MobileHeader from '../base/MobileHeader'
 import HeaderBackButton from '../base/HeaderBackButton'
@@ -27,7 +27,11 @@ function BasicLayout({
     <FullHeightPage>
       <MobileHeader
         title={title}
-        headerLeft={hasBackButton ? <HeaderBackButton onClick={onGoBack ?? goBack} /> : undefined}
+        headerLeft={
+          hasBackButton ? (
+            <HeaderBackButton onClick={onGoBack ?? goBack} />
+          ) : undefined
+        }
         headerRight={headerRight}
       />
       {desktopHeaderVisible ? <DesktopHeader /> : null}
@@ -41,6 +45,7 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: scroll;
+  overflow-x: hidden;
 `
 
 export default BasicLayout

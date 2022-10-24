@@ -1,7 +1,8 @@
 import React, { forwardRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import Input, { type Props as InputProps } from './Input'
+import { css } from '@emotion/react'
 
 interface Props extends InputProps {
   label: string

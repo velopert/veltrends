@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import { useUser } from '~/states/user'

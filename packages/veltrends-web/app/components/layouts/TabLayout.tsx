@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useTabScrollTop } from '~/contexts/TabScrollTopContext'
 import DesktopHeader from '../base/DesktopHeader'
 import Footer from '../base/Footer'
@@ -40,6 +40,7 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: scroll;
+  overflow-x: hidden;
 `
 
 export default TabLayout

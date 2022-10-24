@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import Button from '../system/Button'
@@ -12,7 +12,13 @@ interface Props {
   isLoading?: boolean
 }
 
-function WriteFormTemplate({ description, children, buttonText, isLoading, onSubmit }: Props) {
+function WriteFormTemplate({
+  description,
+  children,
+  buttonText,
+  isLoading,
+  onSubmit,
+}: Props) {
   return (
     <StyledForm onSubmit={onSubmit}>
       {description && <h3>{description}</h3>}
