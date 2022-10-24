@@ -22,7 +22,7 @@ import { withCookie } from './lib/client'
 import { getCanonical } from './lib/getCanonical'
 import { getMemoMyAccount } from './lib/protectRoute'
 import { userState } from './states/user'
-import './styles.css'
+import styles from './styles.css'
 import { useFirebaseAnalytics } from './hooks/useFirebaseAnalytics'
 
 interface LoaderResult {
@@ -100,6 +100,10 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
   'og:image': 'https://veltrends.com/og-image.png',
 })
+
+export function links() {
+  return [{ rel: 'stylesheet', href: styles }]
+}
 
 export default function App() {
   const { user, canonical, tokenRemainingTime, env } =
