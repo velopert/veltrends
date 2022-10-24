@@ -15,6 +15,7 @@ export const markdownStyles = css`
     margin-top: 8px;
     margin-bottom: 8px;
   }
+
   h1,
   h2,
   h3,
@@ -36,6 +37,9 @@ export const markdownStyles = css`
     margin-bottom: 8px;
     ul,
     ol {
+      margin: 0;
+    }
+    p {
       margin: 0;
     }
   }
