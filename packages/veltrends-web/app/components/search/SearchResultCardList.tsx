@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { type SearchResultItem } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import SearchResultCard from './SearchResultCard'

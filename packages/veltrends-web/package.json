@@ -9,6 +9,7 @@
     "@codemirror/commands": "^6.1.2",
     "@codemirror/lang-markdown": "^6.0.2",
     "@codemirror/view": "^6.4.0",
+    "@emotion/styled": "^11.10.4",
     "@remix-run/node": "^1.7.3",
     "@remix-run/react": "^1.7.3",
     "@remix-run/vercel": "^1.7.3",

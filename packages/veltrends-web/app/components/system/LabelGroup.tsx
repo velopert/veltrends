@@ -1,11 +1,17 @@
 import { useCallback, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 
 interface Props {
   children:
     | React.ReactNode
-    | (({ onFocus, onBlur }: { onFocus: () => void; onBlur: () => void }) => React.ReactNode)
+    | (({
+        onFocus,
+        onBlur,
+      }: {
+        onFocus: () => void
+        onBlur: () => void
+      }) => React.ReactNode)
   className?: string
   label: string
 }
@@ -25,7 +31,9 @@ function LabelGroup({ children, label, className }: Props) {
   return (
     <Block className={className}>
       <Label focused={focused}>{label}</Label>
-      {typeof children === 'function' ? children({ onFocus, onBlur }) : children}
+      {typeof children === 'function'
+        ? children({ onFocus, onBlur })
+        : children}
     </Block>
   )
 }

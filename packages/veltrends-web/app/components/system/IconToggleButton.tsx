@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 
 interface Props {
   inactiveIcon: React.ReactNode
@@ -11,12 +11,23 @@ interface Props {
 
 type Size = 'small' | 'medium'
 
-function IconToggleButton({ isActive, inactiveIcon, activeIcon, onClick, size = 'medium' }: Props) {
+function IconToggleButton({
+  isActive,
+  inactiveIcon,
+  activeIcon,
+  onClick,
+  size = 'medium',
+}: Props) {
   return (
     <StyledButton onClick={onClick} size={size}>
       <AnimatePresence initial={false}>
         {isActive ? (
-          <SvgWrapper key="fill" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+          <SvgWrapper
+            key="fill"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+          >
             {activeIcon}
           </SvgWrapper>
         ) : (

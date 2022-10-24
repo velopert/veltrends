@@ -1,7 +1,7 @@
 import { useNavigate } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { useOnClickOutside } from '~/hooks/useClickOutside'
 import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'
@@ -39,7 +39,9 @@ function UserMenu({ visible, onClose }: Props) {
           <MenuItem isDesktopHidden onClick={() => navigate('/write')}>
             새 글 등록
           </MenuItem>
-          <MenuItem onClick={() => navigate('/setting/account')}>내 계정</MenuItem>
+          <MenuItem onClick={() => navigate('/setting/account')}>
+            내 계정
+          </MenuItem>
           <MenuItem onClick={() => navigate('/bookmarks')}>북마크</MenuItem>
           <MenuItem onClick={logout}>로그아웃</MenuItem>
         </Block>

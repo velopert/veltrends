@@ -1,7 +1,7 @@
 import { json, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
 import { type FormEvent, useCallback, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelGroup from '~/components/system/LabelGroup'
 import LabelInput from '~/components/system/LabelInput'

@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -21,7 +21,12 @@ const LabelTextArea = forwardRef<HTMLTextAreaElement, Props>(
     return (
       <Block className={className}>
         <Label focused={focused}>{label}</Label>
-        <StyledTextArea onFocus={handleFocus} onBlur={handleBlur} {...rest} ref={ref} />
+        <StyledTextArea
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...rest}
+          ref={ref}
+        />
       </Block>
     )
   },

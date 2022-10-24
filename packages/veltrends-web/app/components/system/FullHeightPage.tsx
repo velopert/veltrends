@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from '@emotion/styled'
 
 const GlobalFullHeight = createGlobalStyle`
   html, body {

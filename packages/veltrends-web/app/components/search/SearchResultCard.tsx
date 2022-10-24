@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { type SearchResultItem } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import { Globe } from '../vectors'
@@ -14,14 +14,20 @@ function SearchResultCard({ item }: Props) {
   return (
     <Block to={link}>
       <Publisher>
-        {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+        {publisher.favicon ? (
+          <img src={publisher.favicon} alt="favicon" />
+        ) : (
+          <Globe />
+        )}
         {author ? `${author} · ` : ''}
         {publisher.name}
       </Publisher>
       {/** @todo: Secure this code **/}
       <h3 dangerouslySetInnerHTML={{ __html: highlight.title }}></h3>
       <p dangerouslySetInnerHTML={{ __html: highlight.body }}></p>
-      {likes > 0 ? <LikesCount>좋아요 {likes.toLocaleString()}개</LikesCount> : null}
+      {likes > 0 ? (
+        <LikesCount>좋아요 {likes.toLocaleString()}개</LikesCount>
+      ) : null}
     </Block>
   )
 }

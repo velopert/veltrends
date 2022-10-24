@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { hover } from '~/lib/styles'
 
@@ -9,13 +9,25 @@ interface ButtonProps {
   layoutMode?: 'inline' | 'fullWidth'
   variant?: 'primary' | 'secondary' | 'text'
 }
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonProps {
+interface Props
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    ButtonProps {
   to?: string
   href?: string
 }
 
 const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ layoutMode = 'inline', variant = 'primary', size = 'medium', to, href, ...rest }, ref) => {
+  (
+    {
+      layoutMode = 'inline',
+      variant = 'primary',
+      size = 'medium',
+      to,
+      href,
+      ...rest
+    },
+    ref,
+  ) => {
     if (href) {
       return (
         <StyledAnchor
@@ -48,7 +60,13 @@ const Button = forwardRef<HTMLButtonElement, Props>(
       )
     }
     return (
-      <StyledButton layoutMode={layoutMode} variant={variant} size={size} ref={ref} {...rest} />
+      <StyledButton
+        layoutMode={layoutMode}
+        variant={variant}
+        size={size}
+        ref={ref}
+        {...rest}
+      />
     )
   },
 )

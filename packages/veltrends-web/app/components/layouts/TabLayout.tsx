@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useTabScrollTop } from '~/contexts/TabScrollTopContext'
 import DesktopHeader from '../base/DesktopHeader'
 import Footer from '../base/Footer'

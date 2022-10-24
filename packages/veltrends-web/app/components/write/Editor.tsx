@@ -1,6 +1,6 @@
 import { EditorView } from 'codemirror'
 import { useEffect, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import { codeMirrorExtensions } from '~/lib/codemirror'

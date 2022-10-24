@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { Spinner } from '../vectors'
 

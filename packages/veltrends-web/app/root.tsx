@@ -12,7 +12,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { decode } from 'js-base64'
 import { useRef } from 'react'
 import { SangteProvider } from 'sangte'
-import GlobalStyle from './GlobalStyle'
 import Core from './components/base/Core'
 import GlobalBottomSheetModal from './components/base/GlobalBottomSheetModal'
 import GlobalDialog from './components/base/GlobalDialog'
@@ -203,7 +202,6 @@ export default function App() {
           />
         ) : null}
         <Links />
-        {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
         <script
@@ -219,7 +217,6 @@ export default function App() {
               set(userState, user)
             }}
           >
-            <GlobalStyle />
             <QueryClientProvider client={queryClient}>
               <TabScrollTopContextProvider>
                 <Outlet />

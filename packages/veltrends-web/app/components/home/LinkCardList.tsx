@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { type Item } from '~/lib/api/types'
 import { media } from '~/lib/media'
 import LinkCard from './LinkCard'

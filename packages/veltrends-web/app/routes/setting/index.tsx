@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import TabLayout from '~/components/layouts/TabLayout'
 import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'

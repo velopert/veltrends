@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import Input, { type Props as InputProps } from './Input'
 

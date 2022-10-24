@@ -1,6 +1,6 @@
 import { json, MetaFunction, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData, useNavigate } from '@remix-run/react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import MoreVertButton from '~/components/base/MoreVertButton'
 import CommentList from '~/components/items/CommentList'
 import ItemViewer from '~/components/items/ItemViewer'

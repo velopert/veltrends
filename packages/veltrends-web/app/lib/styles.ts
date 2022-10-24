@@ -1,4 +1,4 @@
-import { css, type FlattenSimpleInterpolation } from 'styled-components'
+import { css, type FlattenSimpleInterpolation } from '@emotion/styled'
 import { colors } from './colors'
 import { media } from './media'
 

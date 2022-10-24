@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { type ListMode } from '~/lib/api/types'
 import { colors } from '~/lib/colors'
 import { Calendar, Time, Trending } from '../vectors'
