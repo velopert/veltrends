@@ -1,11 +1,12 @@
 import { useNavigate } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef } from 'react'
-import styled, { css } from '@emotion/styled'
+import styled from '@emotion/styled'
 import { useOnClickOutside } from '~/hooks/useClickOutside'
 import { useLogout } from '~/hooks/useLogout'
 import { colors } from '~/lib/colors'
 import { mediaQuery } from '~/lib/media'
+import { css } from '@emotion/react'
 
 interface Props {
   visible: boolean

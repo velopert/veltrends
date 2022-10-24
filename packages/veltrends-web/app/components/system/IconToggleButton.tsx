@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import styled, { css } from '@emotion/styled'
+import styled from '@emotion/styled'
+import { css } from '@emotion/react'
 
 interface Props {
   inactiveIcon: React.ReactNode

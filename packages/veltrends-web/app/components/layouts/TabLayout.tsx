@@ -40,6 +40,7 @@ const Content = styled.div`
   flex-direction: column;
   flex: 1;
   overflow: scroll;
+  overflow-x: hidden;
 `
 
 export default TabLayout

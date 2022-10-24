@@ -1,8 +1,8 @@
-import { css, type FlattenSimpleInterpolation } from '@emotion/styled'
+import { css, SerializedStyles } from '@emotion/react'
 import { colors } from './colors'
 import { media } from './media'
 
-export const hover = (styles: string | FlattenSimpleInterpolation) => css`
+export const hover = (styles: string | SerializedStyles) => css`
   @media (hover: hover) {
     &:hover:not([disabled]) {
       ${styles}

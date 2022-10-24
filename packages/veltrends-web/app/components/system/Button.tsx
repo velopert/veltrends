@@ -1,8 +1,9 @@
 import { Link } from '@remix-run/react'
 import { forwardRef } from 'react'
-import styled, { css } from '@emotion/styled'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { hover } from '~/lib/styles'
+import { css } from '@emotion/react'
 
 interface ButtonProps {
   size?: 'small' | 'medium'
@@ -111,10 +112,10 @@ const sizeStyles = {
   `,
 }
 
-const sharedStyles = css<ButtonProps>`
+const sharedStyles = (props: ButtonProps) => css`
   display: flex;
-  ${(props) => variantStyles[props.variant!]}
-  ${(props) => sizeStyles[props.size!]}
+  ${variantStyles[props.variant!]!}
+  ${sizeStyles[props.size!]}
   border: none;
   align-items: center;
   justify-content: center;
@@ -127,24 +128,23 @@ const sharedStyles = css<ButtonProps>`
     filter: grayscale(0.6);
   }
 
-  ${(props) =>
-    props.layoutMode === 'fullWidth' &&
-    css`
-      width: 100%;
-    `}
+  ${props.layoutMode === 'fullWidth' &&
+  css`
+    width: 100%;
+  `}
 `
 
 const StyledButton = styled.button<ButtonProps>`
-  ${sharedStyles}
+  ${(props) => sharedStyles(props)}
 `
 
 const StyledAnchor = styled.a<ButtonProps>`
-  ${sharedStyles}
+  ${(props) => sharedStyles(props)}
   text-decoration: none;
 `
 
 const StyledLink = styled(Link)<ButtonProps>`
-  ${sharedStyles}
+  ${(props) => sharedStyles(props)}
   text-decoration: none;
 `
 

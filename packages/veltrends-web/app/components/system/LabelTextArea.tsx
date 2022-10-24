@@ -1,6 +1,7 @@
 import { forwardRef, useState } from 'react'
-import styled, { css } from '@emotion/styled'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
+import { css } from '@emotion/react'
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string

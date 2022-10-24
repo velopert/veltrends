@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import styled, { css } from '@emotion/styled'
+import styled from '@emotion/styled'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -14,6 +14,7 @@ import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import { media } from '~/lib/media'
 import { useItemOverrideById } from '~/states/itemOverride'
 import removeMd from 'remove-markdown'
+import { css } from '@emotion/react'
 
 interface Props {
   item: Item

@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion'
-import styled, { keyframes } from '@emotion/styled'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { Spinner } from '../vectors'
+import { keyframes } from '@emotion/react'
 
 function LoadingIndicator({ color }: { color?: string }) {
   return <StyledSpinner color={color} />
