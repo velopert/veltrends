@@ -1,7 +1,7 @@
 import { useSearchParams } from '@remix-run/react'
 import { format } from 'date-fns'
 import { useMemo } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { addWeekToRange } from '~/lib/week'
 

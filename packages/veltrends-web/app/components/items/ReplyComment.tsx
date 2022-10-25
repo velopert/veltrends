@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useCreateCommentMutation } from '~/hooks/mutation/useCreateCommentMutation'
 import { useCommentsQuery } from '~/hooks/query/useCommentsQuery'
 import { useItemId } from '~/hooks/useItemId'

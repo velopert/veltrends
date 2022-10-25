@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css } from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { HeartFill, HeartOutline } from '../vectors'
 import { AnimatePresence, motion } from 'framer-motion'

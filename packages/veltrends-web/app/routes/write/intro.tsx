@@ -1,7 +1,7 @@
 import { type ActionFunction, redirect, json } from '@remix-run/node'
 import { useFetcher, useNavigate } from '@remix-run/react'
 import React, { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import BasicLayout from '~/components/layouts/BasicLayout'
 import LabelGroup from '~/components/system/LabelGroup'
 import LabelInput from '~/components/system/LabelInput'

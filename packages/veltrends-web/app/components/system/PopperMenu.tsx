@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import { useRef } from 'react'
+import styled from '@emotion/styled'
 import { useOnClickOutside } from '~/hooks/useClickOutside'
 import { colors } from '~/lib/colors'
 import { hover } from '~/lib/styles'
+import { css } from '@emotion/react'
 
 interface PopperMenuItem {
   name: string

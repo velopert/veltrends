@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import MobileHeader from '~/components/base/MobileHeader'
 import TabLayout from '~/components/layouts/TabLayout'
 import SearchInput from '~/components/search/SearchInput'

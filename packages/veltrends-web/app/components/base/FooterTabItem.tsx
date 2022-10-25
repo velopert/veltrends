@@ -1,9 +1,9 @@
 import { NavLink } from '@remix-run/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { Bookmark, Home, PlusCircle, Search, Setting } from '../vectors'
+import { css } from '@emotion/react'
 
 const iconMap = {
   home: Home,

@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import QueryString from 'qs'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import LinkCardList from '~/components/home/LinkCardList'
 import ListModeSelector from '~/components/home/ListModeSelector'
 import WeekSelector from '~/components/home/WeekSelector'

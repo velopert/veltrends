@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Overlay from './Overlay'
 
 interface Props {

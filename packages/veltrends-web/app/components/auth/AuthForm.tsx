@@ -1,6 +1,6 @@
 import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
 import { useEffect } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useForm } from '~/hooks/useForm'
 import { useSubmitLoading } from '~/hooks/useSubmitLoading'
 import { colors } from '~/lib/colors'
@@ -55,15 +55,22 @@ function AuthForm({ mode, error }: Props) {
       },
       password: {
         validate: mode === 'register' ? validate.password : undefined,
-        errorMessage: '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
+        errorMessage:
+          '8자 이상, 영문/숫자/특수문자 중 2가지 이상 입력해주세요.',
       },
     },
     mode: 'all',
     shouldPreventDefault: false,
   })
 
-  const { usernamePlaceholder, passwordPlaceholder, buttonText, actionText, question, actionLink } =
-    authDescriptions[mode]
+  const {
+    usernamePlaceholder,
+    passwordPlaceholder,
+    buttonText,
+    actionText,
+    question,
+    actionLink,
+  } = authDescriptions[mode]
 
   const onSubmit = handleSubmit(() => {})
 

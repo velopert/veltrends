@@ -7,7 +7,7 @@ import {
 import { useLoaderData } from '@remix-run/react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import LinkCardList from '~/components/home/LinkCardList'
 import TabLayout from '~/components/layouts/TabLayout'
 import EmptyList from '~/components/system/EmptyList'

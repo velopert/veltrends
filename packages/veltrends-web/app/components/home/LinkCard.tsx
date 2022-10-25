@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import styled, { css } from 'styled-components'
+import styled from '@emotion/styled'
 import { useUser } from '~/states/user'
 import { useDateDistance } from '~/hooks/useDateDistance'
 import { useLikeManager } from '~/hooks/useLikeManager'
@@ -14,13 +14,15 @@ import { useBookmarkManager } from '~/hooks/useBookmarkManager'
 import { media } from '~/lib/media'
 import { useItemOverrideById } from '~/states/itemOverride'
 import removeMd from 'remove-markdown'
+import { css } from '@emotion/react'
 
 interface Props {
   item: Item
 }
 
 function LinkCard({ item }: Props) {
-  const { thumbnail, title, publisher, body, author, user, createdAt, id } = item
+  const { thumbnail, title, publisher, body, author, user, createdAt, id } =
+    item
   const itemOverride = useItemOverrideById(id)
   const dateDistance = useDateDistance(createdAt)
   const { like, unlike } = useLikeManager()
@@ -66,7 +68,11 @@ function LinkCard({ item }: Props) {
       <StyledLink to={link} prefetch="intent">
         {thumbnail ? <Thumbnail src={thumbnail} alt={title} /> : null}
         <Publisher>
-          {publisher.favicon ? <img src={publisher.favicon} alt="favicon" /> : <Globe />}
+          {publisher.favicon ? (
+            <img src={publisher.favicon} alt="favicon" />
+          ) : (
+            <Globe />
+          )}
           {author ? `${author} · ` : ''}
           {publisher.name}
         </Publisher>

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { mediaQuery } from '~/lib/media'
 import Button from '../system/Button'
 import { User } from '../vectors'
@@ -11,7 +11,8 @@ function UserAddon({ username }: { username: string }) {
   const onOpen = () => setVisible(true)
   const onClose = (e?: Event) => {
     const isButton =
-      buttonRef.current?.contains(e?.target as Node) || buttonRef.current === e?.target
+      buttonRef.current?.contains(e?.target as Node) ||
+      buttonRef.current === e?.target
     if (isButton) return
     setVisible(false)
   }

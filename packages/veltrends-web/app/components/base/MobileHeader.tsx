@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import { Logo } from '../vectors'
@@ -10,7 +10,12 @@ interface Props {
   className?: string
 }
 
-function MobileHeader({ title = <StyledLogo />, headerLeft, headerRight, className }: Props) {
+function MobileHeader({
+  title = <StyledLogo />,
+  headerLeft,
+  headerRight,
+  className,
+}: Props) {
   return (
     <Block className={className}>
       {headerLeft && <HeaderSide position="left">{headerLeft}</HeaderSide>}

@@ -1,19 +1,21 @@
 import { forwardRef, useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 
 export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string | null
 }
 
-const Input = forwardRef<HTMLInputElement, Props>(({ errorMessage, ...rest }: Props, ref) => {
-  return (
-    <>
-      <StyledInput {...rest} />
-      {errorMessage ? <Message>{errorMessage}</Message> : null}
-    </>
-  )
-})
+const Input = forwardRef<HTMLInputElement, Props>(
+  ({ errorMessage, ...rest }: Props, ref) => {
+    return (
+      <>
+        <StyledInput {...rest} />
+        {errorMessage ? <Message>{errorMessage}</Message> : null}
+      </>
+    )
+  },
+)
 
 Input.displayName = 'Input'
 

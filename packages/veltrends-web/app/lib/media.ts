@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import { css } from '@emotion/styled'
 
 const breakpoints = {
   mobile: 500,
@@ -13,7 +13,10 @@ type BreakpointName = keyof typeof breakpoints
 export const mediaQuery = (width: number) => `@media (min-width: ${width}px)`
 type Media = Record<BreakpointName, string>
 
-export const media = Object.entries(breakpoints).reduce((acc, [name, width]) => {
-  acc[name as BreakpointName] = mediaQuery(width)
-  return acc
-}, {} as Media)
+export const media = Object.entries(breakpoints).reduce(
+  (acc, [name, width]) => {
+    acc[name as BreakpointName] = mediaQuery(width)
+    return acc
+  },
+  {} as Media,
+)

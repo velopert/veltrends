@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from '@remix-run/react'
 import React, { useRef } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { Search } from '../vectors'
 

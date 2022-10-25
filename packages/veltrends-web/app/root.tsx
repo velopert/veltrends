@@ -12,7 +12,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { decode } from 'js-base64'
 import { useRef } from 'react'
 import { SangteProvider } from 'sangte'
-import GlobalStyle from './GlobalStyle'
 import Core from './components/base/Core'
 import GlobalBottomSheetModal from './components/base/GlobalBottomSheetModal'
 import GlobalDialog from './components/base/GlobalDialog'
@@ -23,8 +22,9 @@ import { withCookie } from './lib/client'
 import { getCanonical } from './lib/getCanonical'
 import { getMemoMyAccount } from './lib/protectRoute'
 import { userState } from './states/user'
-import './styles.css'
+import styles from './styles.css'
 import { useFirebaseAnalytics } from './hooks/useFirebaseAnalytics'
+import GlobalStyles from './GlobalStyles'
 
 interface LoaderResult {
   user: User | null
@@ -101,6 +101,10 @@ export const meta: MetaFunction = () => ({
   viewport: 'width=device-width,initial-scale=1',
   'og:image': 'https://veltrends.com/og-image.png',
 })
+
+export function links() {
+  return [{ rel: 'stylesheet', href: styles }]
+}
 
 export default function App() {
   const { user, canonical, tokenRemainingTime, env } =
@@ -203,7 +207,6 @@ export default function App() {
           />
         ) : null}
         <Links />
-        {typeof document === 'undefined' ? '__STYLES__' : null}
       </head>
       <body>
         <script
@@ -213,13 +216,13 @@ export default function App() {
           `,
           }}
         />
+        <GlobalStyles />
         <TokenRefreshProvider>
           <SangteProvider
             initialize={({ set }) => {
               set(userState, user)
             }}
           >
-            <GlobalStyle />
             <QueryClientProvider client={queryClient}>
               <TabScrollTopContextProvider>
                 <Outlet />

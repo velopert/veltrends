@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import styled, { css } from 'styled-components'
+import styled from '@emotion/styled'
 import { colors } from '~/lib/colors'
 import { media } from '~/lib/media'
 import Overlay from './Overlay'
 import { hover } from '~/lib/styles'
+import { css } from '@emotion/react'
 
 interface Props {
   visible: boolean
